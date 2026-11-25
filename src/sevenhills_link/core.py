@@ -573,6 +573,7 @@ class Core:
                 "now": _summary(frame),
                 "where": self.tracker.describe(),
                 "screen": self.screen.status,
+                "screen_report": self.screen.report(),   # for Settings → Game → Test screen reading; never uploaded
                 "situation": self._situation(frame),
                 "gamelog_error": self.gamelog.error if self.gamelog else None,
             }

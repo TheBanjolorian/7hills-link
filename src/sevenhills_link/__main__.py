@@ -12,6 +12,11 @@
   --install-to <exe> --wait <pids> --from-version <v>   (used by the updater) put this exe in place of <exe>
   --installed          (used by the installer) first start of the installed copy
   --remove-old <exe>   (used by the installer) delete the copy it was installed from
+  --screen-test [picture]   read the debug text in a saved screenshot of the game window (or,
+                       without a picture, in the top-right corner of the main screen right now),
+                       the way the running client reads the screen, and print what it found as
+                       JSON (also written to screen-test.json in the data folder). Exit code 0
+                       read, 3 no Windows text recognition on this PC. Nothing is sent anywhere.
   --version
 """
 
@@ -71,6 +76,12 @@ def main(argv: list[str] | None = None) -> int:
     if "--version" in argv:
         print(__version__)
         return 0
+
+    if "--screen-test" in argv:
+        from . import screen
+        i = argv.index("--screen-test")
+        picture = argv[i + 1] if i + 1 < len(argv) and not argv[i + 1].startswith("--") else None
+        return screen.check_screenshot(picture)
 
     if "--install-to" in argv:
         from . import updater

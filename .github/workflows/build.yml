@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install grpcio protobuf pytest
+      - run: pip install grpcio protobuf pytest pillow
       - run: python -m pytest -q tests
         env:
           PYTHONPATH: src
@@ -53,6 +53,54 @@ jobs:
         run: |
           $v = & .\dist\7HillsLink.exe --version | Out-String
           Write-Host "version: $v"
+      # The screen reading (screen.py) can only be tried on Windows, so the build does it: the exe
+      # just made reads a drawn stand-in for a game screenshot with Windows' own text
+      # recognition, and then looks at this runner's screen. A missing OCR language on the
+      # runner is a warning; anything else that goes wrong stops the build.
+      - name: Windows OCR language
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          Get-WindowsCapability -Online -Name "Language.OCR*" | Format-Table Name, State
+          $cap = Get-WindowsCapability -Online -Name "Language.OCR~~~en-US~0.0.1.0"
+          if ($cap.State -ne 'Installed') { Add-WindowsCapability -Online -Name "Language.OCR~~~en-US~0.0.1.0" }
+      - name: Screen reading test
+        shell: pwsh
+        run: |
+          $env:LOCALAPPDATA = Join-Path $env:RUNNER_TEMP 'ocrtest'
+          New-Item -ItemType Directory -Force $env:LOCALAPPDATA | Out-Null
+          $json = "$env:LOCALAPPDATA\7HillsLink\screen-test.json"
+          # The exe is a window program: its answer is read from screen-test.json, not from a pipe.
+          function Invoke-ScreenTest($arguments) {
+            Remove-Item $json -ErrorAction SilentlyContinue
+            $p = Start-Process dist/7HillsLink.exe -ArgumentList $arguments -PassThru
+            $null = $p.Handle
+            $p | Wait-Process -Timeout 180 -ErrorAction SilentlyContinue
+            if (-not $p.HasExited) { $p | Stop-Process -Force; throw 'the screen test did not finish in three minutes' }
+            $text = Get-Content $json -Raw -ErrorAction SilentlyContinue
+            Write-Host "exit code $($p.ExitCode)"
+            Write-Host $text
+            if (-not $text) { throw 'the exe wrote no screen-test.json' }
+            return [pscustomobject]@{ Code = $p.ExitCode; Result = ($text | ConvertFrom-Json) }
+          }
+          $shot = Join-Path $env:RUNNER_TEMP 'shot.png'
+          python tools/make_debug_screenshot.py $shot
+          $t = Invoke-ScreenTest @('--screen-test', "`"$shot`"")
+          if ($t.Code -eq 3 -and $t.Result.error -match 'no OCR language installed') {
+            Write-Host "::warning::Windows has no OCR language on this runner: the screen reading in the exe was NOT tried"
+            exit 0
+          }
+          if ($t.Code -ne 0 -or -not $t.Result.ok) { Write-Error "the screen test failed (exit code $($t.Code)): $($t.Result.error)"; exit 1 }
+          if (-not $t.Result.block) { Write-Error 'the debug block was not found in the picture'; exit 1 }
+          if ($t.Result.place -ne 'stanton/crusader/yela') { Write-Error "the debug text was read as '$($t.Result.place)', not Yela"; exit 1 }
+          if ($t.Result.confidence -ne 'near') { Write-Error "a moon from the screen must be 'near', got '$($t.Result.confidence)'"; exit 1 }
+          # The live path: capture this screen's corner with mss and read it. There is no game on
+          # the runner, so no place is expected; a runner without a screen to capture is a warning.
+          try { $live = Invoke-ScreenTest @('--screen-test') } catch { $live = [pscustomobject]@{ Code = -1; Result = [pscustomobject]@{ error = "$_" } } }
+          if ($live.Result.error -match 'ModuleNotFoundError|ImportError') { Write-Error "a module is missing from the exe: $($live.Result.error)"; exit 1 }
+          if ($live.Code -ne 0 -or -not $live.Result.captured) {
+            Write-Host "::warning::this runner's screen could not be captured and read (exit code $($live.Code)): $($live.Result.error) The live path was NOT confirmed"
+          }
       - name: Single instance test
         shell: pwsh
         run: |
