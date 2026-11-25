@@ -42,8 +42,9 @@ member is, and the arrival lines of other ships nearby are ignored.
 
 Only the place id from places.json is sent to 7Net, with how sure it is, the shard,
 the game's location number, the jurisdiction's name, the route's two ends as place
-ids and one short line about the newest event. Never coordinates, never log lines,
-never another player's name.
+ids and one short line about the newest event. Never log lines, never another
+player's name. The exact position on a planet or moon (position.py, read from the
+screen) goes with it only when the member turned on "Share exact position".
 """
 
 from __future__ import annotations
@@ -61,6 +62,7 @@ from .paths import data_dir, resource
 BURST_S = 3.0           # planets loaded this close together are streaming, not where you are
 PORT_HINT_S = 600.0     # an ATC hint counts for this long when you then land or enter armistice
 ROUTE_FORGET_S = 900.0  # a plotted route with no arrival is forgotten after this long
+POS_STALE_S = 15.0      # an exact position read from the screen counts for this long
 
 RE_TS = re.compile(r"^<(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?)Z>")
 RE_JOIN = re.compile(r"<Join PU>.*?shard\[([^\]]+)\]")
@@ -392,6 +394,11 @@ class Tracker:
         self.route: dict | None = None
         self.event: tuple[float, str] | None = None   # (log time, short text): the newest thing that happened
         self.screen: dict | None = None       # set by screen.py: {"place_id", "at"} while the screen shows a known place
+        # The exact position on a planet or moon, read from the screen (position.py):
+        # {"body", "lat", "lon", "alt", "at"}. Sent only while share_position is on, which
+        # core.py sets from the member's own "Share exact position" setting (off by default).
+        self.screen_pos: dict | None = None
+        self.share_position = False
         self._last_ts = 0.0
 
     # ------------------------------------------------------------ feeding
@@ -792,10 +799,17 @@ class Tracker:
             if r:
                 transit = {"from": r["from"], "to": r["to"], "to_label": r["to_label"], "state": "route",
                            "since": _iso(r["since"])}
-            return {"place_id": pid, "confidence": conf, "source": src, "armistice": self.armistice,
-                    "shard": self.shard, "raw_id": self.raw_id,
-                    "jurisdiction": self.jurisdiction, "transit": transit,
-                    "event": {"text": self.event[1], "at": _iso(self.event[0])} if self.event else None}
+            out = {"place_id": pid, "confidence": conf, "source": src, "armistice": self.armistice,
+                   "shard": self.shard, "raw_id": self.raw_id,
+                   "jurisdiction": self.jurisdiction, "transit": transit,
+                   "event": {"text": self.event[1], "at": _iso(self.event[0])} if self.event else None}
+            # The exact position: only when the member shares it, it is fresh, and it is on the
+            # body the place is on. Absent otherwise, which clears it on 7Net.
+            sp = self.screen_pos
+            if (self.share_position and sp and time.time() - sp["at"] <= POS_STALE_S
+                    and (pid == sp["body"] or self.places.within(pid, sp["body"]))):
+                out["pos"] = {"body": sp["body"], "lat": sp["lat"], "lon": sp["lon"], "alt": sp["alt"]}
+            return out
 
     def describe(self) -> str | None:
         snap = self.snapshot()

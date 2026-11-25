@@ -31,7 +31,12 @@ showed, and what is done about it:
     are several WAYS and the reader moves on to the next one whenever a look names
     no place, and stays with the one that does.
 
-What leaves the PC: only the place id, through the same upload as the Game.log
+The same text also gives the exact position on a planet or moon (position.py). It is
+read with the place, shown under "Test screen reading", and sent only when the member
+turned on "Share exact position" (off by default).
+
+What leaves the PC: the place id (and, with that setting on, latitude, longitude and
+height), through the same upload as the Game.log
 place (location.py), which also decides between the two: the screen never
 replaces a station the log knows with the moon it sits on. No picture is kept or
 sent; the zone names of the last look stay in memory for "Test screen reading"
@@ -50,11 +55,16 @@ import sys
 import threading
 import time
 
+from . import position
 from .log import log
 
 POLL_S = 2.0
 IDLE_POLL_S = 10.0       # how often it looks once the debug text has not been there for a while
 STALE_S = 15.0           # a screen place older than this no longer counts
+# The exact position (position.py): two readings in a row must lie this close together,
+# as far as a ship near the ground can have moved in between plus some slack.
+POS_SPEED_MS = 3000.0
+POS_SLACK_M = 300.0
 BOX = (760, 420)         # px in the window's top-right corner: the block is about 640 × 330 px on a real screen
 CORNER = (0.55, 0.0, 1.0, 0.40)   # the wider corner, as fractions of the window, should a screen draw the text larger
 # The ways a look can be made, in the order they are tried: which part of the window,
@@ -118,6 +128,8 @@ class ScreenReader:
         self.way = 0                        # which of WAYS the next look uses
         self.misses = 0                     # looks in a row that found no debug block
         self._looked = 0.0
+        self._pos_prev: tuple[dict, float] | None = None   # the last position read, and when
+        self.position: dict | None = None                  # the last position that counted, for "Test screen reading"
         self._last: str | None = None
         self._at = 0.0
         self._engine = None
@@ -160,8 +172,29 @@ class ScreenReader:
     def _clear(self) -> None:
         self.place_id = None
         self._last = None
+        self._pos_prev = None
+        self.position = None
         with self.tracker._lock:
             self.tracker.screen = None
+            self.tracker.screen_pos = None
+
+    def _look_position(self, text: str | None, now: float) -> dict | None:
+        """The exact position this reading gives (position.py). It counts, and is handed to the
+        tracker, once it lies close to the reading before it; the tracker sends it only when
+        the member has turned on "Share exact position"."""
+        pos = position.body_position(text, self.places)
+        prev, self._pos_prev = self._pos_prev, ((pos, now) if pos else None)
+        if not pos:
+            if self.position and now - self.position["at"] > STALE_S:
+                self.position = None
+                with self.tracker._lock:
+                    self.tracker.screen_pos = None
+            return None
+        if prev and prev[0]["body"] == pos["body"] and position.apart_m(prev[0], pos) <= POS_SLACK_M + POS_SPEED_MS * max(0.0, now - prev[1]):
+            self.position = {"body": pos["body"], "lat": pos["lat"], "lon": pos["lon"], "alt": pos["alt"], "at": now}
+            with self.tracker._lock:
+                self.tracker.screen_pos = dict(self.position)
+        return pos
 
     def _fail(self, what: str, e: BaseException) -> None:
         """A look that did not work: say so in the window and once in link.log."""
@@ -231,7 +264,8 @@ class ScreenReader:
         WAYS. Returns the place this reading names (also used by the tests)."""
         seen = read_debug_text(text)
         pid = self.place_of(seen) if seen["block"] else None
-        self.last = {"at": time.time(), "size": list(size) if size else None, "scale": scale, "prepared": prep, "ms": ms,
+        pos = self._look_position(text, time.time()) if seen["block"] else None
+        self.last = {"at": time.time(), "position": {k: pos[k] for k in ("body", "lat", "lon", "alt", "checked")} if pos else None, "size": list(size) if size else None, "scale": scale, "prepared": prep, "ms": ms,
                      "lines": len([x for x in (text or "").splitlines() if x.strip()]),
                      "block": seen["block"], "zones": seen["zones"][:6], "location": seen["location"] or seen["lz"],
                      "place": pid, "error": None}
@@ -512,8 +546,9 @@ def check_screenshot(path: str | None) -> int:
 
     Prints one JSON object and writes the same to screen-test.json in the data folder (a
     windowed exe has no console to print to unless its output is piped). Of what was read
-    it holds only the lines that bear on the place, with their numbers taken out: no
-    position, session or server name is written down. It goes nowhere.
+    it holds only the lines that bear on the place, with their numbers taken out, and the
+    position worked out from them (body, latitude, longitude, height): no session or
+    server name is written down. It goes nowhere.
     Exit code: 0 the text was read (whatever it said), 2 bad file, 3 Windows text recognition
     is not available here, 1 it failed.
     """
@@ -560,7 +595,9 @@ def check_screenshot(path: str | None) -> int:
             text = loop.run_until_complete(_recognize(engine, px, w2, h2))
             ms = round((time.perf_counter() - began) * 1000)
             seen = read_debug_text(text)
+            pos = position.body_position(text, places) if seen["block"] else None
             return {"box": which, "scale": used, "prepared": prep, "ms": ms, "size": [w2, h2],
+                    "position": {k: pos[k] for k in ("body", "lat", "lon", "alt", "checked")} if pos else None,
                     "lines": len([x for x in text.splitlines() if x.strip()]), "block": seen["block"], "zones": seen["zones"][:6],
                     "location": seen["location"] or seen["lz"], "place": reader.place_of(seen) if seen["block"] else None, "text": text}
 
@@ -576,6 +613,9 @@ def check_screenshot(path: str | None) -> int:
         reader.look(best["text"], size=tuple(best["size"]), scale=best["scale"], ms=best["ms"], prep=best["prepared"])   # a place counts after two readings that agree
         snap = reader.tracker.snapshot()
         kept, others = _place_lines(best["text"], places)
+        # The exact position: what this way of reading gave, and how many of the ways gave one.
+        out["position"] = best["position"]
+        out["position_ways"] = sum(1 for x in looks if x["position"])
         out.update({"ok": True, **{k: best[k] for k in ("box", "scale", "prepared", "ms", "size", "lines", "block", "zones", "location", "place")},
                     "place_name": places.name_of(best["place"]) if best["place"] else None,
                     "confidence": snap["confidence"] if snap else None, "read": kept, "other_lines": others})

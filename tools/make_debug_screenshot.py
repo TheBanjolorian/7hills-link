@@ -23,12 +23,26 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
+# The made-up spot the block describes: on Yela (radius 313 km), 20 degrees south and 148
+# degrees west, on ground 500 m above the radius, eyes 1.7 m above the ground. The build
+# checks that the exe reads this position back from the picture (position.py).
+SPOT = {"lat": -20.0, "lon": -148.0, "radius": 313000.0, "elevation": 500.0, "altitude": 1.7}
+
+
+def _spot_xyz() -> tuple[float, float, float]:
+    import math
+    r = SPOT["radius"] + SPOT["elevation"] + SPOT["altitude"]
+    la, lo = math.radians(SPOT["lat"]), math.radians(SPOT["lon"])
+    return r * math.cos(la) * math.cos(lo), r * math.cos(la) * math.sin(lo), r * math.sin(la)
+
+
+_X, _Y, _Z = _spot_xyz()
 BLOCK = [
     ("CamDir:    4    0 -112 FOV: 84 Focal: 0.10 FStop: 64.0", "w"),
     ("Zone: ObjectContainer-000 Pos: 1.00m -2.00m -3.00m", "w"),
-    ("Zone: OOC_Stanton_2c_Yela Pos: -500.0000km 300.0000km -2000.00m", "w"),
-    ("Zone: SolarSystem_926344131032 Pos: -19000000.0000km -2600000.0000km -2000.00m", "w"),
-    ("Zone: Root Pos: -19000000.0000km -2600000.0000km -2000.00m", "w"),
+    (f"Zone: OOC_Stanton_2c_Yela Pos: {_X / 1000:.4f}km {_Y / 1000:.4f}km {_Z / 1000:.4f}km", "w"),
+    (f"Zone: SolarSystem_926344131032 Pos: -19000000.0000km -2600000.0000km {_Z / 1000:.4f}km", "w"),
+    (f"Zone: Root Pos: -19000000.0000km -2600000.0000km {_Z / 1000:.4f}km", "w"),
     ("FPS 53.2 [51..54], - 18.8ms [18.5ms]", "y"),
     ("Session: 00000000-0000-0000-0000-000000000000", "w"),
     ("ShardId: pub_euw1b_00000000_000", "w"),
@@ -48,7 +62,9 @@ BLOCK = [
     ("VRAM Demoted: 3113, OSBudget: 15569 MB", "o"),
     ("Current player location : GrimHEX  (LZ : GrimHEX)", "w"),
     ("Planet:OOC_Stanton_2c_Yela (working) (Load Complete)", "w"),
-    ("CamPos Planet Zone: -500000.000000 300000.000000 -2000.000000", "w"),
+    (f"CamPos Planet Zone: {_X:.6f} {_Y:.6f} {_Z:.6f}", "w"),
+    (f"Radius: {SPOT['radius']:.6f} ElevationUnderCam: {SPOT['elevation']:.6f} Altitude {SPOT['altitude']:.6f}", "w"),
+    ("XYPos: -100000.000000 50000.000000 Page: 0 (-X)", "w"),
 ]
 COLOURS = {"w": (235, 235, 235), "y": (232, 214, 96), "o": (236, 150, 60)}
 TEXT_PX, LINE_PX = 12, 13

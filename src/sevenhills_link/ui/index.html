@@ -206,6 +206,7 @@
       <p class="err" id="pathErr"></p>
       <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn outline small" onclick="call('rescan')">Scan again</button></div>
       <div class="srow" style="margin-top:10px"><div class="grow"><div>Place from the screen</div><div class="dim" style="font-size:12px">While you share Full and the game window is in front, the debug text in the top-right corner (<span class="mono">r_displayinfo 3</span> in the game console) is read on this PC. Only the place goes to 7Net.</div></div><button class="btn outline small" id="scrBtn" onclick="toggleScreenTest()">Test screen reading</button></div>
+      <div class="srow" style="margin-top:10px"><div class="grow"><div>Share exact position</div><div class="dim" style="font-size:12px">Off unless you turn it on. With the debug text on screen, your position on a planet or moon (latitude, longitude, height) is worked out on this PC and sent with your place, so the map can show where you are and not only which place you are at. Seen by the same people who see your place: your party and, while you share Full, Org Command. Only the latest position is kept.</div></div><button class="switch" id="prefPos" onclick="togglePref('share_position')" aria-label="Share exact position"><span></span></button></div>
       <div class="mono hidden" id="scrReport" style="font-size:12px;line-height:1.6;margin-top:8px;padding:10px 12px;border:1px solid #2a2a2a;border-radius:6px;white-space:pre-wrap;word-break:break-word"></div>
     </div>
 
@@ -286,7 +287,7 @@
     if (open && typeof section === 'string') $(section).scrollIntoView({ block: 'start' })
   }
   // Settings → Game → Test screen reading: what the last look at the game's corner found.
-  // It stays on this PC; only the place id ever goes to 7Net.
+  // It stays on this PC; the place id goes to 7Net, and the position only with Share exact position on.
   let screenTestOpen = false
   function toggleScreenTest() { screenTestOpen = !screenTestOpen; if (S) renderScreenTest(S) }
   function screenTestText(s) {
@@ -316,6 +317,10 @@
     lines.push('Debug text: found · zones: ' + (l.zones || []).join(', '))
     if (l.location) lines.push('Location line: ' + l.location)
     lines.push(l.place ? 'Place: ' + (l.place_name || l.place) + ' (' + l.place + ')' : 'Place: none of these names is on the place list yet')
+    const p = l.position
+    const deg = (v, pos, neg) => Math.abs(v).toFixed(3) + '° ' + (v < 0 ? neg : pos)
+    lines.push(p ? 'Position: ' + deg(p.lat, 'N', 'S') + ', ' + deg(p.lon, 'E', 'W') + ', ' + (p.alt >= 1000 ? (p.alt / 1000).toFixed(1) + ' km' : p.alt + ' m') + ' above the radius · checked against: ' + (p.checked || []).join(', ') + ' · ' + (s.prefs && s.prefs.share_position ? 'shared' : 'not shared (Share exact position is off)')
+      : 'Position: none that checks out on this look (it needs the planet\'s Zone line and the Radius line, both read without a wrong digit)')
     return lines.join('\n')
   }
   function renderScreenTest(s) {
@@ -452,7 +457,7 @@
     show('shareLinkHint', !s.linked)
 
     const pr = s.prefs || {}
-    setSwitch('prefStart', pr.start_with_windows); setSwitch('prefTray', pr.tray); setSwitch('prefMusic', pr.play_on_start)
+    setSwitch('prefStart', pr.start_with_windows); setSwitch('prefTray', pr.tray); setSwitch('prefMusic', pr.play_on_start); setSwitch('prefPos', pr.share_position)
     $('prefStart').disabled = !s.can_autostart
     const linux = String(s.platform || '').startsWith('linux')
     $('startLabel').textContent = linux ? 'Start when you log in' : 'Start with Windows'

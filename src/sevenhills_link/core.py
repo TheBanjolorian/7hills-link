@@ -202,6 +202,8 @@ class Core:
         self.gamelog: location.GameLogFollower | None = None
         # The exact place from the r_displayinfo text on screen, while sharing Full (see screen.py).
         self.screen = screen.ScreenReader(self.tracker, self.tracker.places)
+        # The exact position is sent only when the member turned it on (Settings → Game).
+        self.tracker.share_position = self.prefs.get("share_position")
         self.screen.start()
         # What the player is doing there, from the telemetry (see situation.py).
         self.steady = situation.Steady()
