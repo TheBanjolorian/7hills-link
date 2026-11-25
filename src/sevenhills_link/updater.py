@@ -23,6 +23,7 @@ import os
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -64,9 +65,31 @@ def _get(url: str, timeout: float = 15.0) -> bytes:
         return r.read()
 
 
+def _latest_via_web() -> dict | None:
+    """Without the API (rate limited to 60 calls an hour per address): github.com's
+    /releases/latest redirects to /releases/tag/vX.Y.Z; the checksum comes from the
+    7HillsLink.exe.sha256 file the build uploads."""
+    url = f"https://github.com/{REPO}/releases/latest"
+    req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": f"7HillsLink/{__version__}"})
+    with urllib.request.urlopen(req, timeout=15) as r:
+        final = r.geturl()
+    if (urllib.parse.urlparse(final).hostname or "") != "github.com" or "/releases/tag/" not in final:
+        raise UpdateError("Could not read the latest release")
+    tag = urllib.parse.unquote(final.rsplit("/releases/tag/", 1)[1]).strip("/")
+    if not is_newer(tag):
+        return None
+    base = f"https://github.com/{REPO}/releases/download/{urllib.parse.quote(tag)}/"
+    return {"version": tag.lstrip("vV"), "url": base + ASSET, "sha256": None, "sha256_url": base + ASSET + ".sha256", "size": None}
+
+
 def check() -> dict | None:
     """{version, url, sha256 or None, sha256_url or None, notes} for a newer release, else None."""
-    data = json.loads(_get(API))
+    try:
+        data = json.loads(_get(API))
+    except urllib.error.HTTPError as e:
+        if e.code in (403, 429):
+            return _latest_via_web()
+        raise
     tag = data.get("tag_name") or ""
     if data.get("draft") or data.get("prerelease") or not is_newer(tag):
         return None

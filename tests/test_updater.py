@@ -111,3 +111,26 @@ def test_install_to_rolls_back(tmp_path, monkeypatch):
     assert rc == 2 and target.read_bytes() == b"old"
     assert started[-1] == (b"old", ())
     assert "restoring the old one" in log
+
+
+def test_rate_limited_api_falls_back_to_the_release_page(monkeypatch):
+    import urllib.error
+    from sevenhills_link import updater
+
+    def refuse(url, timeout=15.0):
+        raise urllib.error.HTTPError(url, 403, "rate limit exceeded", None, None)
+
+    class Resp:
+        def __enter__(self):
+            return self
+        def __exit__(self, *a):
+            return False
+        def geturl(self):
+            return "https://github.com/TheBanjolorian/7hills-link/releases/tag/v99.0.0"
+
+    monkeypatch.setattr(updater, "_get", refuse)
+    monkeypatch.setattr(updater.urllib.request, "urlopen", lambda req, timeout=15: Resp())
+    info = updater.check()
+    assert info["version"] == "99.0.0"
+    assert info["url"].endswith("/releases/download/v99.0.0/7HillsLink.exe")
+    assert info["sha256_url"].endswith("7HillsLink.exe.sha256") and info["sha256"] is None
