@@ -62,6 +62,47 @@ def test_what_ocr_makes_of_it_still_gives_the_moon():
     assert len(read_debug_text(AS_READ_SMALL)["zones"]) == 4       # "CamPos Planet Zone:" is not a zone line
 
 
+# What Windows' own OCR made of the first drawn test picture in the build (a face with a
+# slashed zero, enlarged twice): zeros as "ø", "Yela" as "YeIa", and three zone lines broken
+# in two, one of them with "Zone:" left on a line of its own.
+AS_READ_WINDOWS = """Zone:
+CamDir:
+4
+Ø -112 FOV: 84 Focal: ø.lø FStop: 64.Ø
+Zone: ObjectContainer-øøø Pos: I.ØØm -2.ØØm -3.00m
+Zone: OOC_Stanton_2c_YeIa Pos. -
+• søø.øøøøkm 3øø.øøøøkm -2ØØØ.ØØm
+SolarSystem_926344131Ø32 Pos: -19øøøøøø.øøøøkm -26øøøøø.øøøøkm -2ØØØ.ØØm
+Zone: Root Pos. -
+• 19øøøøøø.øøøøkm -26øøøøø.øøøøkm -2ØØØ.ØØm
+Graphics Renderer : Vulkan (FSR AA)
+Current player location : GrimHEX (LZ : GrimHEX)
+Planet:OOC_Stanton_2c_Ye1a (working) (Load Complete)
+Cam os Planet Zone.
+• -søøøøø.øøøøøø 3øøøøø.øøøøøø -2øøø.øøøøøø"""
+
+
+def test_what_windows_ocr_made_of_it_gives_the_moon_too():
+    seen = read_debug_text(AS_READ_WINDOWS)
+    # The line that lost its "Zone:" still counts; the lone "Zone:" and "Planet Zone." do not.
+    assert seen["zones"] == ["ObjectContainer-øøø", "OOC_Stanton_2c_YeIa", "SolarSystem_926344131Ø32", "Root"]
+    assert seen["location"] == "GrimHEX"
+    assert reader().place_from_text(AS_READ_WINDOWS) == "stanton/crusader/yela"       # by "Stanton 2c", whatever became of the name
+
+
+def test_a_zone_line_broken_in_two_still_counts_once():
+    assert read_debug_text("Zone: OOC_Stanton_2b_Daymar\nPos: 1.0km 2.0km 3.0km\nZone:\nRoot Pos: 1.0km 2.0km 3.0km")["zones"] == ["OOC_Stanton_2b_Daymar", "Root"]
+    # Not zone lines: a word before "Pos" that is no zone name, and "Zone:" followed by numbers.
+    assert read_debug_text("Camera Pos: 1 2 3\nZone: 12.5 13.5\nSomething Zone: here and there")["zones"] == []
+
+
+def test_the_bracket_before_lz_may_be_misread():
+    for line in ("Current player location : Lorville  (LZ : Lorville)", "Current player location : Lorville [LZ : Lorville)",
+                 "Current player location : Lorville {LZ ; Lorville}", "Current player l0cation: Lorville (LZ: Lorville"):
+        seen = read_debug_text(block(line))
+        assert (seen["location"], seen["lz"]) == ("Lorville", "Lorville"), line
+
+
 def test_only_the_debug_block_counts():
     r = reader()
     # A mission text or a notice in the top-right corner, with no debug text on screen.
@@ -172,18 +213,45 @@ def test_enlarging_keeps_the_picture_and_the_byte_order():
     assert out[0] > 200 and out[2] < 60            # left edge still blue (B first)
     assert out[(w - 1) * 4 + 2] > 200 and out[(w - 1) * 4] < 60    # right edge still red
     # Too large for the OCR: left as it is.
-    assert _enlarge(pixels, 2, 1, 3) == (pixels, 2, 1, 1)
+    assert _enlarge(pixels, 2, 1, 3, scale=2, prep="none") == (pixels, 2, 1, 1)
+    # Three times does not fit but twice does.
+    assert _enlarge(pixels, 2, 1, 5, scale=3, prep="none")[1:] == (4, 2, 2)
+
+
+def test_the_corner_that_is_read_is_never_smaller_than_the_block():
+    from sevenhills_link.screen import _corner_box
+    assert _corner_box(0, 0, 2560, 1440) == (1408, 0, 2560, 576)            # 45 % × 40 % of the window
+    assert _corner_box(100, 50, 2020, 1130) == (1156, 50, 2020, 482)        # a 1920 × 1080 window that is not at 0, 0
+    assert _corner_box(0, 0, 1280, 720) == (560, 0, 1280, 380)              # small window: the text is as large, so 720 × 380
+    assert _corner_box(0, 0, 600, 300) == (0, 0, 600, 300)                  # never outside the window
+
+
+def test_soft_makes_bright_text_white_on_black_whatever_its_colour():
+    pytest.importorskip("PIL")
+    # BGRX: yellow text, orange text, a dim blue wall, a dark wall, white text, a mid-grey edge.
+    px = lambda r, g, b: bytes([b, g, r, 0])
+    pixels = px(232, 214, 96) + px(236, 150, 60) + px(20, 40, 85) + px(12, 12, 12) + px(235, 235, 235) + px(140, 140, 140)
+    out, w, h, scale = _enlarge(pixels, 6, 1, 10000, scale=1, prep="soft")
+    assert (w, h, scale) == (6, 1, 1)
+    grey = [out[i * 4] for i in range(6)]
+    assert all(out[i * 4] == out[i * 4 + 1] == out[i * 4 + 2] for i in range(6))      # no colour left
+    assert grey[0] == grey[1] == grey[4] == 255 and grey[2] == grey[3] == 0 and 100 < grey[5] < 160
+    inv, *_ = _enlarge(pixels, 6, 1, 10000, scale=1, prep="soft_inv")
+    assert [inv[i * 4] for i in range(6)] == [255 - v for v in grey]
+    # Enlarged too: the size follows, and the text end is still the bright one.
+    big, w, h, scale = _enlarge(pixels, 6, 1, 10000, scale=3, prep="soft")
+    assert (w, h, scale) == (18, 3, 3) and big[0] == 255 and big[10 * 4] == 0
 
 
 # ---------------------------------------------------------------- 7HillsLink.exe --screen-test
 
 def _screen_test(monkeypatch, tmp_path, picture, text=BLOCK, engine=True):
-    """check_screenshot with the two Windows calls replaced; returns (exit code, the JSON it wrote)."""
+    """check_screenshot with the two Windows calls replaced; returns (exit code, the JSON it wrote, the reads)."""
     import json
     from sevenhills_link import screen
 
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
-    seen = {}
+    seen = []
 
     class Engine:
         max_image_dimension = 10000
@@ -194,8 +262,8 @@ def _screen_test(monkeypatch, tmp_path, picture, text=BLOCK, engine=True):
         return Engine()
 
     async def recognize(_engine, pixels, w, h):
-        seen["bytes"], seen["size"] = len(pixels), (w, h)
-        return text
+        seen.append({"bytes": len(pixels), "size": (w, h)})
+        return text(len(seen)) if callable(text) else text
 
     monkeypatch.setattr(screen, "_ocr_engine", engine_or_not)
     monkeypatch.setattr(screen, "_language_of", lambda e: "en-US")
@@ -213,20 +281,59 @@ def _picture(tmp_path, size=(2000, 1000)):
 
 
 def test_screen_test_reads_a_saved_screenshot_the_way_the_client_reads_the_screen(monkeypatch, tmp_path, capsys):
+    from sevenhills_link import screen
     code, out, seen = _screen_test(monkeypatch, tmp_path, _picture(tmp_path))
     assert code == 0 and out["ok"] is True and out["language"] == "en-US"
-    # The top-right corner (45 % × 40 % of the picture), enlarged twice, four bytes a pixel.
-    assert seen["size"] == (1800, 800) and seen["bytes"] == 1800 * 800 * 4
-    assert out["size"] == [1800, 800] and out["scale"] == 2
+    # First the client's own way: the top-right corner (45 % × 40 % of the picture), enlarged, four bytes a pixel.
+    k = screen.SCALE
+    assert seen[0]["size"] == (900 * k, 400 * k) and seen[0]["bytes"] == 900 * k * 400 * k * 4
+    assert out["size"] == [900 * k, 400 * k] and out["scale"] == k and out["prepared"] == screen.PREP and isinstance(out["ms"], int)
     assert out["block"] is True and out["place"] == "stanton/crusader/yela" and out["place_name"] == "Yela"
     assert out["confidence"] == "near"                  # a moon, not the station: never "exact"
     assert '"place": "stanton/crusader/yela"' in capsys.readouterr().out
+    # Then every other way to prepare the corner, each read once and judged the same way.
+    assert [(t["scale"], t["prepared"]) for t in out["tried"]] == screen.VARIANTS and len(seen) == 1 + len(screen.VARIANTS)
+    assert {s["size"] for s in seen[1:]} == {(900, 400), (1800, 800), (2700, 1200)}
+    assert all(t["place"] == "stanton/crusader/yela" and t["location"] == "GrimHEX" and len(t["zones"]) == 4 for t in out["tried"])
 
 
-def test_screen_test_writes_down_no_position(monkeypatch, tmp_path):
-    _, out, _ = _screen_test(monkeypatch, tmp_path, _picture(tmp_path))
+def test_screen_test_shows_which_way_reads_best(monkeypatch, tmp_path):
+    from sevenhills_link import screen
+    # The OCR finds the block only in the last three reads (enlarged three times).
+    n = 1 + len(screen.VARIANTS)
+    code, out, _ = _screen_test(monkeypatch, tmp_path, _picture(tmp_path), text=lambda i: BLOCK if i > n - 3 else "Zcne: nothing readable")
+    assert code == 0 and out["block"] is False and out["place"] is None
+    assert [t["place"] for t in out["tried"]] == [None] * 6 + ["stanton/crusader/yela"] * 3
+
+
+def test_screen_test_skips_the_sizes_the_ocr_does_not_take(monkeypatch, tmp_path):
+    from sevenhills_link import screen
+    code, out, seen = _screen_test(monkeypatch, tmp_path, _picture(tmp_path, size=(8000, 5000)))     # corner 3600 × 2000
+    assert code == 0 and {t["scale"] for t in out["tried"]} == {1, 2}
+    assert max(s["size"][0] for s in seen) == 7200
+
+
+def test_screen_test_writes_down_no_position_session_or_server(monkeypatch, tmp_path):
+    full = BLOCK + "\nSession: 12345678-abcd-ef01-2345-6789abcdef01\nShardId: pub_euw1b_13165946_020\nServer: pub-euw1b-sc-alpha-4100-game-128, restarts 0"
+    _, out, _ = _screen_test(monkeypatch, tmp_path, _picture(tmp_path), text=full)
     assert any("OOC_Stanton_2c_Yela" in line for line in out["read"])      # the words are kept
-    assert "500.0000" not in str(out) and "19000000" not in str(out) and "2000.00" not in str(out)
+    assert any("GrimHEX" in line for line in out["read"])
+    text = str(out)
+    assert "500.0000" not in text and "19000000" not in text and "2000.00" not in text and "500000" not in text
+    assert "12345678" not in text and "pub_euw1b" not in text and "sc-alpha" not in text
+    assert out["other_lines"] >= 5                      # counted, not kept
+
+
+def test_numbers_are_taken_out_also_when_the_ocr_garbled_them():
+    from sevenhills_link.screen import _no_numbers, _place_lines
+    assert _no_numbers("Zone: OOC_Stanton_2c_Yela Pos: -568.6817km 383.6074km -2089.02m") == "Zone: OOC_Stanton_2c_Yela Pos: # # #"
+    assert _no_numbers("Zone: OOC Stanton 2c YeIa Pos. -") == "Zone: OOC Stanton 2c YeIa Pos. -"
+    assert _no_numbers("SolarSystem_926344131Ø32 Pos: -19øøøøøø.øøøøkm -26øøøøø.øøøøkm -2ØØØ.ØØm") == "SolarSystem_#Ø32 Pos: # # #"
+    assert _no_numbers("Zone: ObjectContainer-øøø Pos: I.ØØm -2.ØØm -3.00m") == "Zone: ObjectContainer-øøø Pos: # # #"
+    assert _no_numbers("CamPos Planet Zone: -568681.742251 383607 - 2089. 024816") == "CamPos Planet Zone: # # - # #"
+    kept, others = _place_lines(AS_READ_WINDOWS)
+    assert others == 7 and not any("km" in line for line in kept)      # the broken-off halves with the positions are not kept
+    assert "Current player location : GrimHEX (LZ : GrimHEX)" in kept
 
 
 def test_screen_test_says_when_the_debug_text_is_not_there(monkeypatch, tmp_path):

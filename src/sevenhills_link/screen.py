@@ -43,12 +43,19 @@ from .log import log
 POLL_S = 2.0
 STALE_S = 15.0           # a screen place older than this no longer counts
 CORNER = (0.55, 0.0, 1.0, 0.40)   # left, top, right, bottom of the window, as fractions
+MIN_BOX = (720, 380)     # the block is about 640 × 330 px on a real screen, whatever the window's size
 SCALE = 2                # the debug text is about 9 px high at 1440p: enlarged before it is read
+PREP = "none"            # how the corner is prepared for the OCR, see _enlarge: "none", "soft" or "soft_inv"
 
 # A zone line of the debug block. The OCR often loses the underscores and reads ":" as ";".
 RE_ZONE = re.compile(r"\bZ[o0]ne\s*[:;.]?\s*(\S.*?)\s+P[o0]s\b", re.I)
-# "Current player location : GrimHEX (LZ : GrimHEX)"
-RE_PLAYER_AT = re.compile(r"player\s+l[o0]cati[o0]n\s*[:;.]?\s*(.*?)\s*(?:\(\s*LZ\s*[:;.]?\s*(.*?)\s*\)?)?\s*$", re.I)
+# The OCR also breaks a zone line in two now and then, as Windows did with
+# "Zone:" / "SolarSystem_926344131032 Pos: ...": the half that still carries the name counts.
+_ZONE_NAME = r"((?=[\w-]*[_-])[A-Za-z][\w-]*|Root)"      # a name with "_" or "-" in it, as every zone but Root has
+RE_ZONE_NO_HEAD = re.compile(r"^\W*" + _ZONE_NAME + r"\s+P[o0]s\b", re.I)
+RE_ZONE_NO_TAIL = re.compile(r"\bZ[o0]ne\s*[:;.]\s*" + _ZONE_NAME + r"\W*$", re.I)
+# "Current player location : GrimHEX  (LZ : GrimHEX)"; the bracket is read as "[" or "{" at times.
+RE_PLAYER_AT = re.compile(r"player\s+l[o0]cati[o0]n\s*[:;.]?\s*(.*?)\s*(?:[(\[{]\s*LZ\s*[:;.]?\s*(.*?)\s*[)\]}]?)?\s*$", re.I)
 MIN_ZONE_LINES = 2       # fewer: not the debug block
 
 IS_WINDOWS = sys.platform == "win32"
@@ -65,7 +72,7 @@ def read_debug_text(text: str | None) -> dict:
     lz: str | None = None
     for line in (text or "").splitlines():
         line = line.strip()
-        m = RE_ZONE.search(line)
+        m = RE_ZONE.search(line) or RE_ZONE_NO_HEAD.search(line) or RE_ZONE_NO_TAIL.search(line)
         if m:
             zones.append(m.group(1).strip()[:60])
             continue
@@ -176,27 +183,26 @@ class ScreenReader:
             if self.status not in ("reading", "no_text", "error"):
                 self.status = "idle"
             return
-        l, t, r, b = rect
-        w, h = r - l, b - t
-        box = (l + int(w * CORNER[0]), t + int(h * CORNER[1]), l + int(w * CORNER[2]), t + int(h * CORNER[3]))
         try:
-            pixels, bw, bh = _grab(box)
+            pixels, bw, bh = _grab(_corner_box(*rect))
         except Exception as e:  # noqa: BLE001
             return self._fail("capturing the screen", e)
         try:
+            began = time.perf_counter()
             pixels, bw, bh, scale = _enlarge(pixels, bw, bh, _max_side(self._engine))
             text = loop.run_until_complete(_recognize(self._engine, pixels, bw, bh))
+            ms = round((time.perf_counter() - began) * 1000)
         except Exception as e:  # noqa: BLE001
             return self._fail("reading the text", e)
         self.error = None
-        self.look(text, size=(bw, bh), scale=scale)
+        self.look(text, size=(bw, bh), scale=scale, ms=ms)
 
-    def look(self, text: str | None, size: tuple[int, int] | None = None, scale: int = 1) -> str | None:
+    def look(self, text: str | None, size: tuple[int, int] | None = None, scale: int = 1, ms: int | None = None) -> str | None:
         """One reading of the corner: update the status, the last look and, after two that
         agree, the place. Returns the place this reading names (also used by the tests)."""
         seen = read_debug_text(text)
         pid = self.place_of(seen) if seen["block"] else None
-        self.last = {"at": time.time(), "size": list(size) if size else None, "scale": scale,
+        self.last = {"at": time.time(), "size": list(size) if size else None, "scale": scale, "ms": ms,
                      "lines": len([x for x in (text or "").splitlines() if x.strip()]),
                      "block": seen["block"], "zones": seen["zones"][:6], "location": seen["location"] or seen["lz"],
                      "place": pid, "error": None}
@@ -246,6 +252,15 @@ class ScreenReader:
         return self.place_of(seen) if seen["block"] else None
 
 
+def _corner_box(l: int, t: int, r: int, b: int) -> tuple[int, int, int, int]:
+    """The part of a window or picture the debug block sits in: its top-right corner, CORNER
+    of it, and at least MIN_BOX pixels, because the text is as large in a small window."""
+    w, h = r - l, b - t
+    bw = min(w, max(w - int(w * CORNER[0]), MIN_BOX[0]))
+    bh = min(h, max(int(h * CORNER[3]), MIN_BOX[1]))
+    return r - bw, t, r, t + bh
+
+
 # ---------------------------------------------------------------- Windows bits
 
 def _game_rect() -> tuple[int, int, int, int] | None:
@@ -279,20 +294,46 @@ def _grab(box: tuple[int, int, int, int]) -> tuple[bytes, int, int]:
         return bytes(shot.bgra), shot.width, shot.height
 
 
-def _enlarge(pixels: bytes, w: int, h: int, max_side: int) -> tuple[bytes, int, int, int]:
-    """The capture enlarged SCALE times (BGRA in, BGRA out), or as it is when Pillow is
-    missing or the result would be larger than the OCR takes."""
-    if SCALE <= 1 or w * SCALE > max_side or h * SCALE > max_side:
+SOFT_FROM, SOFT_TO = 90, 190    # "soft": darker than the first is black, brighter than the second white
+
+
+def _enlarge(pixels: bytes, w: int, h: int, max_side: int, scale: int | None = None, prep: str | None = None) -> tuple[bytes, int, int, int]:
+    """The capture made ready for the OCR (BGRA in, BGRA out): enlarged `scale` times and
+    prepared as `prep` says. Returned as it is when Pillow is missing, and never larger
+    than the OCR takes.
+
+    prep "none": only enlarged. "soft": the brightest of the three colours of each pixel,
+    with everything dark made black and everything bright white, so the white, yellow and
+    orange debug text stands on a flat black background instead of on the game's picture.
+    "soft_inv": the same, black text on white.
+    """
+    scale = SCALE if scale is None else scale
+    prep = PREP if prep is None else prep
+    while scale > 1 and (w * scale > max_side or h * scale > max_side):
+        scale -= 1
+    if scale <= 1 and prep == "none":
         return pixels, w, h, 1
     try:
-        from PIL import Image  # type: ignore
+        from PIL import Image, ImageChops  # type: ignore
     except Exception:  # noqa: BLE001
         return pixels, w, h, 1
+    bicubic = getattr(Image, "Resampling", Image).BICUBIC
     # Read as three colours plus an unused byte, never as RGBA: a capture's fourth byte is
     # often 0, and Pillow would weigh every pixel by that "alpha" and return a black picture.
     img = Image.frombuffer("RGB", (w, h), pixels, "raw", "BGRX", 0, 1)
-    big = img.resize((w * SCALE, h * SCALE), getattr(Image, "Resampling", Image).BICUBIC)
-    return big.tobytes("raw", "BGRX"), w * SCALE, h * SCALE, SCALE
+    if prep == "none":
+        big = img.resize((w * scale, h * scale), bicubic)
+    else:
+        r, g, b = img.split()
+        light = ImageChops.lighter(ImageChops.lighter(r, g), b)
+        if scale > 1:
+            light = light.resize((w * scale, h * scale), bicubic)
+        span = SOFT_TO - SOFT_FROM
+        light = light.point([0 if v <= SOFT_FROM else 255 if v >= SOFT_TO else round((v - SOFT_FROM) * 255 / span) for v in range(256)])
+        if prep == "soft_inv":
+            light = ImageChops.invert(light)
+        big = Image.merge("RGB", (light, light, light))
+    return big.tobytes("raw", "BGRX"), w * scale, h * scale, scale
 
 
 def _ocr_engine():
@@ -339,27 +380,50 @@ async def _recognize(engine, pixels: bytes, w: int, h: int) -> str:
 
 # ---------------------------------------------------------------- 7HillsLink.exe --screen-test [screenshot]
 
-RE_NUMBER = re.compile(r"-?\d+(?:\s?[.,]\s?\d+)+(?:\s*k?m\b)?|-?\d{4,}")
+RE_PLACE_LINE = re.compile(r"z[o0]ne|\bp[o0]s\b|player|l[o0]cati[o0]n|\bLZ\b|planet|container|system", re.I)
+RE_DIGITS = re.compile(r"[0-9øØ]")       # Windows reads a slashed zero as "ø"
+VARIANTS = [(scale, prep) for scale in (1, 2, 3) for prep in ("none", "soft", "soft_inv")]
 
 
 def _no_numbers(line: str) -> str:
-    """A read line with its decimals and long numbers replaced by "#": the words are what a
-    test needs, and the numbers in the debug block are positions."""
-    return RE_NUMBER.sub("#", line)[:120]
+    """A read line without its numbers: every word that holds a decimal point or is made of
+    digits becomes "#", and long runs of digits inside a name too. The words are what a
+    test needs; the numbers in the debug block are positions."""
+    out = []
+    for word in line.split():
+        if (RE_DIGITS.search(word) and re.search(r"[.,]", word)) or re.fullmatch(r"\W*[0-9øØ]{3,}[A-Za-z]{0,2}\W*", word):
+            out.append("#")
+        else:
+            out.append(re.sub(r"\d{4,}", "#", word))
+    return " ".join(out)[:120]
+
+
+def _place_lines(text: str) -> tuple[list[str], int]:
+    """(the read lines that bear on the place, numbers taken out; how many other lines).
+    The other lines of the debug block (session, shard, server, times) are nobody's
+    business and are only counted."""
+    lines = [x.strip() for x in (text or "").splitlines() if x.strip()]
+    kept = [_no_numbers(x) for x in lines if RE_PLACE_LINE.search(x)]
+    return kept[:30], len(lines) - len(kept)
+
 
 def check_screenshot(path: str | None) -> int:
     """Read the debug text exactly as the running client reads the screen (same corner, same
-    enlarging, same Windows OCR call, on a worker thread), and say what it found.
+    preparation, same Windows OCR call, on a worker thread), and say what it found.
 
     With a picture: a saved screenshot of the game window. For checking text recognition on a
     PC without the game, and for testing the built exe. Without one: the top-right corner of
     the main screen as it is right now, whatever is in front (for a look with the game up,
     apart from the sharing setting and the "game window in front" rule).
 
+    It also reads the same corner in the other ways it could be prepared (`tried`: enlarged
+    one, two or three times, as it is or with the background flattened) and says how each
+    went and how long it took, so the way the client uses can be chosen from real screens.
+
     Prints one JSON object and writes the same to screen-test.json in the data folder (a
-    windowed exe has no console to print to unless its output is piped). It holds the lines
-    that were read with their numbers taken out, so no position is written down, and it
-    goes nowhere.
+    windowed exe has no console to print to unless its output is piped). Of what was read
+    it holds only the lines that bear on the place, with their numbers taken out: no
+    position, session or server name is written down. It goes nowhere.
     Exit code: 0 the text was read (whatever it said), 2 bad file, 3 Windows text recognition
     is not available here, 1 it failed.
     """
@@ -381,16 +445,15 @@ def check_screenshot(path: str | None) -> int:
                 out["error"] = f"could not open the picture: {type(e).__name__}: {e}"
                 code = 2
                 return
-            w, h = img.size
-            crop = img.crop((int(w * CORNER[0]), int(h * CORNER[1]), int(w * CORNER[2]), int(h * CORNER[3])))
+            crop = img.crop(_corner_box(0, 0, *img.size))
             pixels, bw, bh = crop.tobytes("raw", "BGRX"), crop.width, crop.height    # what a screen capture hands over
         else:
             try:
                 import mss  # type: ignore
                 with mss.mss() as sct:
                     mon = sct.monitors[1]
-                l, t, w, h = mon["left"], mon["top"], mon["width"], mon["height"]
-                pixels, bw, bh = _grab((l + int(w * CORNER[0]), t + int(h * CORNER[1]), l + int(w * CORNER[2]), t + int(h * CORNER[3])))
+                l, t = mon["left"], mon["top"]
+                pixels, bw, bh = _grab(_corner_box(l, t, l + mon["width"], t + mon["height"]))
             except Exception as e:  # noqa: BLE001
                 out["error"] = f"capturing the screen failed: {type(e).__name__}: {e}"
                 return
@@ -402,24 +465,49 @@ def check_screenshot(path: str | None) -> int:
             code = 3
             return
         out["language"] = _language_of(engine)
+        loop = asyncio.new_event_loop()
+        limit = _max_side(engine)
+
+        def read(scale: int | None = None, prep: str | None = None) -> tuple[str, int, int, int, int]:
+            began = time.perf_counter()
+            px, w2, h2, used = _enlarge(pixels, bw, bh, limit, scale, prep)
+            text = loop.run_until_complete(_recognize(engine, px, w2, h2))
+            return text, w2, h2, used, round((time.perf_counter() - began) * 1000)
+
         try:
-            pixels, bw, bh, scale = _enlarge(pixels, bw, bh, _max_side(engine))
-            text = asyncio.new_event_loop().run_until_complete(_recognize(engine, pixels, bw, bh))
+            text, w2, h2, scale, ms = read()
         except Exception as e:  # noqa: BLE001
             out["error"] = f"reading the text failed: {type(e).__name__}: {e}"
             return
         places = Places.load()
         reader = ScreenReader(Tracker(places), places)
-        reader.look(text, size=(bw, bh), scale=scale)
-        reader.look(text, size=(bw, bh), scale=scale)       # a place counts after two readings that agree
+        reader.look(text, size=(w2, h2), scale=scale, ms=ms)
+        reader.look(text, size=(w2, h2), scale=scale, ms=ms)       # a place counts after two readings that agree
         last = reader.report()["last"] or {}
         snap = reader.tracker.snapshot()
-        out.update({"ok": True, "size": last.get("size"), "scale": last.get("scale"), "lines": last.get("lines"),
-                    "block": last.get("block"), "zones": last.get("zones"), "location": last.get("location"),
-                    "place": last.get("place"), "place_name": last.get("place_name"),
-                    "confidence": snap["confidence"] if snap else None,
-                    "read": [_no_numbers(x) for x in text.splitlines() if x.strip()][:40]})
+        kept, others = _place_lines(text)
+        out.update({"ok": True, "size": last.get("size"), "scale": last.get("scale"), "prepared": PREP, "ms": ms,
+                    "lines": last.get("lines"), "block": last.get("block"), "zones": last.get("zones"),
+                    "location": last.get("location"), "place": last.get("place"), "place_name": last.get("place_name"),
+                    "confidence": snap["confidence"] if snap else None, "read": kept, "other_lines": others})
         code = 0
+        # The other ways to prepare the corner, each read once.
+        tried = []
+        for s, prep in VARIANTS:
+            row: dict = {"scale": s, "prepared": prep}
+            try:
+                t2, w3, h3, used, ms2 = read(s, prep)
+            except Exception as e:  # noqa: BLE001
+                row["error"] = f"{type(e).__name__}: {e}"[:120]
+                tried.append(row)
+                continue
+            if used != s:
+                continue        # too large for the OCR at this scale
+            seen = read_debug_text(t2)
+            row.update({"ms": ms2, "lines": len([x for x in t2.splitlines() if x.strip()]), "zones": seen["zones"][:6],
+                        "location": seen["location"] or seen["lz"], "place": reader.place_of(seen) if seen["block"] else None})
+            tried.append(row)
+        out["tried"] = tried
 
     t = threading.Thread(target=work, name="screen-test")
     t.start()

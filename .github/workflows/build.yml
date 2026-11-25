@@ -55,8 +55,10 @@ jobs:
           Write-Host "version: $v"
       # The screen reading (screen.py) can only be tried on Windows, so the build does it: the exe
       # just made reads a drawn stand-in for a game screenshot with Windows' own text
-      # recognition, and then looks at this runner's screen. A missing OCR language on the
-      # runner is a warning; anything else that goes wrong stops the build.
+      # recognition, in the client's own way and in every other way the corner could be
+      # prepared (the log shows how each went), and then looks at this runner's screen.
+      # A missing OCR language on the runner is a warning; anything else that goes wrong
+      # stops the build.
       - name: Windows OCR language
         shell: pwsh
         continue-on-error: true
@@ -79,21 +81,30 @@ jobs:
             if (-not $p.HasExited) { $p | Stop-Process -Force; throw 'the screen test did not finish in three minutes' }
             $text = Get-Content $json -Raw -ErrorAction SilentlyContinue
             Write-Host "exit code $($p.ExitCode)"
-            Write-Host $text
             if (-not $text) { throw 'the exe wrote no screen-test.json' }
-            return [pscustomobject]@{ Code = $p.ExitCode; Result = ($text | ConvertFrom-Json) }
+            $r = $text | ConvertFrom-Json
+            # What the client's own way read, then every other way to prepare the corner, one line each.
+            $r | Select-Object ok, error, source, language, size, scale, prepared, ms, lines, block, location, place, confidence, other_lines | ConvertTo-Json -Compress | Write-Host
+            $r.read | ForEach-Object { Write-Host "   | $_" }
+            $r.tried | ForEach-Object { Write-Host ('   x{0} {1,-9} {2,5} ms  {3,2} lines  zones {4}  location [{5}]  place [{6}] {7}' -f $_.scale, $_.prepared, $_.ms, $_.lines, ($_.zones | Measure-Object).Count, $_.location, $_.place, $_.error) }
+            return [pscustomobject]@{ Code = $p.ExitCode; Result = $r }
           }
-          $shot = Join-Path $env:RUNNER_TEMP 'shot.png'
-          python tools/make_debug_screenshot.py $shot
-          $t = Invoke-ScreenTest @('--screen-test', "`"$shot`"")
-          if ($t.Code -eq 3 -and $t.Result.error -match 'no OCR language installed') {
-            Write-Host "::warning::Windows has no OCR language on this runner: the screen reading in the exe was NOT tried"
-            exit 0
+          # The same block at the two commonest screen sizes. The first must be read; the rest of the build is not held up by the second.
+          foreach ($size in @(@(2560, 1440), @(1920, 1080))) {
+            $shot = Join-Path $env:RUNNER_TEMP "shot-$($size[1]).png"
+            python tools/make_debug_screenshot.py $shot $size[0] $size[1]
+            $t = Invoke-ScreenTest @('--screen-test', "`"$shot`"")
+            if ($t.Code -eq 3 -and $t.Result.error -match 'no OCR language installed') {
+              Write-Host "::warning::Windows has no OCR language on this runner: the screen reading in the exe was NOT tried"
+              exit 0
+            }
+            if ($t.Code -ne 0 -or -not $t.Result.ok) { Write-Error "the screen test failed (exit code $($t.Code)): $($t.Result.error)"; exit 1 }
+            $why = if (-not $t.Result.block) { 'the debug block was not found in the picture' }
+              elseif ($t.Result.place -ne 'stanton/crusader/yela') { "the debug text was read as '$($t.Result.place)', not Yela" }
+              elseif ($t.Result.confidence -ne 'near') { "a moon from the screen must be 'near', got '$($t.Result.confidence)'" }
+            if ($why -and $size[1] -eq 1440) { Write-Error $why; exit 1 }
+            if ($why) { Write-Host "::warning::at $($size[0]) x $($size[1]): $why" }
           }
-          if ($t.Code -ne 0 -or -not $t.Result.ok) { Write-Error "the screen test failed (exit code $($t.Code)): $($t.Result.error)"; exit 1 }
-          if (-not $t.Result.block) { Write-Error 'the debug block was not found in the picture'; exit 1 }
-          if ($t.Result.place -ne 'stanton/crusader/yela') { Write-Error "the debug text was read as '$($t.Result.place)', not Yela"; exit 1 }
-          if ($t.Result.confidence -ne 'near') { Write-Error "a moon from the screen must be 'near', got '$($t.Result.confidence)'"; exit 1 }
           # The live path: capture this screen's corner with mss and read it. There is no game on
           # the runner, so no place is expected; a runner without a screen to capture is a warning.
           try { $live = Invoke-ScreenTest @('--screen-test') } catch { $live = [pscustomobject]@{ Code = -1; Result = [pscustomobject]@{ error = "$_" } } }

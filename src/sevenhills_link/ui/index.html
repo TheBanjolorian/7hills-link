@@ -307,7 +307,7 @@
     }
     const ago = l.ago < 90 ? l.ago + ' s ago' : Math.round(l.ago / 60) + ' min ago'
     if (l.error) { lines.push('Last look ' + ago + ' failed: ' + l.error); return lines.join('\n') }
-    lines.push('Last look ' + ago + (l.size ? ' · ' + l.size[0] + ' × ' + l.size[1] + ' px' + (l.scale > 1 ? ' (enlarged ×' + l.scale + ')' : '') : '') + ' · ' + l.lines + ' lines of text')
+    lines.push('Last look ' + ago + (l.size ? ' · ' + l.size[0] + ' × ' + l.size[1] + ' px' + (l.scale > 1 ? ' (enlarged ×' + l.scale + ')' : '') : '') + ' · ' + l.lines + ' lines of text' + (l.ms != null ? ' · read in ' + l.ms + ' ms' : ''))
     if (!l.block) {
       lines.push(l.lines ? 'Debug text: not found among them. Type r_displayinfo 3 in the game console; it sits in the top-right corner.'
         : 'No text read at all. If the game runs in exclusive fullscreen the capture can come out black: try borderless or windowed.')
