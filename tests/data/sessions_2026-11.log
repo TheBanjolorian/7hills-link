@@ -1,0 +1,480 @@
+<2026-11-21T18:23:04.398Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_320] locationId[-281470681677823] [Team_GameServices][GIM][Matchmaking]
+<2026-11-21T18:23:38.808Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [2026442305]. Location [0] -> [2026442305]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T18:23:49.344Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T18:23:49.765Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_P6_LEO] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T18:25:05.120Z> PHYSICS INSTANCE STATS BEGIN 1
+<2026-11-21T18:25:05.120Z> PHYSICS INSTANCE STATS END
+<2026-11-21T18:35:05.137Z> PHYSICS INSTANCE STATS BEGIN 2
+<2026-11-21T18:35:05.137Z> PHYSICS INSTANCE STATS END
+<2026-11-21T18:37:48.557Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Rough & Ready Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T18:39:55.398Z> PHYSICS INSTANCE STATS BEGIN 1
+<2026-11-21T18:39:55.399Z> PHYSICS INSTANCE STATS END
+<2026-11-21T18:40:09.623Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_320] locationId[-281470681677823] [Team_GameServices][GIM][Matchmaking]
+<2026-11-21T18:40:40.142Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [2026442305]. Location [0] -> [2026442305]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T18:40:53.617Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Rough & Ready Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T18:40:54.298Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_P6_LEO] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T18:47:49.853Z> PHYSICS INSTANCE STATS BEGIN 1
+<2026-11-21T18:47:49.853Z> PHYSICS INSTANCE STATS END
+<2026-11-21T18:47:57.130Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_320] locationId[-281470681677823] [Team_GameServices][GIM][Matchmaking]
+<2026-11-21T18:48:28.264Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [2026442305]. Location [0] -> [2026442305]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T18:48:39.516Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Rough & Ready Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T18:48:40.046Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_P6_LEO] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T18:49:51.414Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][37688] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point rs_ext_pyro-stan_jp1 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-21T18:49:51.414Z> [Notice] <Calculate Route> [ItemNavigation][CL][37688] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Ruin Station for route to destination rs_ext_pyro-stan_jp1 [Team_CGP4][QuantumTravel]
+<2026-11-21T18:50:15.372Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [2026442305] -> [0]. Location [2026442305] -> [3184339241]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T18:56:05.455Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_320] locationId[-281470681677823] [Team_GameServices][GIM][Matchmaking]
+<2026-11-21T18:56:26.019Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [0] -> [3184339241]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T18:56:27.121Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:02:47.284Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [3184339241] -> [3273347588]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:02:50.009Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered UEE Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:02:51.906Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][29076] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-21T19:02:53.669Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [639835600]. Location [3273347588] -> [639835600]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:02:53.672Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_JP_PyroStanton] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:03:03.122Z> PHYSICS INSTANCE STATS BEGIN 1
+<2026-11-21T19:03:03.122Z> PHYSICS INSTANCE STATS END
+<2026-11-21T19:05:04.126Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:05:04.127Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By TestPilot: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:09:45.669Z> PHYSICS INSTANCE STATS BEGIN 1
+<2026-11-21T19:09:45.669Z> PHYSICS INSTANCE STATS END
+<2026-11-21T19:09:57.704Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_320] locationId[-281470681677823] [Team_GameServices][GIM][Matchmaking]
+<2026-11-21T19:10:17.324Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [639835600]. Location [0] -> [639835600]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:10:18.427Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered UEE Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:10:18.904Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_JP_PyroStanton] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:15:41.497Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:15:42.874Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [639835600] -> [0]. Location [639835600] -> [694522860]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:15:43.486Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered UEE Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:15:48.088Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [639835600] -> [1547955914]. Location [694522860] -> [1547955914]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:15:48.089Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_JP_StantonPyro] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:15:54.677Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:15:57.041Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1547955914] -> [0]. Location [1547955914] -> [1902223495]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:16:06.867Z> [Notice] <Calculate Route> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Stanton System for route to destination PartyMemberMarker_900000000002 [Team_CGP4][QuantumTravel]
+<2026-11-21T19:16:10.204Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point PartyMemberMarker_900000000002 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-21T19:16:10.204Z> [Notice] <Calculate Route> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Stanton System for route to destination PartyMemberMarker_900000000002 [Team_CGP4][QuantumTravel]
+<2026-11-21T19:19:45.676Z> PHYSICS INSTANCE STATS BEGIN 2
+<2026-11-21T19:19:45.676Z> PHYSICS INSTANCE STATS END
+<2026-11-21T19:20:28.320Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1547955914] -> [0]. Location [1902223495] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:26:34.772Z> [Notice] <SHUDEvent_OnNotification> Added notification "PartyMember1 has started to QT to your current location.: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:29:45.697Z> PHYSICS INSTANCE STATS BEGIN 3
+<2026-11-21T19:29:45.697Z>   planet cells:  594 [16384] meshes:   89 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T19:29:45.697Z> PHYSICS INSTANCE STATS END
+<2026-11-21T19:39:45.710Z> PHYSICS INSTANCE STATS BEGIN 4
+<2026-11-21T19:39:45.710Z>   planet cells:  264 [16384] meshes:   70 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T19:39:45.710Z> PHYSICS INSTANCE STATS END
+<2026-11-21T19:49:45.719Z> PHYSICS INSTANCE STATS BEGIN 5
+<2026-11-21T19:49:45.719Z>   planet cells:  450 [16384] meshes:  102 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T19:49:45.719Z> PHYSICS INSTANCE STATS END
+<2026-11-21T19:54:50.175Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1547955914] -> [0]. Location [2610496815] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:57:20.816Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [0] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:57:20.860Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:57:20.948Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [3154860438] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:58:22.092Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [2610496815] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:59:22.592Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [0] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:59:22.632Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T19:59:22.660Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [3154860438] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T19:59:45.733Z> PHYSICS INSTANCE STATS BEGIN 6
+<2026-11-21T19:59:45.733Z>   planet cells:  505 [16384] meshes:  113 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T19:59:45.735Z> PHYSICS INSTANCE STATS END
+<2026-11-21T20:00:19.277Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [2610496815] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:01:16.567Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [0] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:01:16.615Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T20:01:16.690Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [3154860438] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:02:55.455Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [2610496815] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:04:05.009Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [0] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:04:05.054Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T20:04:05.579Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [3154860438] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:05:35.798Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [2610496815] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:06:43.719Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [0] -> [3154860438]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:06:43.763Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T20:06:44.325Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [3154860438] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:09:45.748Z> PHYSICS INSTANCE STATS BEGIN 7
+<2026-11-21T20:09:45.749Z>   planet cells:  434 [16384] meshes:   95 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T20:09:45.749Z> PHYSICS INSTANCE STATS END
+<2026-11-21T20:19:45.765Z> PHYSICS INSTANCE STATS BEGIN 8
+<2026-11-21T20:19:45.766Z>   planet cells:  302 [16384] meshes:   80 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T20:19:45.766Z> PHYSICS INSTANCE STATS END
+<2026-11-21T20:21:37.356Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [4019052551]. Location [2610496815] -> [4019052551]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:21:37.361Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[Outpost_OLP_Stanton2b_Lamina] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:21:42.664Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [4019052551] -> [0]. Location [4019052551] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:29:45.776Z> PHYSICS INSTANCE STATS BEGIN 9
+<2026-11-21T20:29:45.776Z>   planet cells:  255 [16384] meshes:   70 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T20:29:45.776Z> PHYSICS INSTANCE STATS END
+<2026-11-21T20:32:09.359Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T20:32:11.617Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T20:39:45.779Z> PHYSICS INSTANCE STATS BEGIN 10
+<2026-11-21T20:39:45.779Z>   planet cells:  146 [16384] meshes:   37 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T20:39:45.779Z> PHYSICS INSTANCE STATS END
+<2026-11-21T20:45:21.261Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T20:45:25.452Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [4019052551] -> [1882438059]. Location [2610496815] -> [1882438059]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:45:25.455Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[Stanton2b_ShubinMining_SCD1] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:46:31.810Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T20:46:33.067Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [0]. Location [1882438059] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T20:49:45.790Z> PHYSICS INSTANCE STATS BEGIN 11
+<2026-11-21T20:49:45.790Z>   planet cells:  179 [16384] meshes:   44 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T20:49:45.790Z> PHYSICS INSTANCE STATS END
+<2026-11-21T20:59:45.797Z> PHYSICS INSTANCE STATS BEGIN 12
+<2026-11-21T20:59:45.797Z>   planet cells:   83 [16384] meshes:   22 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T20:59:45.797Z> PHYSICS INSTANCE STATS END
+<2026-11-21T21:01:09.980Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T21:01:12.389Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T21:09:45.814Z> PHYSICS INSTANCE STATS BEGIN 13
+<2026-11-21T21:09:45.814Z>   planet cells:  152 [16384] meshes:   47 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T21:09:45.814Z> PHYSICS INSTANCE STATS END
+<2026-11-21T21:10:07.589Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point OOC_Stanton_4_Microtech as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-21T21:10:07.589Z> [Notice] <Calculate Route> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Daymar for route to destination OOC_Stanton_4_Microtech [Team_CGP4][QuantumTravel]
+<2026-11-21T21:10:08.177Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point OOC_Stanton_4_Microtech as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-21T21:10:08.177Z> [Notice] <Calculate Route> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Daymar for route to destination OOC_Stanton_4_Microtech [Team_CGP4][QuantumTravel]
+<2026-11-21T21:10:19.655Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [0]. Location [2610496815] -> [1902223495]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T21:14:49.732Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point OOC_Stanton_2_Crusader as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-21T21:14:49.732Z> [Notice] <Calculate Route> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Stanton System for route to destination OOC_Stanton_2_Crusader [Team_CGP4][QuantumTravel]
+<2026-11-21T21:19:45.829Z> PHYSICS INSTANCE STATS BEGIN 14
+<2026-11-21T21:19:45.829Z> PHYSICS INSTANCE STATS END
+<2026-11-21T21:20:25.825Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [0]. Location [1902223495] -> [2493660041]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T21:20:28.228Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-21T21:20:28.334Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Crusader Industries Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T21:20:50.984Z> [Notice] <Calculate Route> [ItemNavigation][CL][38248] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Crusader for route to destination PartyMemberMarker_900000000002 [Team_CGP4][QuantumTravel]
+<2026-11-21T21:26:42.766Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T21:26:47.228Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [0]. Location [2493660041] -> [1902223495]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T21:26:55.821Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [0]. Location [1902223495] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T21:29:45.831Z> PHYSICS INSTANCE STATS BEGIN 15
+<2026-11-21T21:29:45.831Z>   planet cells:  158 [16384] meshes:   44 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T21:29:45.831Z> PHYSICS INSTANCE STATS END
+<2026-11-21T21:39:45.880Z> PHYSICS INSTANCE STATS BEGIN 16
+<2026-11-21T21:39:45.880Z>   planet cells:  161 [16384] meshes:   44 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T21:39:45.880Z> PHYSICS INSTANCE STATS END
+<2026-11-21T21:43:48.496Z> [Notice] <SHUDEvent_OnNotification> Added notification "PartyMember3 has started to QT to your current location.: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T21:44:21.945Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember3: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T21:49:45.893Z> PHYSICS INSTANCE STATS BEGIN 17
+<2026-11-21T21:49:45.893Z>   planet cells:  214 [16384] meshes:   41 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T21:49:45.893Z> PHYSICS INSTANCE STATS END
+<2026-11-21T21:52:40.374Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember3: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T21:52:42.908Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember3: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T21:59:45.908Z> PHYSICS INSTANCE STATS BEGIN 18
+<2026-11-21T21:59:45.908Z>   planet cells:  332 [16384] meshes:   91 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T21:59:45.908Z> PHYSICS INSTANCE STATS END
+<2026-11-21T22:09:03.837Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [438795353]. Location [2610496815] -> [438795353]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:09:03.841Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[Outpost_OLP_Stanton2b_Attritus] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:09:45.900Z> PHYSICS INSTANCE STATS BEGIN 19
+<2026-11-21T22:09:45.900Z>   planet cells:  333 [16384] meshes:   68 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T22:09:45.900Z> PHYSICS INSTANCE STATS END
+<2026-11-21T22:10:42.388Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [438795353] -> [0]. Location [438795353] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:12:04.469Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [438795353] -> [3554465802]. Location [2610496815] -> [3554465802]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:12:04.473Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[Outpost_PAF_Stanton2b_Attritus_2] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:12:56.399Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember4: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:19:45.866Z> PHYSICS INSTANCE STATS BEGIN 20
+<2026-11-21T22:19:45.866Z>   planet cells:  334 [16384] meshes:   77 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T22:19:45.866Z> PHYSICS INSTANCE STATS END
+<2026-11-21T22:19:51.893Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3554465802] -> [0]. Location [3554465802] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:29:45.842Z> PHYSICS INSTANCE STATS BEGIN 21
+<2026-11-21T22:29:45.842Z>   planet cells:   77 [16384] meshes:   23 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T22:29:45.842Z> PHYSICS INSTANCE STATS END
+<2026-11-21T22:30:14.822Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:30:17.236Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:30:30.564Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][38248] | NOT AUTH | RSI_Galaxy_900000000003[900000000003]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-21T22:39:44.727Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3554465802] -> [3554465802]. Location [2610496815] -> [3554465802]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:39:45.832Z> PHYSICS INSTANCE STATS BEGIN 22
+<2026-11-21T22:39:45.833Z>   planet cells:  297 [16384] meshes:   72 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T22:39:45.833Z> PHYSICS INSTANCE STATS END
+<2026-11-21T22:40:22.396Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3554465802] -> [0]. Location [3554465802] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:42:34.047Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:42:36.535Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:46:03.580Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:46:05.149Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3554465802] -> [1882438059]. Location [2610496815] -> [1882438059]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:46:05.153Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[Stanton2b_ShubinMining_SCD1] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:46:07.190Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:46:08.173Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:46:09.723Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:46:11.435Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [0]. Location [1882438059] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:46:28.818Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:46:29.193Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [1882438059]. Location [2610496815] -> [1882438059]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:47:18.982Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:47:20.136Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [1882438059] -> [0]. Location [1882438059] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-21T22:49:45.819Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:49:45.824Z> PHYSICS INSTANCE STATS BEGIN 23
+<2026-11-21T22:49:45.824Z>   planet cells:  185 [16384] meshes:   54 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T22:49:45.824Z> PHYSICS INSTANCE STATS END
+<2026-11-21T22:49:47.921Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T22:59:45.820Z> PHYSICS INSTANCE STATS BEGIN 24
+<2026-11-21T22:59:45.821Z> PHYSICS INSTANCE STATS END
+<2026-11-21T23:02:37.491Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember5: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:05:25.132Z> [Notice] <SHUDEvent_OnNotification> Added notification "PartyMember4 has started to QT to your current location.: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:06:00.673Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:09:45.811Z> PHYSICS INSTANCE STATS BEGIN 25
+<2026-11-21T23:09:45.812Z>   planet cells:  241 [16384] meshes:   54 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T23:09:45.812Z> PHYSICS INSTANCE STATS END
+<2026-11-21T23:15:41.917Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:15:42.754Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:15:45.284Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:19:45.805Z> PHYSICS INSTANCE STATS BEGIN 26
+<2026-11-21T23:19:45.805Z>   planet cells:  315 [16384] meshes:   93 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T23:19:45.805Z> PHYSICS INSTANCE STATS END
+<2026-11-21T23:21:23.538Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:21:26.389Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:29:45.799Z> PHYSICS INSTANCE STATS BEGIN 27
+<2026-11-21T23:29:45.799Z>   planet cells:  350 [16384] meshes:   96 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T23:29:45.799Z> PHYSICS INSTANCE STATS END
+<2026-11-21T23:39:45.804Z> PHYSICS INSTANCE STATS BEGIN 28
+<2026-11-21T23:39:45.804Z>   planet cells:  288 [16384] meshes:   67 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T23:39:45.804Z> PHYSICS INSTANCE STATS END
+<2026-11-21T23:46:40.194Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember4: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-21T23:49:45.800Z> PHYSICS INSTANCE STATS BEGIN 29
+<2026-11-21T23:49:45.800Z>   planet cells:  618 [16384] meshes:  142 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T23:49:45.800Z> PHYSICS INSTANCE STATS END
+<2026-11-21T23:59:45.805Z> PHYSICS INSTANCE STATS BEGIN 30
+<2026-11-21T23:59:45.805Z>   planet cells:  333 [16384] meshes:   87 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-21T23:59:45.805Z> PHYSICS INSTANCE STATS END
+<2026-11-22T00:00:01.586Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:00:04.200Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:09:45.802Z> PHYSICS INSTANCE STATS BEGIN 31
+<2026-11-22T00:09:45.802Z>   planet cells:  365 [16384] meshes:   70 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T00:09:45.802Z> PHYSICS INSTANCE STATS END
+<2026-11-22T00:11:47.096Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember6: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:20:10.623Z> PHYSICS INSTANCE STATS BEGIN 32
+<2026-11-22T00:20:10.623Z>   planet cells:  246 [16384] meshes:   62 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T00:20:10.623Z> PHYSICS INSTANCE STATS END
+<2026-11-22T00:22:35.385Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember4: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:28:39.570Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember6: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:29:29.961Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:29:32.456Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:30:10.643Z> PHYSICS INSTANCE STATS BEGIN 33
+<2026-11-22T00:30:10.643Z>   planet cells:  489 [16384] meshes:  127 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T00:30:10.644Z> PHYSICS INSTANCE STATS END
+<2026-11-22T00:37:16.169Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:37:59.197Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember3: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T00:40:10.666Z> PHYSICS INSTANCE STATS BEGIN 34
+<2026-11-22T00:40:10.666Z>   planet cells:  399 [16384] meshes:   90 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T00:40:10.666Z> PHYSICS INSTANCE STATS END
+<2026-11-22T00:50:10.679Z> PHYSICS INSTANCE STATS BEGIN 35
+<2026-11-22T00:50:10.679Z>   planet cells:  377 [16384] meshes:   93 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T00:50:10.679Z> PHYSICS INSTANCE STATS END
+<2026-11-22T01:00:10.689Z> PHYSICS INSTANCE STATS BEGIN 36
+<2026-11-22T01:00:10.689Z>   planet cells:  280 [16384] meshes:   75 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T01:00:10.690Z> PHYSICS INSTANCE STATS END
+<2026-11-22T01:05:20.012Z> [Notice] <SHUDEvent_OnNotification> Added notification "PartyMember5 has started to QT to your current location.: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-22T01:10:10.696Z> PHYSICS INSTANCE STATS BEGIN 37
+<2026-11-22T01:10:10.696Z>   planet cells:  316 [16384] meshes:   90 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T01:10:10.696Z> PHYSICS INSTANCE STATS END
+<2026-11-22T01:20:10.698Z> PHYSICS INSTANCE STATS BEGIN 38
+<2026-11-22T01:20:10.699Z>   planet cells:  320 [16384] meshes:   93 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T01:20:10.699Z> PHYSICS INSTANCE STATS END
+<2026-11-22T01:30:10.721Z> PHYSICS INSTANCE STATS BEGIN 39
+<2026-11-22T01:30:10.721Z>   planet cells:  318 [16384] meshes:   91 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T01:30:10.721Z> PHYSICS INSTANCE STATS END
+<2026-11-22T01:40:10.728Z> PHYSICS INSTANCE STATS BEGIN 40
+<2026-11-22T01:40:10.728Z>   planet cells:  115 [16384] meshes:   36 [ 2048] name: OOC_Stanton_2b_Daymar
+<2026-11-22T01:40:10.728Z> PHYSICS INSTANCE STATS END
+<2026-11-23T17:58:21.357Z> PHYSICS INSTANCE STATS BEGIN 1
+<2026-11-23T17:58:21.357Z> PHYSICS INSTANCE STATS END
+<2026-11-23T17:58:54.374Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_030] locationId[-281470681677823] [Team_GameServices][GIM][Matchmaking]
+<2026-11-23T17:59:18.715Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [0] -> [2610496815]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:07:12.370Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Daymar for route to destination MISSION_QT_Quantum_Beacon_900000000004 [Team_CGP4][QuantumTravel]
+<2026-11-23T18:07:18.240Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point MISSION_QT_Quantum_Beacon_900000000004 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T18:07:18.240Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Daymar for route to destination MISSION_QT_Quantum_Beacon_900000000004 [Team_CGP4][QuantumTravel]
+<2026-11-23T18:07:18.494Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point MISSION_QT_Quantum_Beacon_900000000004 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T18:07:18.494Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Daymar for route to destination MISSION_QT_Quantum_Beacon_900000000004 [Team_CGP4][QuantumTravel]
+<2026-11-23T18:07:18.694Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point MISSION_QT_Quantum_Beacon_900000000004 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T18:07:18.694Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Daymar for route to destination MISSION_QT_Quantum_Beacon_900000000004 [Team_CGP4][QuantumTravel]
+<2026-11-23T18:08:19.653Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Crusader Industries Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T18:08:20.909Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [2610496815] -> [1902223495]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:08:21.370Z> PHYSICS INSTANCE STATS BEGIN 2
+<2026-11-23T18:08:21.370Z> PHYSICS INSTANCE STATS END
+<2026-11-23T18:08:27.371Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [1902223495] -> [2493660041]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:08:50.384Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [2493660041] -> [1902223495]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:08:55.573Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-23T18:09:00.039Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [1902223495] -> [1685977803]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:12:44.092Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Stanton for route to destination MISSION_QT_Quantum_Beacon_900000000005 [Team_CGP4][QuantumTravel]
+<2026-11-23T18:12:45.724Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point MISSION_QT_Quantum_Beacon_900000000005 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T18:12:45.724Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Stanton for route to destination MISSION_QT_Quantum_Beacon_900000000005 [Team_CGP4][QuantumTravel]
+<2026-11-23T18:12:48.968Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point MISSION_QT_Quantum_Beacon_900000000005 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T18:12:48.968Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Stanton for route to destination MISSION_QT_Quantum_Beacon_900000000005 [Team_CGP4][QuantumTravel]
+<2026-11-23T18:12:49.260Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point MISSION_QT_Quantum_Beacon_900000000005 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T18:12:49.260Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::CalculateRoute|Projected Start Location is Stanton for route to destination MISSION_QT_Quantum_Beacon_900000000005 [Team_CGP4][QuantumTravel]
+<2026-11-23T18:13:42.274Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [1685977803] -> [1902223495]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:13:49.524Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-23T18:13:52.001Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [1902223495] -> [643320572]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:18:21.379Z> PHYSICS INSTANCE STATS BEGIN 3
+<2026-11-23T18:18:21.380Z> PHYSICS INSTANCE STATS END
+<2026-11-23T18:28:21.405Z> PHYSICS INSTANCE STATS BEGIN 4
+<2026-11-23T18:28:21.407Z> PHYSICS INSTANCE STATS END
+<2026-11-23T18:38:04.308Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [643320572] -> [1902223495]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:38:14.458Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [1902223495] -> [1988372641]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:38:21.433Z> PHYSICS INSTANCE STATS BEGIN 5
+<2026-11-23T18:38:21.434Z> PHYSICS INSTANCE STATS END
+<2026-11-23T18:39:32.086Z> [Notice] <SHUDEvent_OnNotification> Added notification "PartyMember7 has started to QT to your current location.: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T18:47:32.468Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [1988372641] -> [1902223495]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:47:35.013Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered UEE Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T18:48:21.455Z> PHYSICS INSTANCE STATS BEGIN 6
+<2026-11-23T18:48:21.455Z> PHYSICS INSTANCE STATS END
+<2026-11-23T18:51:50.255Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [0]. Location [1902223495] -> [1022018936]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:51:51.806Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-23T18:51:54.797Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [3335971174]. Location [1022018936] -> [3335971174]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:51:54.800Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_JP_StantonMagnus] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:52:39.827Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T18:53:04.034Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T18:57:03.547Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3335971174] -> [0]. Location [3335971174] -> [1037384677]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:57:08.795Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3335971174] -> [141810852]. Location [1037384677] -> [141810852]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:57:08.797Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_JP_NyxCastra] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:58:21.469Z> PHYSICS INSTANCE STATS BEGIN 7
+<2026-11-23T18:58:21.469Z> PHYSICS INSTANCE STATS END
+<2026-11-23T18:59:45.209Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [141810852] -> [1037384677]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T18:59:47.615Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [1037384677] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T19:04:24.750Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-23T19:04:26.481Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [2627827560] -> [126935608]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T19:08:21.480Z> PHYSICS INSTANCE STATS BEGIN 8
+<2026-11-23T19:08:21.481Z> PHYSICS INSTANCE STATS END
+<2026-11-23T19:10:52.664Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [126935608] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T19:15:07.088Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [2627827560] -> [3227463517]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T19:17:45.604Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [3227463517] -> [126935608]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T19:18:21.492Z> PHYSICS INSTANCE STATS BEGIN 9
+<2026-11-23T19:18:21.492Z> PHYSICS INSTANCE STATS END
+<2026-11-23T19:28:21.516Z> PHYSICS INSTANCE STATS BEGIN 10
+<2026-11-23T19:28:21.516Z> PHYSICS INSTANCE STATS END
+<2026-11-23T19:38:21.548Z> PHYSICS INSTANCE STATS BEGIN 11
+<2026-11-23T19:38:21.548Z> PHYSICS INSTANCE STATS END
+<2026-11-23T19:48:21.581Z> PHYSICS INSTANCE STATS BEGIN 12
+<2026-11-23T19:48:21.582Z> PHYSICS INSTANCE STATS END
+<2026-11-23T19:56:28.423Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [126935608] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T19:58:21.599Z> PHYSICS INSTANCE STATS BEGIN 13
+<2026-11-23T19:58:21.599Z> PHYSICS INSTANCE STATS END
+<2026-11-23T20:00:47.678Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-23T20:00:54.538Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [2627827560] -> [126935608]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:04:33.888Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [126935608] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:07:52.774Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000001[900000000001]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-23T20:07:53.331Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [0]. Location [2627827560] -> [48919369]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:07:56.283Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [141810852] -> [3978634644]. Location [48919369] -> [3978634644]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:07:56.285Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_JP_NyxPyro] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:08:21.626Z> PHYSICS INSTANCE STATS BEGIN 14
+<2026-11-23T20:08:21.626Z> PHYSICS INSTANCE STATS END
+<2026-11-23T20:08:33.730Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:14:33.972Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:14:41.577Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:18:21.644Z> PHYSICS INSTANCE STATS BEGIN 15
+<2026-11-23T20:18:21.644Z> PHYSICS INSTANCE STATS END
+<2026-11-23T20:23:06.145Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:25:07.745Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:26:54.728Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:27:02.140Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:27:37.487Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_JP_NyxPyro] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:28:21.660Z> PHYSICS INSTANCE STATS BEGIN 16
+<2026-11-23T20:28:21.661Z> PHYSICS INSTANCE STATS END
+<2026-11-23T20:29:29.629Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:29:42.123Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:29:56.181Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:30:07.312Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [0] -> [3978634644]. Location [0] -> [3978634644]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:30:07.350Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:30:07.375Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered UEE Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:30:08.607Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[RR_JP_NyxPyro] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:30:09.491Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:34:57.985Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:35:12.353Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:35:34.437Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:35:54.492Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:36:47.107Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:38:21.683Z> PHYSICS INSTANCE STATS BEGIN 17
+<2026-11-23T20:38:21.683Z> PHYSICS INSTANCE STATS END
+<2026-11-23T20:39:14.474Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:39:44.600Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:39:45.927Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T20:39:46.407Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [3978634644] -> [48919369]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:39:48.595Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [48919369] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:43:02.555Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [2627827560] -> [126935608]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T20:48:21.705Z> PHYSICS INSTANCE STATS BEGIN 18
+<2026-11-23T20:48:21.705Z> PHYSICS INSTANCE STATS END
+<2026-11-23T20:58:21.715Z> PHYSICS INSTANCE STATS BEGIN 19
+<2026-11-23T20:58:21.715Z> PHYSICS INSTANCE STATS END
+<2026-11-23T20:59:54.292Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [126935608] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:02:47.660Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [2627827560] -> [126935608]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:08:21.734Z> PHYSICS INSTANCE STATS BEGIN 20
+<2026-11-23T21:08:21.735Z> PHYSICS INSTANCE STATS END
+<2026-11-23T21:13:14.836Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [126935608] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:16:00.664Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered UEE Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:16:01.211Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][46828] | NOT AUTH | RSI_Galaxy_900000000006[900000000006]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-23T21:16:05.519Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [3978634644]. Location [2627827560] -> [3978634644]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:16:06.358Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [3978634644] -> [48919369]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:16:08.491Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [3978634644]. Location [48919369] -> [3978634644]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:16:31.174Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:18:08.561Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:18:21.747Z> PHYSICS INSTANCE STATS BEGIN 21
+<2026-11-23T21:18:21.747Z> PHYSICS INSTANCE STATS END
+<2026-11-23T21:20:00.305Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:20:11.075Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:20:38.526Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:20:49.550Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:22:48.860Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:22:51.312Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:24:35.864Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:24:36.777Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [3978634644] -> [48919369]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:24:36.848Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:24:39.101Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [0]. Location [48919369] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:28:12.653Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [3978634644] -> [2028915632]. Location [2627827560] -> [2028915632]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:28:12.654Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[Nyx_TSG_QVExtractionStation_038] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T21:28:21.769Z> PHYSICS INSTANCE STATS BEGIN 22
+<2026-11-23T21:28:21.769Z> PHYSICS INSTANCE STATS END
+<2026-11-23T21:29:15.346Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:29:17.936Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:33:46.796Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:33:49.366Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember1: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:33:59.371Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Started By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:34:01.888Z> [Notice] <SHUDEvent_OnNotification> Added notification "Quantum Travel Calibration Complete By PartyMember2: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T21:38:21.786Z> PHYSICS INSTANCE STATS BEGIN 23
+<2026-11-23T21:38:21.787Z> PHYSICS INSTANCE STATS END
+<2026-11-23T21:48:21.802Z> PHYSICS INSTANCE STATS BEGIN 24
+<2026-11-23T21:48:21.802Z> PHYSICS INSTANCE STATS END
+<2026-11-23T21:58:21.811Z> PHYSICS INSTANCE STATS BEGIN 25
+<2026-11-23T21:58:21.812Z> PHYSICS INSTANCE STATS END
+<2026-11-23T22:08:21.824Z> PHYSICS INSTANCE STATS BEGIN 26
+<2026-11-23T22:08:21.824Z> PHYSICS INSTANCE STATS END
+<2026-11-23T22:08:41.841Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point glaciemring_TransitPoint_Charlie as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T22:08:41.841Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx for route to destination glaciemring_TransitPoint_Charlie [Team_CGP4][QuantumTravel]
+<2026-11-23T22:09:29.743Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point glaciemring_TransitPoint_Charlie as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T22:09:29.743Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx for route to destination glaciemring_TransitPoint_Charlie [Team_CGP4][QuantumTravel]
+<2026-11-23T22:10:06.618Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [2028915632] -> [0]. Location [2028915632] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T22:12:18.936Z> [Notice] <Quantum Drive Arrived - Arrived at Final Destination> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::OnQuantumDriveArrived|Quantum Drive has arrived at final destination [Team_CGP4][QuantumTravel]
+<2026-11-23T22:13:21.600Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point rs_ext_nyx-pyro_jp1 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T22:13:21.600Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx System for route to destination rs_ext_nyx-pyro_jp1 [Team_CGP4][QuantumTravel]
+<2026-11-23T22:16:17.076Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [2028915632] -> [2028915632]. Location [2627827560] -> [2028915632]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T22:16:41.484Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point rs_asmbl_keeger_04 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T22:16:41.484Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx for route to destination rs_asmbl_keeger_04 [Team_CGP4][QuantumTravel]
+<2026-11-23T22:17:11.148Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [2028915632] -> [0]. Location [2028915632] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T22:18:21.849Z> PHYSICS INSTANCE STATS BEGIN 27
+<2026-11-23T22:18:21.849Z> PHYSICS INSTANCE STATS END
+<2026-11-23T22:20:25.505Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered People's Alliance Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T22:20:25.901Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T22:20:27.318Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [2028915632] -> [2263490509]. Location [2627827560] -> [2263490509]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T22:20:27.320Z> [Notice] <RequestLocationInventory> Player[TestPilot] requested inventory for Location[AsteroidClusterBase_Nyx_Social_Keeger_004] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T22:24:05.092Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T22:24:05.131Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T22:26:14.311Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered People's Alliance Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T22:26:14.403Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entering Armistice Zone - Combat Prohibited: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T22:28:21.875Z> PHYSICS INSTANCE STATS BEGIN 28
+<2026-11-23T22:28:21.877Z> PHYSICS INSTANCE STATS END
+<2026-11-23T22:30:35.066Z> [Notice] <SHUDEvent_OnNotification> Added notification "Leaving Armistice Zone - Caution Advised: : " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T22:30:59.673Z> [Notice] <SHUDEvent_OnNotification> Added notification "Entered Ungoverned Jurisdiction: " [0] to queue. New queue size: 1 [Team_CoreGameplayFeatures][Missions][Comms]
+<2026-11-23T22:31:04.180Z> [Notice] <Update Inventory Location> Player [TestPilot] is changing location. Landing [2263490509] -> [0]. Location [2263490509] -> [2627827560]. Pending [0] [Team_CoreGameplayFeatures][Inventory]
+<2026-11-23T22:36:09.652Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx System for route to destination PartyMemberMarker_900000000002 [Team_CGP4][QuantumTravel]
+<2026-11-23T22:36:10.875Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx System for route to destination PartyMemberMarker_900000000008 [Team_CGP4][QuantumTravel]
+<2026-11-23T22:36:12.127Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx System for route to destination PartyMemberMarker_900000000002 [Team_CGP4][QuantumTravel]
+<2026-11-23T22:36:16.667Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point PartyMemberMarker_900000000002 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T22:36:16.667Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx System for route to destination PartyMemberMarker_900000000002 [Team_CGP4][QuantumTravel]
+<2026-11-23T22:38:21.891Z> PHYSICS INSTANCE STATS BEGIN 29
+<2026-11-23T22:38:21.891Z> PHYSICS INSTANCE STATS END
+<2026-11-23T22:39:30.939Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx System for route to destination PartyMemberMarker_900000000002 [Team_CGP4][QuantumTravel]
+<2026-11-23T22:39:33.357Z> [Notice] <Player Selected Quantum Target - Local> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::OnPlayerSelectedQuantumTarget|Player has selected point PartyMemberMarker_900000000002 as their destination, routing locally [Team_CGP4][QuantumTravel]
+<2026-11-23T22:39:33.357Z> [Notice] <Calculate Route> [ItemNavigation][CL][46828] | NOT AUTH | AEGS_Idris_M_900000000007[900000000007]|CSCItemNavigation::CalculateRoute|Projected Start Location is Nyx System for route to destination PartyMemberMarker_900000000002 [Team_CGP4][QuantumTravel]
+<2026-11-23T22:48:21.901Z> PHYSICS INSTANCE STATS BEGIN 30
+<2026-11-23T22:48:21.901Z> PHYSICS INSTANCE STATS END
+<2026-11-23T22:58:21.922Z> PHYSICS INSTANCE STATS BEGIN 31
+<2026-11-23T22:58:21.922Z> PHYSICS INSTANCE STATS END
+<2026-11-23T23:08:21.939Z> PHYSICS INSTANCE STATS BEGIN 32
+<2026-11-23T23:08:21.940Z> PHYSICS INSTANCE STATS END
+<2026-11-23T23:18:21.951Z> PHYSICS INSTANCE STATS BEGIN 33
+<2026-11-23T23:18:21.952Z> PHYSICS INSTANCE STATS END
+<2026-11-24T08:51:46.999Z> PHYSICS INSTANCE STATS BEGIN 1
+<2026-11-24T08:51:46.999Z> PHYSICS INSTANCE STATS END

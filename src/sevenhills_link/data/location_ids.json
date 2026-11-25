@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "about": "The game's own location numbers (Game.log: <Update Inventory Location> ... Location [a] -> [b]) and the place each one is. A number is the same place on every shard and in LIVE and PTU. Taken from real sessions, Nov 2026: each entry was named by the log itself, by the landing area's name, by a route's start location or by the landing that followed seconds later. Pyro's open space (3184339241) is the one read from the pattern alone: it is the number held while flying to a gateway, as 1902223495 is in Stanton and 2627827560 in Nyx. 'near' marks the space around a station (not inside its landing area). The client adds what it learns to locations.json in its data folder.",
+  "builds": "LIVE 13220821, PTU 13260598",
+  "ids": {
+    "1902223495": { "place": "stanton" },
+    "2493660041": { "place": "stanton/crusader" },
+    "2610496815": { "place": "stanton/crusader/daymar" },
+    "1105811199": { "place": "stanton/crusader/orison" },
+    "1547955914": { "place": "stanton/jump-pyro" },
+    "694522860": { "place": "stanton/jump-pyro", "near": true },
+    "3335971174": { "place": "stanton/jump-magnus" },
+    "1022018936": { "place": "stanton/jump-magnus", "near": true },
+
+    "3184339241": { "place": "pyro" },
+    "2026442305": { "place": "pyro/terminus/ruin-station" },
+    "639835600": { "place": "pyro/jump-stanton" },
+    "3273347588": { "place": "pyro/jump-stanton", "near": true },
+
+    "2627827560": { "place": "nyx" },
+    "3978634644": { "place": "nyx/jump-pyro" },
+    "48919369": { "place": "nyx/jump-pyro", "near": true },
+    "141810852": { "place": "nyx/jump-castra" },
+    "1037384677": { "place": "nyx/jump-castra", "near": true }
+  }
+}
