@@ -171,3 +171,14 @@ def test_the_screen_alone_gives_a_place_when_the_log_has_none():
     assert snap["place_id"] == "stanton/crusader/daymar" and snap["confidence"] == "near" and snap["source"] == "screen"
     t.screen = {"place_id": "not/on/the/list"}
     assert t.snapshot() is None
+
+
+def test_the_list_of_0_8_1_names_the_new_places_and_never_an_unnamed_or_shared_one():
+    from sevenhills_link.location import Places
+    p = Places.load()
+    assert p.named("Grim HEX") == "stanton/crusader/yela/grim-hex" and p.named("GrimHEX") == "stanton/crusader/yela/grim-hex"
+    assert p.named("Scarper's Turn") == "pyro/terminus/scarpers-turn"
+    assert p.named("Cave") is None and p.named("Bunker") is None          # unnamed spots are 7Net's only
+    assert p.named("Derelict Outpost") is None                            # thirteen places share the name
+    assert not any(pid.rsplit("/", 1)[-1].startswith("u-") for pid in p.by_id)
+    assert p.named("Ruin Station") == "pyro/terminus/ruin-station"

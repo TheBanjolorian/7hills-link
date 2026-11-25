@@ -48,17 +48,17 @@ def block(*lines: str) -> str:
     return "\n".join(["Zone: ObjectContainer-000 Pos: 1.00m 2.00m 3.00m", *lines, "Zone: Root Pos: 1.0km 2.0km 3.0km"])
 
 
-def test_the_real_block_gives_the_moon_because_grimhex_is_not_on_the_list():
+def test_the_real_block_gives_grim_hex_now_that_it_is_on_the_list():
     seen = read_debug_text(BLOCK)
     assert seen["block"] is True
     assert seen["zones"] == ["ObjectContainer-000", "OOC_Stanton_2c_Yela", "SolarSystem_926344131032", "Root"]
     assert seen["location"] == "GrimHEX" and seen["lz"] == "GrimHEX"
-    assert reader().place_from_text(BLOCK) == "stanton/crusader/yela"
+    assert reader().place_from_text(BLOCK) == "stanton/crusader/yela/grim-hex"
 
 
-def test_what_ocr_makes_of_it_still_gives_the_moon():
-    assert reader().place_from_text(AS_READ_LARGE) == "stanton/crusader/yela"
-    assert reader().place_from_text(AS_READ_SMALL) == "stanton/crusader/yela"
+def test_what_ocr_makes_of_it_still_gives_the_station():
+    assert reader().place_from_text(AS_READ_LARGE) == "stanton/crusader/yela/grim-hex"
+    assert reader().place_from_text(AS_READ_SMALL) == "stanton/crusader/yela/grim-hex"
     assert len(read_debug_text(AS_READ_SMALL)["zones"]) == 4       # "CamPos Planet Zone:" is not a zone line
 
 
@@ -82,12 +82,12 @@ Cam os Planet Zone.
 • -søøøøø.øøøøøø 3øøøøø.øøøøøø -2øøø.øøøøøø"""
 
 
-def test_what_windows_ocr_made_of_it_gives_the_moon_too():
+def test_what_windows_ocr_made_of_it_gives_the_station_too():
     seen = read_debug_text(AS_READ_WINDOWS)
     # The line that lost its "Zone:" still counts; the lone "Zone:" and "Planet Zone." do not.
     assert seen["zones"] == ["ObjectContainer-øøø", "OOC_Stanton_2c_YeIa", "SolarSystem_926344131Ø32", "Root"]
     assert seen["location"] == "GrimHEX"
-    assert reader().place_from_text(AS_READ_WINDOWS) == "stanton/crusader/yela"       # by "Stanton 2c", whatever became of the name
+    assert reader().place_from_text(AS_READ_WINDOWS) == "stanton/crusader/yela/grim-hex"       # Yela by "Stanton 2c", whatever became of its name; the station by the location line
 
 
 def test_a_zone_line_broken_in_two_still_counts_once():
@@ -152,7 +152,7 @@ def test_a_place_counts_after_two_readings_that_agree():
     assert r.tracker.screen["place_id"] == "stanton/crusader/daymar"
     # ... a second one does.
     r.look(BLOCK)
-    assert r.tracker.screen["place_id"] == "stanton/crusader/yela"
+    assert r.tracker.screen["place_id"] == "stanton/crusader/yela/grim-hex"
 
 
 def test_the_old_place_goes_when_the_block_stops_naming_one():
@@ -180,7 +180,7 @@ def test_the_last_look_is_kept_for_the_window_without_positions():
     last = rep["last"]
     assert last["block"] is True and last["size"] == [2304, 1152] and last["scale"] == 2
     assert last["zones"][1] == "OOC_Stanton_2c_Yela" and last["location"] == "GrimHEX"
-    assert last["place"] == "stanton/crusader/yela" and last["place_name"] == "Yela"
+    assert last["place"] == "stanton/crusader/yela/grim-hex" and last["place_name"] == "Grim HEX"
     assert isinstance(last["ago"], int) and "at" not in last
     assert "km" not in str(last) and "500.0000" not in str(last)      # zone names only, never where in the zone
 
@@ -271,7 +271,7 @@ def test_a_look_that_names_no_place_moves_on_to_the_next_way():
     assert r.way == 2 and r.status == "no_text"
     r.look(BLOCK)                           # this way names the place: stay with it
     r.look(BLOCK)
-    assert r.way == 2 and r.place_id == "stanton/crusader/yela"
+    assert r.way == 2 and r.place_id == "stanton/crusader/yela/grim-hex"
     for _ in range(len(WAYS)):
         r.look("nothing")
     assert r.way == 2                       # once round, back at the same way
@@ -359,13 +359,13 @@ def test_screen_test_reads_a_saved_screenshot_the_way_the_client_reads_the_scree
     # The answer is the first way that names a place: here the very first.
     box, k, prep = screen.WAYS[0]
     assert (out["box"], out["scale"], out["prepared"]) == (box, k, prep) and out["size"] == [760 * k, 420 * k] and isinstance(out["ms"], int)
-    assert out["block"] is True and out["place"] == "stanton/crusader/yela" and out["place_name"] == "Yela"
-    assert out["confidence"] == "near"                  # a moon, not the station: never "exact"
-    assert '"place": "stanton/crusader/yela"' in capsys.readouterr().out
+    assert out["block"] is True and out["place"] == "stanton/crusader/yela/grim-hex" and out["place_name"] == "Grim HEX"
+    assert out["confidence"] == "exact"                 # the station on the location line, now that it is on the place list
+    assert '"place": "stanton/crusader/yela/grim-hex"' in capsys.readouterr().out
     # Then every other way of reading: both boxes, twice and three times, each preparation; none twice.
     ways = [(t["box"], t["scale"], t["prepared"]) for t in out["tried"]]
     assert ways[:len(screen.WAYS)] == screen.WAYS and len(ways) == len(set(ways)) == 12 == len(seen)
-    assert all(t["place"] == "stanton/crusader/yela" and t["location"] == "GrimHEX" and len(t["zones"]) == 4 for t in out["tried"])
+    assert all(t["place"] == "stanton/crusader/yela/grim-hex" and t["location"] == "GrimHEX" and len(t["zones"]) == 4 for t in out["tried"])
     assert not any("text" in t for t in out["tried"])               # what was read is not kept here
 
 
@@ -374,8 +374,8 @@ def test_screen_test_answers_with_the_first_way_that_names_a_place(monkeypatch, 
     # The first two ways find no block; the third (the wider corner) reads it.
     code, out, _ = _screen_test(monkeypatch, tmp_path, _picture(tmp_path), text=lambda i: BLOCK if i >= 3 else "Zcne: nothing readable")
     assert code == 0 and (out["box"], out["scale"], out["prepared"]) == screen.WAYS[2]
-    assert out["block"] is True and out["place"] == "stanton/crusader/yela"
-    assert [t["place"] for t in out["tried"]][:3] == [None, None, "stanton/crusader/yela"]
+    assert out["block"] is True and out["place"] == "stanton/crusader/yela/grim-hex"
+    assert [t["place"] for t in out["tried"]][:3] == [None, None, "stanton/crusader/yela/grim-hex"]
     # No way reads it: the answer says so, with the first way's numbers.
     code, out, _ = _screen_test(monkeypatch, tmp_path, _picture(tmp_path), text="Zcne: nothing readable")
     assert code == 0 and out["block"] is False and out["place"] is None and out["confidence"] is None

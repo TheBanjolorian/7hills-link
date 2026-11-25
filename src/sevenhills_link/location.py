@@ -53,6 +53,7 @@ import json
 import re
 import threading
 import time
+from collections import Counter as _count
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -129,6 +130,10 @@ class Places:
     """The place list (data/places.json, the same file 7Net uses)."""
 
     def __init__(self, places: list[dict]) -> None:
+        # The list also holds spots the game files place but do not name (hundreds of "Cave",
+        # `unnamed` on the place). They are for 7Net's map only: nothing here can tell one
+        # from another, so they are never reported.
+        places = [p for p in places if not p.get("unnamed")]
         self.by_id = {p["id"]: p for p in places}
         # Planets and moons match the name the game uses for them exactly
         # (OOC_Stanton_2a_Cellin, pyro5a, Nyx1, ...).
@@ -153,9 +158,14 @@ class Places:
         self.named_ports = sorted(named_ports, key=lambda kv: -len(kv[0]))
         self.planets_by_name = {_norm(p["name"]): p["id"] for p in places if p["kind"] == "planet"}
         # Any place by its name or a match key ("Daymar", "Ruin Station", "Nyx System").
+        # A name several places share ("Derelict Outpost") names none of them. (Places with
+        # match keys of their own, such as the two Pyro Gateways, are told apart by those.)
+        shared = {n for n, c in _count(_norm(p["name"]) for p in places if not p.get("match")).items() if c > 1}
         self.by_name: dict[str, str] = {}
         for p in places:
             for k in [p["name"], *p.get("match", [])]:
+                if _norm(k) in shared and k == p["name"]:
+                    continue
                 self.by_name.setdefault(_norm(k), p["id"])
         # A belt by the first word of its name ("Keeger" in AsteroidClusterBase_Nyx_Social_Keeger_004).
         words: dict[str, list[str]] = {}
