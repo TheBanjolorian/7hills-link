@@ -185,6 +185,8 @@ class Core:
         self.sound_volume = min(1.0, max(0.0, float(v))) if isinstance(v, (int, float)) else 0.1
         self.sound_repeat = bool(snd.get("repeat", False))
         self.sound_stopped = bool(snd.get("stopped", False))   # Stop pressed: no music on start until Play
+        # Can the window play audio at all: None until the window knows (see app.audio_output_ok).
+        self.audio_ok: bool | None = True
         self.link_error: str | None = None
         self.member: dict | None = None
         self.settings: dict | None = None
@@ -525,6 +527,7 @@ class Core:
                 "version": __version__,
                 "update": self.updates.status(),
                 "sound": {"muted": self.sound_muted, "volume": self.sound_volume, "repeat": self.sound_repeat, "stopped": self.sound_stopped},
+                "audio_ok": self.audio_ok,
                 "channels_known": detect.CHANNELS,
                 "prefs": self.prefs.as_dict(),
                 "traffic": self.traffic_rate(),

@@ -81,7 +81,8 @@ jobs:
           Get-Content $log
           Get-Process 7HillsLink -ErrorAction SilentlyContinue | Stop-Process -Force
           if (-not (Select-String -Path $log -Pattern ' updated$' -Quiet)) { Write-Error 'install did not complete'; exit 1 }
-          if (-not (Test-Path "$d\7HillsLink.old.exe")) { Write-Error 'no backup kept'; exit 1 }
+          # The log, not the file: the new version removes 7HillsLink.old.exe soon after it starts.
+          if (-not (Select-String -Path $log -Pattern ' kept 7HillsLink\.old\.exe$' -Quiet)) { Write-Error 'no backup kept'; exit 1 }
       - name: Checksum
         shell: pwsh
         run: |

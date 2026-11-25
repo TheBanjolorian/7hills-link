@@ -103,6 +103,7 @@ def test_install_to_swaps_and_starts_new(tmp_path, monkeypatch):
     assert rc == 0 and target.read_bytes() == b"new"
     assert target.with_name("7HillsLink.old.exe").read_bytes() == b"old"
     assert started == [(b"new", ("--updated", "0.4.3"))]
+    assert " kept 7HillsLink.old.exe\n" in log   # what the CI update test checks
     assert log.strip().endswith("updated")
 
 

@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import os
+import sys
 import threading
 import webbrowser
 
 from . import install as installer
 from . import instance, updater
 from .core import Core
+from .log import log
 from .paths import resource
 from .prefs import DEFAULTS, apply_startup
 
@@ -145,6 +147,25 @@ class JsApi:
         webbrowser.open(SITE + "/live")
 
 
+def audio_output_ok(renderer: str | None) -> bool:
+    """False only when the window is WebKitGTK and GStreamer has no audio sink.
+
+    WebKitGTK plays <audio> through GStreamer. Without autoaudiosink (gst-plugins-good) its media
+    pipeline stalls the page as soon as the music starts, so the page then leaves the music off.
+    WebView2 (Windows) and Qt WebEngine bring their own audio and are not affected.
+    """
+    if renderer != "gtkwebkit2":
+        return True
+    try:
+        import gi
+        gi.require_version("Gst", "1.0")
+        from gi.repository import Gst
+        Gst.init(None)
+        return Gst.ElementFactory.find("autoaudiosink") is not None
+    except Exception:
+        return True   # cannot tell: keep the old behaviour
+
+
 def run_window(updated_from: str | None = None, autostart: bool = False) -> int:
     import webview  # pywebview
 
@@ -228,7 +249,13 @@ def run_window(updated_from: str | None = None, autostart: bool = False) -> int:
                 pass
             quitting.wait(5)
 
+    if sys.platform.startswith("linux"):
+        core.audio_ok = None   # the page holds the music until started() has checked
+
     def started():
+        core.audio_ok = audio_output_ok(webview.renderer)
+        if core.audio_ok is False:
+            log.warning("no GStreamer audio sink (install gst-plugins-good): music is off")
         threading.Thread(target=core.run, name="core", daemon=True).start()
         tray.start()
         if autostart and not tray.can_hide:

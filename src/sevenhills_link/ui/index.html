@@ -35,6 +35,7 @@
   .icon { background: none; border: 0; padding: 4px; color: #8A8A8A; cursor: pointer; display: inline-flex; border-radius: 6px; }
   .icon:hover { color: var(--gold); }
   .icon.on { color: var(--gold); }
+  .icon:disabled { opacity: .35; cursor: default; color: #8A8A8A; }
   .icon svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .bub { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: none; }
   .bub.g { background: var(--ok); box-shadow: 0 0 0 3px rgba(93,202,165,.15); }
@@ -169,13 +170,14 @@
       <button class="icon" id="sndPlay" onclick="togglePlay()" aria-label="Play"></button>
       <button class="icon" onclick="stopMusic()" aria-label="Stop"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg></button>
       <span class="dim" style="font-size:12px">Peacekeepers</span>
+      <span class="dim hidden" style="font-size:12px" id="sndOff">No audio output: install gst-plugins-good</span>
       <span class="mono" style="white-space:nowrap" id="sndTime">0:00</span>
       <input type="range" id="sndVol" min="0" max="100" step="1" style="flex:1;max-width:180px" oninput="setVolume(this.value)" onchange="saveVolume(this.value)">
       <span class="mono" style="min-width:30px" id="sndPct"></span>
       <button class="icon" id="sndMute" onclick="toggleMute()" aria-label="Mute"></button>
       <button class="icon" id="sndRepeat" onclick="call('set_sound', null, null, !(S && S.sound && S.sound.repeat))" aria-label="Repeat" title="Repeat"><svg viewBox="0 0 24 24"><path d="M4 12V9a3 3 0 0 1 3-3h13l-3-3M20 12v3a3 3 0 0 1-3 3H4l3 3"/></svg></button>
     </div>
-    <audio id="music" src="music.mp3" preload="auto"></audio>
+    <audio id="music" preload="none"></audio>
 
     <div class="sec links" style="padding-top:12px;padding-bottom:16px">
       <span class="label">7Hills</span>
@@ -245,10 +247,20 @@
 
   // ------------------------------------------------------------ music
   const music = $('music')
+  // The source is set on first play, not in the tag: WebKitGTK builds its GStreamer pipeline as soon as an
+  // <audio> has a src, and without an audio sink that stalls the page. audio_ok false: never start it.
+  function playMusic() {
+    if (S && S.audio_ok === false) return Promise.reject(new Error('no audio output'))
+    if (!music.getAttribute('src')) music.src = 'music.mp3'
+    return music.play()
+  }
   let musicStarted = false
   const fmt = t => isFinite(t) ? Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0') : '0:00'
   function paintMusic() {
     const snd = (S && S.sound) || {}
+    const off = !!S && S.audio_ok === false
+    $('sndPlay').disabled = off
+    $('sndOff').classList.toggle('hidden', !off)
     const silent = snd.muted || !snd.volume
     $('sndPlay').innerHTML = music.paused ? ICON.play : ICON.pause
     $('sndPlay').setAttribute('aria-label', music.paused ? 'Play' : 'Pause')
@@ -266,7 +278,7 @@
   function saveVolume(v) { call('set_sound', null, v / 100) }
   // Stop is remembered: no music on the next start until Play is pressed again.
   function togglePlay() {
-    if (music.paused) { music.play().catch(() => {}); if (S && S.sound && S.sound.stopped) call('set_sound', null, null, null, false) }
+    if (music.paused) { playMusic().catch(() => {}); if (S && S.sound && S.sound.stopped) call('set_sound', null, null, null, false) }
     else music.pause()
   }
   function stopMusic() { music.pause(); music.currentTime = 0; paintMusic(); call('set_sound', null, null, null, true) }
@@ -328,16 +340,15 @@
   }
 
   function render(s) {
-    const first = S === null
     S = s
     const snd = s.sound || {}
     music.muted = !!snd.muted
     if (snd.muted && !music.paused) music.pause()   // also when muted from the tray menu
     if (document.activeElement !== $('sndVol')) { $('sndVol').value = Math.round((snd.volume ?? 0.1) * 100); setVolume($('sndVol').value) }
-    if (first && !musicStarted) {
+    if (!musicStarted && s.audio_ok !== null && s.audio_ok !== undefined) {   // Linux: wait for the audio check
       musicStarted = true
       // Muted or at 0 counts as off: nothing starts until they press Play.
-      if (s.prefs && s.prefs.play_on_start && !snd.muted && !snd.stopped && snd.volume > 0 && !s.autostarted) music.play().catch(() => {})
+      if (s.prefs && s.prefs.play_on_start && !snd.muted && !snd.stopped && snd.volume > 0 && !s.autostarted) playMusic().catch(() => {})
     }
     paintMusic()
 
