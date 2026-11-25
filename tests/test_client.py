@@ -109,14 +109,14 @@ def test_sound_and_prefs_survive_restart(tmp_path, monkeypatch):
     assert c.status()["sound"] == {"muted": False, "volume": 0.1, "repeat": False, "stopped": False}
     c.set_sound(stopped=True)
     assert c.status()["prefs"] == {"start_with_windows": True, "tray": True, "play_on_start": True, "install_declined": False,
-                                  "share_position": False}     # the exact position is off until the member turns it on
+                                  "exact_position": True}      # the exact position is on until the member turns it off
     c.prefs.set("play_on_start", False)
     c.prefs.set("start_with_windows", False)          # no registry outside the packaged exe
     c.set_sound(muted=True, volume=1.7)
     c2 = core_mod.Core()
     assert c2.sound_muted and c2.sound_volume == 1.0 and c2.sound_stopped
     assert c2.prefs.as_dict() == {"start_with_windows": False, "tray": True, "play_on_start": False, "install_declined": False,
-                                  "share_position": False}
+                                  "exact_position": True}
 
 
 def test_chosen_game_path_wins(tmp_path, monkeypatch):

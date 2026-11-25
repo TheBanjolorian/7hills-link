@@ -65,6 +65,7 @@ STALE_S = 15.0           # a screen place older than this no longer counts
 # as far as a ship near the ground can have moved in between plus some slack.
 POS_SPEED_MS = 3000.0
 POS_SLACK_M = 300.0
+COURSE_MIN_M = 20.0      # the course is taken between two positions at least this far apart
 BOX = (760, 420)         # px in the window's top-right corner: the block is about 640 × 330 px on a real screen
 CORNER = (0.55, 0.0, 1.0, 0.40)   # the wider corner, as fractions of the window, should a screen draw the text larger
 # The ways a look can be made, in the order they are tried: which part of the window,
@@ -129,6 +130,8 @@ class ScreenReader:
         self.misses = 0                     # looks in a row that found no debug block
         self._looked = 0.0
         self._pos_prev: tuple[dict, float] | None = None   # the last position read, and when
+        self._course_from: tuple[str, tuple[float, float]] | None = None   # (body, where the course is measured from)
+        self._course: int | None = None                    # the last course, whole degrees
         self.position: dict | None = None                  # the last position that counted, for "Test screen reading"
         self._last: str | None = None
         self._at = 0.0
@@ -173,6 +176,8 @@ class ScreenReader:
         self.place_id = None
         self._last = None
         self._pos_prev = None
+        self._course_from = None
+        self._course = None
         self.position = None
         with self.tracker._lock:
             self.tracker.screen = None
@@ -191,7 +196,16 @@ class ScreenReader:
                     self.tracker.screen_pos = None
             return None
         if prev and prev[0]["body"] == pos["body"] and position.apart_m(prev[0], pos) <= POS_SLACK_M + POS_SPEED_MS * max(0.0, now - prev[1]):
-            self.position = {"body": pos["body"], "lat": pos["lat"], "lon": pos["lon"], "alt": pos["alt"], "at": now}
+            # The course: from the spot it was last measured from to here, once that is far
+            # enough to say anything. Standing still keeps the last course.
+            here = pos["exact"]
+            if not self._course_from or self._course_from[0] != pos["body"]:
+                self._course_from, self._course = (pos["body"], here), None
+            elif position.ground_m(self._course_from[1], here, pos["radius"] + max(0, pos["alt"])) >= COURSE_MIN_M:
+                self._course = round(position.bearing(self._course_from[1], here)) % 360
+                self._course_from = (pos["body"], here)
+            self.position = {"body": pos["body"], "lat": pos["lat"], "lon": pos["lon"], "alt": pos["alt"], "hdg": self._course,
+                             "r": round(pos["radius"] / 1000), "at": now}
             with self.tracker._lock:
                 self.tracker.screen_pos = dict(self.position)
         return pos
@@ -265,7 +279,7 @@ class ScreenReader:
         seen = read_debug_text(text)
         pid = self.place_of(seen) if seen["block"] else None
         pos = self._look_position(text, time.time()) if seen["block"] else None
-        self.last = {"at": time.time(), "position": {k: pos[k] for k in ("body", "lat", "lon", "alt", "checked")} if pos else None, "size": list(size) if size else None, "scale": scale, "prepared": prep, "ms": ms,
+        self.last = {"at": time.time(), "position": {**{k: pos[k] for k in ("body", "lat", "lon", "alt", "checked")}, "hdg": self._course} if pos else None, "size": list(size) if size else None, "scale": scale, "prepared": prep, "ms": ms,
                      "lines": len([x for x in (text or "").splitlines() if x.strip()]),
                      "block": seen["block"], "zones": seen["zones"][:6], "location": seen["location"] or seen["lz"],
                      "place": pid, "error": None}

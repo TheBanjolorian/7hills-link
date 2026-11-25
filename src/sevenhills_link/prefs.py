@@ -12,7 +12,9 @@ DEFAULTS = {
     "tray": True,                 # minimize and close hide the window to the tray
     "play_on_start": True,        # play the music when the window opens (not on autostart)
     "install_declined": False,    # "Run without installing" was pressed: do not offer to install again
-    "share_position": False,      # send the exact position on a planet or moon with the place (position.py)
+    # Send the exact position on a planet or moon with the place (position.py). On unless the
+    # member turns it off on the main view. (0.8.0 and 0.8.1 had "share_position", off by default.)
+    "exact_position": True,
 }
 
 

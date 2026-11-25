@@ -113,8 +113,9 @@ def test_a_position_counts_after_two_readings_and_is_sent_only_when_shared():
     assert t.screen_pos["body"] == "stanton/crusader/cellin"
     snap = t.snapshot()
     assert snap["place_id"] == "stanton/crusader/cellin"
-    assert snap["pos"] == {"body": "stanton/crusader/cellin", "lat": pytest.approx(-61.296, abs=0.002), "lon": pytest.approx(-144.617, abs=0.002), "alt": pytest.approx(750, abs=3)}
-    assert set(snap["pos"]) == {"body", "lat", "lon", "alt"}     # nothing else leaves the PC
+    assert snap["pos"] == {"body": "stanton/crusader/cellin", "lat": pytest.approx(-61.296, abs=0.002), "lon": pytest.approx(-144.617, abs=0.002), "alt": pytest.approx(750, abs=3),
+                           "hdg": None, "r": 260}
+    assert set(snap["pos"]) == {"body", "lat", "lon", "alt", "hdg", "r"}     # nothing else leaves the PC
     assert r.last["position"]["checked"] == ["distance", "side"]
 
     r2, t2 = reader(False)
@@ -150,3 +151,44 @@ def test_no_debug_block_clears_the_position():
     r.look(ON_FOOT); r.look(ON_FOOT)
     r.look("FPS 60")
     assert t.screen_pos is None and "pos" not in (t.snapshot() or {})
+
+
+def test_the_course_is_the_way_the_member_moves():
+    assert position.bearing((0, 0), (1, 0)) == pytest.approx(0)          # towards the north pole
+    assert position.bearing((0, 0), (0, 1)) == pytest.approx(90)         # east
+    assert position.bearing((10, 20), (9, 20)) == pytest.approx(180)
+    assert position.bearing((0, 0), (0, -1)) == pytest.approx(270)
+    assert position.ground_m((0, 0), (0, 1), 260000) == pytest.approx(4537.9, abs=1)
+
+
+def at(lat: float, lon: float) -> str:
+    """ON_FOOT with the member moved to this latitude and longitude, at the same height."""
+    import math
+    r = 260.7503860                     # km from Cellin's middle, as in ON_FOOT
+    la, lo = math.radians(lat), math.radians(lon)
+    x, y, z = r * math.cos(la) * math.cos(lo), r * math.cos(la) * math.sin(lo), r * math.sin(la)
+    return ON_FOOT.replace("-102.1047km -72.5157km -228.7069km\nZone: Solar", f"{x:.4f}km {y:.4f}km {z:.4f}km\nZone: Solar")
+
+
+def test_a_course_comes_after_twenty_metres_and_stays_while_standing_still():
+    r, t = reader(True)
+    r.look(at(-61.2958, -144.6173)); r.look(at(-61.2958, -144.6173))
+    assert t.snapshot()["pos"]["hdg"] is None and t.snapshot()["pos"]["r"] == 260      # no course yet; the radius in km
+    r.look(at(-61.2948, -144.6173))                     # 5 m north: not enough
+    assert t.snapshot()["pos"]["hdg"] is None
+    r.look(at(-61.2858, -144.6173))                     # 45 m north of where it started
+    hdg = t.snapshot()["pos"]["hdg"]
+    assert hdg is not None and (hdg <= 3 or hdg >= 357), hdg
+    r.look(at(-61.2858, -144.6173))                     # standing still: the course stays
+    assert t.snapshot()["pos"]["hdg"] == hdg
+    r.look(at(-61.2858, -144.5973))                     # 43 m east
+    assert 85 <= t.snapshot()["pos"]["hdg"] <= 95
+
+
+def test_a_landing_name_with_the_games_own_word_for_the_kind_of_place():
+    assert PLACES.outpost("Stanton2a_IndyMiner_TramMyers") == "stanton/crusader/cellin/tram-myers-mining"
+    assert PLACES.outpost("Stanton2a_IndyFarmer_GalleteFamily") == "stanton/crusader/cellin/gallete-family-farms"
+    assert PLACES.outpost("Stanton2a_Hickes") == "stanton/crusader/cellin/hickes-research-outpost"
+    assert PLACES.outpost("Stanton2b_ShubinMining_SCD1") == "stanton/crusader/daymar/shubin-mining-facility-scd-1"
+    assert PLACES.outpost("Stanton2a_IndyMiner_Nowhere") is None          # nothing telling left
+    assert PLACES.outpost("Stanton2a_Security") is None                   # eight security posts: not one

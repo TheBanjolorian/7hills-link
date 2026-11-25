@@ -114,7 +114,7 @@ class JsApi:
     def set_pref(self, key, value):
         if str(key) in DEFAULTS:
             self._core.prefs.set(str(key), bool(value))
-            if str(key) == "share_position":
+            if str(key) == "exact_position":
                 self._core.tracker.share_position = bool(value)
         return self.status()
 
