@@ -1603,6 +1603,1278 @@
     -13.5,
     -23.383
    ]
+  },
+  {
+   "id": "stanton/arccorp/orbital-relay-ac-421",
+   "kind": "landmark",
+   "name": "Orbital Relay AC-421",
+   "parent": "stanton/arccorp"
+  },
+  {
+   "id": "stanton/hurston/downded-relay-ac-652",
+   "kind": "landmark",
+   "name": "Downded Relay AC-652",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/comm-array-st1-61",
+   "kind": "landmark",
+   "name": "Comm Array ST1-61",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdms-edmond",
+   "kind": "outpost",
+   "name": "HDMS-Edmond",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdms-hadley",
+   "kind": "outpost",
+   "name": "HDMS-Hadley",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdms-oparei",
+   "kind": "outpost",
+   "name": "HDMS-Oparei",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdms-pinewood",
+   "kind": "outpost",
+   "name": "HDMS-Pinewood",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdms-stanhope",
+   "kind": "outpost",
+   "name": "HDMS-Stanhope",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdms-thedus",
+   "kind": "outpost",
+   "name": "HDMS-Thedus",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdof-palomar",
+   "kind": "outpost",
+   "name": "HDOF-Palomar",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-adlai",
+   "kind": "outpost",
+   "name": "HDSF-Adlai",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-barnabas",
+   "kind": "outpost",
+   "name": "HDSF-Barnabas",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-breckinridge",
+   "kind": "outpost",
+   "name": "HDSF-Breckinridge",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-colfax",
+   "kind": "outpost",
+   "name": "HDSF-Colfax",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-damaris",
+   "kind": "outpost",
+   "name": "HDSF-Damaris",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-elbridge",
+   "kind": "outpost",
+   "name": "HDSF-Elbridge",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-hendricks",
+   "kind": "outpost",
+   "name": "HDSF-Hendricks",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-hiram",
+   "kind": "outpost",
+   "name": "HDSF-Hiram",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-hobart",
+   "kind": "outpost",
+   "name": "HDSF-Hobart",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-ishmael",
+   "kind": "outpost",
+   "name": "HDSF-Ishmael",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-millerand",
+   "kind": "outpost",
+   "name": "HDSF-Millerand",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-rufus",
+   "kind": "outpost",
+   "name": "HDSF-Rufus",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-sherman",
+   "kind": "outpost",
+   "name": "HDSF-Sherman",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-tamar",
+   "kind": "outpost",
+   "name": "HDSF-Tamar",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-tompkins",
+   "kind": "outpost",
+   "name": "HDSF-Tompkins",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/hdsf-zacharias",
+   "kind": "outpost",
+   "name": "HDSF-Zacharias",
+   "parent": "stanton/hurston"
+  },
+  {
+   "id": "stanton/hurston/arial/comm-array-st1-13",
+   "kind": "landmark",
+   "name": "Comm Array ST1-13",
+   "parent": "stanton/hurston/arial"
+  },
+  {
+   "id": "stanton/hurston/arial/hdms-bezdek",
+   "kind": "outpost",
+   "name": "HDMS-Bezdek",
+   "parent": "stanton/hurston/arial"
+  },
+  {
+   "id": "stanton/hurston/arial/hdms-lathan",
+   "kind": "outpost",
+   "name": "HDMS-Lathan",
+   "parent": "stanton/hurston/arial"
+  },
+  {
+   "id": "stanton/hurston/aberdeen/comm-array-st1-92",
+   "kind": "landmark",
+   "name": "Comm Array ST1-92",
+   "parent": "stanton/hurston/aberdeen"
+  },
+  {
+   "id": "stanton/hurston/aberdeen/barton-flats-aid-shelter",
+   "kind": "outpost",
+   "name": "Barton Flats Aid Shelter",
+   "parent": "stanton/hurston/aberdeen"
+  },
+  {
+   "id": "stanton/hurston/aberdeen/hdms-anderson",
+   "kind": "outpost",
+   "name": "HDMS-Anderson",
+   "parent": "stanton/hurston/aberdeen"
+  },
+  {
+   "id": "stanton/hurston/aberdeen/hdms-norgaard",
+   "kind": "outpost",
+   "name": "HDMS-Norgaard",
+   "parent": "stanton/hurston/aberdeen"
+  },
+  {
+   "id": "stanton/hurston/magda/comm-array-st1-48",
+   "kind": "landmark",
+   "name": "Comm Array ST1-48",
+   "parent": "stanton/hurston/magda"
+  },
+  {
+   "id": "stanton/hurston/magda/hdms-hahn",
+   "kind": "outpost",
+   "name": "HDMS-Hahn",
+   "parent": "stanton/hurston/magda"
+  },
+  {
+   "id": "stanton/hurston/magda/hdms-perlman",
+   "kind": "outpost",
+   "name": "HDMS-Perlman",
+   "parent": "stanton/hurston/magda"
+  },
+  {
+   "id": "stanton/hurston/ita/comm-array-st1-02",
+   "kind": "landmark",
+   "name": "Comm Array ST1-02",
+   "parent": "stanton/hurston/ita"
+  },
+  {
+   "id": "stanton/hurston/ita/hdms-ryder",
+   "kind": "outpost",
+   "name": "HDMS-Ryder",
+   "parent": "stanton/hurston/ita"
+  },
+  {
+   "id": "stanton/hurston/ita/hdms-woodruff",
+   "kind": "outpost",
+   "name": "HDMS-Woodruff",
+   "parent": "stanton/hurston/ita"
+  },
+  {
+   "id": "stanton/crusader/comm-array-st2-55",
+   "kind": "landmark",
+   "name": "Comm Array ST2-55",
+   "parent": "stanton/crusader"
+  },
+  {
+   "id": "stanton/crusader/cloudrest-retreat",
+   "kind": "cluster",
+   "name": "Cloudrest Retreat",
+   "parent": "stanton/crusader"
+  },
+  {
+   "id": "stanton/crusader/prospect-point",
+   "kind": "landmark",
+   "name": "Prospect Point",
+   "parent": "stanton/crusader"
+  },
+  {
+   "id": "stanton/crusader/empyrean-park",
+   "kind": "cluster",
+   "name": "Empyrean Park",
+   "parent": "stanton/crusader"
+  },
+  {
+   "id": "stanton/crusader/cellin/ashburn-channel-aid-shelter",
+   "kind": "outpost",
+   "name": "Ashburn Channel Aid Shelter",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/flanagan-s-ravine-aid-shelter",
+   "kind": "outpost",
+   "name": "Flanagan's Ravine Aid Shelter",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/julep-ravine-aid-shelter",
+   "kind": "outpost",
+   "name": "Julep Ravine Aid Shelter",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/mogote-aid-shelter",
+   "kind": "outpost",
+   "name": "Mogote Aid Shelter",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/gallete-family-farms",
+   "kind": "outpost",
+   "name": "Gallete Family Farms",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/tram-myers-mining",
+   "kind": "outpost",
+   "name": "Tram & Myers Mining",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/hickes-research-outpost",
+   "kind": "outpost",
+   "name": "Hickes Research Outpost",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/terra-mills-hydrofarm",
+   "kind": "outpost",
+   "name": "Terra Mills HydroFarm",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/comm-array-st2-28",
+   "kind": "landmark",
+   "name": "Comm Array ST2-28",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/security-post-awala",
+   "kind": "outpost",
+   "name": "Security Post Awala",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/security-post-birbari",
+   "kind": "outpost",
+   "name": "Security Post Birbari",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/security-post-chilad",
+   "kind": "outpost",
+   "name": "Security Post Chilad",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/security-post-gandan",
+   "kind": "outpost",
+   "name": "Security Post Gandan",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/security-post-kota",
+   "kind": "outpost",
+   "name": "Security Post Kota",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/security-post-pakote",
+   "kind": "outpost",
+   "name": "Security Post Pakote",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/security-post-saktigar",
+   "kind": "outpost",
+   "name": "Security Post Saktigar",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/cellin/security-post-sharga",
+   "kind": "outpost",
+   "name": "Security Post Sharga",
+   "parent": "stanton/crusader/cellin"
+  },
+  {
+   "id": "stanton/crusader/daymar/arccorp-mining-area-141",
+   "kind": "outpost",
+   "name": "ArcCorp Mining Area 141",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/dunlow-ridge-aid-shelter",
+   "kind": "outpost",
+   "name": "Dunlow Ridge Aid Shelter",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/eager-flats-aid-shelter",
+   "kind": "outpost",
+   "name": "Eager Flats Aid Shelter",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/tamdon-plains-aid-shelter",
+   "kind": "outpost",
+   "name": "Tamdon Plains Aid Shelter",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/wolf-point-aid-shelter",
+   "kind": "outpost",
+   "name": "Wolf Point Aid Shelter",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/bountiful-harvest-hydroponics",
+   "kind": "outpost",
+   "name": "Bountiful Harvest Hydroponics",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/kudre-ore",
+   "kind": "outpost",
+   "name": "Kudre Ore",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/shubin-mining-facility-scd-1",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SCD-1",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/comm-array-st2-47",
+   "kind": "landmark",
+   "name": "Comm Array ST2-47",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/security-post-dawu",
+   "kind": "outpost",
+   "name": "Security Post Dawu",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/security-post-erden",
+   "kind": "outpost",
+   "name": "Security Post Erden",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/security-post-menian",
+   "kind": "outpost",
+   "name": "Security Post Menian",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/security-post-reawick",
+   "kind": "outpost",
+   "name": "Security Post Reawick",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/security-post-tavan",
+   "kind": "outpost",
+   "name": "Security Post Tavan",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/security-post-ulaga",
+   "kind": "outpost",
+   "name": "Security Post Ulaga",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/daymar/security-post-yafa",
+   "kind": "outpost",
+   "name": "Security Post Yafa",
+   "parent": "stanton/crusader/daymar"
+  },
+  {
+   "id": "stanton/crusader/yela/arccorp-mining-area-157",
+   "kind": "outpost",
+   "name": "ArcCorp Mining Area 157",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/aston-ridge-aid-shelter",
+   "kind": "outpost",
+   "name": "Aston Ridge Aid Shelter",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/kosso-basin-aid-shelter",
+   "kind": "outpost",
+   "name": "Kosso Basin Aid Shelter",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/nakamura-valley-aid-shelter",
+   "kind": "outpost",
+   "name": "Nakamura Valley Aid Shelter",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/talarine-divide-aid-shelter",
+   "kind": "outpost",
+   "name": "Talarine Divide Aid Shelter",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/benson-mining-outpost",
+   "kind": "outpost",
+   "name": "Benson Mining Outpost",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/deakins-research-outpost",
+   "kind": "outpost",
+   "name": "Deakins Research Outpost",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/comm-array-st2-76",
+   "kind": "landmark",
+   "name": "Comm Array ST2-76",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/afterlife",
+   "kind": "outpost",
+   "name": "Afterlife",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/nt-999-xxii",
+   "kind": "outpost",
+   "name": "NT-999-XXII",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-hasik",
+   "kind": "outpost",
+   "name": "Security Post Hasik",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-iteke",
+   "kind": "outpost",
+   "name": "Security Post Iteke",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-klipra",
+   "kind": "outpost",
+   "name": "Security Post Klipra",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-moka",
+   "kind": "outpost",
+   "name": "Security Post Moka",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-opal",
+   "kind": "outpost",
+   "name": "Security Post Opal",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-peska",
+   "kind": "outpost",
+   "name": "Security Post Peska",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-triolet",
+   "kind": "outpost",
+   "name": "Security Post Triolet",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-walvis",
+   "kind": "outpost",
+   "name": "Security Post Walvis",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/security-post-wan",
+   "kind": "outpost",
+   "name": "Security Post Wan",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/crusader/yela/utopia",
+   "kind": "outpost",
+   "name": "Utopia",
+   "parent": "stanton/crusader/yela"
+  },
+  {
+   "id": "stanton/arccorp/comm-array-st3-90",
+   "kind": "landmark",
+   "name": "Comm Array ST3-90",
+   "parent": "stanton/arccorp"
+  },
+  {
+   "id": "stanton/arccorp/area04",
+   "kind": "outpost",
+   "name": "Area04",
+   "parent": "stanton/arccorp"
+  },
+  {
+   "id": "stanton/arccorp/area06",
+   "kind": "outpost",
+   "name": "Area06",
+   "parent": "stanton/arccorp"
+  },
+  {
+   "id": "stanton/arccorp/area11",
+   "kind": "outpost",
+   "name": "Area11",
+   "parent": "stanton/arccorp"
+  },
+  {
+   "id": "stanton/arccorp/area17",
+   "kind": "outpost",
+   "name": "Area17",
+   "parent": "stanton/arccorp"
+  },
+  {
+   "id": "stanton/arccorp/area20",
+   "kind": "outpost",
+   "name": "Area20",
+   "parent": "stanton/arccorp"
+  },
+  {
+   "id": "stanton/arccorp/lyria/humboldt-mines",
+   "kind": "outpost",
+   "name": "Humboldt Mines",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/loveridge-mineral-reserve",
+   "kind": "outpost",
+   "name": "Loveridge Mineral Reserve",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/shubin-mining-facility-sal-2",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SAL-2",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/shubin-mining-facility-sal-5",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SAL-5",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/comm-array-st3-18",
+   "kind": "landmark",
+   "name": "Comm Array ST3-18",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-011",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 011",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-017",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 017",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-024",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 024",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-029",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 029",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-033",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 033",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-038",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 038",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-042",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 042",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-045",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 045",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-052",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 052",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-059",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 059",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/arccorp-security-post-060",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 060",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/buckets",
+   "kind": "outpost",
+   "name": "Buckets",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/elsewhere",
+   "kind": "outpost",
+   "name": "Elsewhere",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/launch-pad",
+   "kind": "outpost",
+   "name": "Launch Pad",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/operations-depot-lyria-1",
+   "kind": "outpost",
+   "name": "Operations Depot Lyria-1",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/shubin-processing-facility-spal-12",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPAL-12",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/shubin-processing-facility-spal-16",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPAL-16",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/shubin-processing-facility-spal-21",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPAL-21",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/shubin-processing-facility-spal-3",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPAL-3",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/shubin-processing-facility-spal-7",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPAL-7",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/shubin-processing-facility-spal-9",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPAL-9",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/teddy-s-playhouse",
+   "kind": "outpost",
+   "name": "Teddy's Playhouse",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/the-pit",
+   "kind": "outpost",
+   "name": "\"The Pit\"",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/lyria/wheeler-s",
+   "kind": "outpost",
+   "name": "\"Wheeler's\"",
+   "parent": "stanton/arccorp/lyria"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-mining-area-045",
+   "kind": "outpost",
+   "name": "ArcCorp Mining Area 045",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-mining-area-048",
+   "kind": "outpost",
+   "name": "ArcCorp Mining Area 048",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-mining-area-056",
+   "kind": "outpost",
+   "name": "ArcCorp Mining Area 056",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-mining-area-061",
+   "kind": "outpost",
+   "name": "ArcCorp Mining Area 061",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/shady-glen-farms",
+   "kind": "outpost",
+   "name": "Shady Glen Farms",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/comm-array-st3-35",
+   "kind": "landmark",
+   "name": "Comm Array ST3-35",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/microtech/comm-array-st4-22",
+   "kind": "landmark",
+   "name": "Comm Array ST4-22",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/calhoun-pass-emergency-shelter",
+   "kind": "outpost",
+   "name": "Calhoun Pass Emergency Shelter",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/clear-view-emergency-shelter",
+   "kind": "outpost",
+   "name": "Clear View Emergency Shelter",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/nuiqsut-emergency-shelter",
+   "kind": "outpost",
+   "name": "Nuiqsut Emergency Shelter",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/point-wain-emergency-shelter",
+   "kind": "outpost",
+   "name": "Point Wain Emergency Shelter",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/ghost-hollow",
+   "kind": "outpost",
+   "name": "Ghost Hollow",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/rayari-deltana-research-outpost",
+   "kind": "outpost",
+   "name": "Rayari Deltana Research Outpost",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/shubin-mining-facility-sm0-10",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SM0-10",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/shubin-mining-facility-sm0-13",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SM0-13",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/shubin-mining-facility-sm0-18",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SM0-18",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/shubin-mining-facility-sm0-22",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SM0-22",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/outpost-54",
+   "kind": "outpost",
+   "name": "Outpost 54",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/the-necropolis",
+   "kind": "outpost",
+   "name": "The Necropolis",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-066",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 066",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-074",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 074",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-078",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 078",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-087",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 087",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-089",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 089",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-092",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 092",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-094",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 094",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-101",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 101",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-108",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 108",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-security-post-111",
+   "kind": "outpost",
+   "name": "ArcCorp Security Post 111",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-processing-center-115",
+   "kind": "outpost",
+   "name": "ArcCorp Processing Center 115",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/arccorp-processing-center-123",
+   "kind": "outpost",
+   "name": "ArcCorp Processing Center 123",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/good-times-temple",
+   "kind": "outpost",
+   "name": "Good Times Temple",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/arccorp/wala/lost-and-found",
+   "kind": "outpost",
+   "name": "Lost and Found",
+   "parent": "stanton/arccorp/wala"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-2ub-rb9-5",
+   "kind": "outpost",
+   "name": "MT DataCenter 2UB-RB9-5",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-4hj-lve-a",
+   "kind": "outpost",
+   "name": "MT DataCenter 4HJ-LVE-A",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-5wq-r2v-c",
+   "kind": "outpost",
+   "name": "MT DataCenter 5WQ-R2V-C",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-8fk-q2x-k",
+   "kind": "outpost",
+   "name": "MT DataCenter 8FK-Q2X-K",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-d79-ecg-r",
+   "kind": "outpost",
+   "name": "MT DataCenter D79-ECG-R",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-e2q-nsg-y",
+   "kind": "outpost",
+   "name": "MT DataCenter E2Q-NSG-Y",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-qvx-j88-j",
+   "kind": "outpost",
+   "name": "MT DataCenter QVX-J88-J",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-tmg-xev-2",
+   "kind": "outpost",
+   "name": "MT DataCenter TMG-XEV-2",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-kh3-aae-l",
+   "kind": "outpost",
+   "name": "MT DataCenter KH3-AAE-L",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/mt-datacenter-l8p-juc-8-offline",
+   "kind": "outpost",
+   "name": "MT DataCenter L8P-JUC-8 (Offline)",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/raven-s-roost",
+   "kind": "outpost",
+   "name": "Raven's Roost",
+   "parent": "stanton/microtech"
+  },
+  {
+   "id": "stanton/microtech/calliope/rayari-anvik-research-outpost",
+   "kind": "outpost",
+   "name": "Rayari Anvik Research Outpost",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/rayari-kaltag-research-outpost",
+   "kind": "outpost",
+   "name": "Rayari Kaltag Research Outpost",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/shubin-mining-facility-smca-6",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SMCa-6",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/shubin-mining-facility-smca-8",
+   "kind": "outpost",
+   "name": "Shubin Mining Facility SMCa-8",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/comm-array-st4-31",
+   "kind": "landmark",
+   "name": "Comm Array ST4-31",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-4hj-lve-a",
+   "kind": "outpost",
+   "name": "MT SecurityCenter 4HJ-LVE-A",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-9pl-q42-k",
+   "kind": "outpost",
+   "name": "MT SecurityCenter 9PL-Q42-K",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-9wb-hv7-p",
+   "kind": "outpost",
+   "name": "MT SecurityCenter 9WB-HV7-P",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-bh5-keh-6",
+   "kind": "outpost",
+   "name": "MT SecurityCenter BH5-KEH-6",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-d66-crw-f",
+   "kind": "outpost",
+   "name": "MT SecurityCenter D66-CRW-F",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-drc-f2s-6",
+   "kind": "outpost",
+   "name": "MT SecurityCenter DRC-F2S-6",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-e6c-brt-m",
+   "kind": "outpost",
+   "name": "MT SecurityCenter E6C-BRT-M",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-gsw-nm3-e",
+   "kind": "outpost",
+   "name": "MT SecurityCenter GSW-NM3-E",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-oee-5rg-5",
+   "kind": "outpost",
+   "name": "MT SecurityCenter OEE-5RG-5",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-slp-vc3-w",
+   "kind": "outpost",
+   "name": "MT SecurityCenter SLP-VC3-W",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-udb-z4w-2",
+   "kind": "outpost",
+   "name": "MT SecurityCenter UDB-Z4W-2",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-xgt-33w-7",
+   "kind": "outpost",
+   "name": "MT SecurityCenter XGT-33W-7",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-6ee-gvh-9",
+   "kind": "outpost",
+   "name": "MT SecurityCenter 6EE-GVH-9",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-ctb-b3u-1",
+   "kind": "outpost",
+   "name": "MT SecurityCenter CTB-B3U-1",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-dxc-25g-l",
+   "kind": "outpost",
+   "name": "MT SecurityCenter DXC-25G-L",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-fq5-urx-8",
+   "kind": "outpost",
+   "name": "MT SecurityCenter FQ5-URX-8",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-h36-ybg-r",
+   "kind": "outpost",
+   "name": "MT SecurityCenter H36-YBG-R",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-jwb-d9l-4",
+   "kind": "outpost",
+   "name": "MT SecurityCenter JWB-D9L-4",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-kws-gpz-5",
+   "kind": "outpost",
+   "name": "MT SecurityCenter KWS-GPZ-5",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-plm-9yw-q",
+   "kind": "outpost",
+   "name": "MT SecurityCenter PLM-9YW-Q",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/mt-securitycenter-vd9-87r-p",
+   "kind": "outpost",
+   "name": "MT SecurityCenter VD9-87R-P",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/shubin-processing-facility-spmc-1",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPMC-1",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/shubin-processing-facility-spmc-10",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPMC-10",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/shubin-processing-facility-spmc-11",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPMC-11",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/shubin-processing-facility-spmc-14",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPMC-14",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/shubin-processing-facility-spmc-3",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPMC-3",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/calliope/shubin-processing-facility-spmc-5",
+   "kind": "outpost",
+   "name": "Shubin Processing Facility SPMC-5",
+   "parent": "stanton/microtech/calliope"
+  },
+  {
+   "id": "stanton/microtech/clio/rayari-cantwell-research-outpost",
+   "kind": "outpost",
+   "name": "Rayari Cantwell Research Outpost",
+   "parent": "stanton/microtech/clio"
+  },
+  {
+   "id": "stanton/microtech/clio/rayari-mcgrath-research-outpost",
+   "kind": "outpost",
+   "name": "Rayari McGrath Research Outpost",
+   "parent": "stanton/microtech/clio"
+  },
+  {
+   "id": "stanton/microtech/clio/comm-array-st4-59",
+   "kind": "landmark",
+   "name": "Comm Array ST4-59",
+   "parent": "stanton/microtech/clio"
+  },
+  {
+   "id": "stanton/microtech/euterpe/comm-array-st4-64",
+   "kind": "landmark",
+   "name": "Comm Array ST4-64",
+   "parent": "stanton/microtech/euterpe"
+  },
+  {
+   "id": "stanton/microtech/euterpe/bud-s-growery",
+   "kind": "outpost",
+   "name": "Bud's Growery",
+   "parent": "stanton/microtech/euterpe"
   }
  ]
 }

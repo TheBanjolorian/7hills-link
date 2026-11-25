@@ -246,10 +246,24 @@ def test_a_line_the_tracker_chokes_on_does_not_stop_the_reader(tmp_path: Path, c
         th = threading.Thread(target=f._run, daemon=True)
         th.start()
         for _ in range(300):
-            if t.event and t.event[1] == "Landed at Ruin Station":
+            if t.event and t.event[1] == "Arrived at Ruin Station":
                 break
             time.sleep(0.01)
         f.stop()
         th.join(timeout=2)
-    assert t.event[1] == "Landed at Ruin Station"            # the line after the bad ones was read
+    assert t.event[1] == "Arrived at Ruin Station"            # the line after the bad ones was read
     assert len([r for r in caplog.records if "not understood" in r.getMessage()]) == 1     # logged once, not per line
+
+
+def test_an_outpost_is_found_by_the_words_of_its_landing_name():
+    assert PLACES.outpost("Stanton2b_ShubinMining_SCD1") == "stanton/crusader/daymar/shubin-mining-facility-scd-1"
+    # Not on the list, or not telling enough: no guess. The moon still comes from the name.
+    for name in ("Outpost_OLP_Stanton2b_Lamina", "Outpost_PAF_Stanton2b_Attritus_2", "Stanton2b_Post", "Nyx_Levski", "RR_P6_LEO", ""):
+        assert PLACES.outpost(name) is None, name
+    assert PLACES.hint("Outpost_OLP_Stanton2b_Lamina") == "stanton/crusader/daymar"
+    # The screen writes the name as the game shows it.
+    assert PLACES.named("Security Post Dawu") == "stanton/crusader/daymar/security-post-dawu"
+
+
+def test_levski_is_known_by_its_number_from_the_start(tmp_path):
+    assert LocationTable.load(tmp_path / "locations.json").get("3723364946")["place"] == "nyx/delamar/levski"

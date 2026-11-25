@@ -219,6 +219,28 @@ class Places:
                 best = pid
         return best
 
+    def outpost(self, name: str) -> str | None:
+        """An outpost from its landing-area name: Stanton2b_ShubinMining_SCD1 → Shubin Mining
+        Facility SCD-1 on Daymar. The moon or planet comes from the name (hint); the outpost
+        is the one place on it whose name holds every other word of the landing name. None
+        unless exactly one fits and the words are telling enough (8 letters together)."""
+        body = self.hint(name)
+        if not body or self.kind(body) not in ("planet", "moon"):
+            return None
+        tokens = []
+        for t in re.split(r"[^A-Za-z0-9]+", name or ""):
+            n = _norm(t)
+            if not n or n in ("outpost", "olp", "paf") or self.bodies.get(n) or self.systems.get(n):
+                continue
+            # "ShubinMining" is two words run together.
+            tokens += [_norm(w) for w in re.findall(r"[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+", t)] if re.search(r"[a-z][A-Z]", t) else [n]
+        tokens = [t for t in tokens if t]
+        if sum(len(t) for t in tokens) < 8 or not any(len(t) >= 4 for t in tokens):
+            return None
+        fits = [p["id"] for p in self.by_id.values()
+                if p.get("parent") == body and self.is_spot(p["id"]) and all(t in _norm(p["name"]) for t in tokens)]
+        return fits[0] if len(fits) == 1 else None
+
     def kind(self, pid: str | None) -> str | None:
         p = self.by_id.get(pid) if pid else None
         return p["kind"] if p else None
@@ -534,6 +556,8 @@ class Tracker:
         self.landing_name = name
         self._hops = 0
         pid = self.places.named(name)
+        if not (pid and self.places.is_spot(pid)):
+            pid = self.places.outpost(name) or pid
         if pid and self.places.is_spot(pid):
             self._set_port(pid)
             self._level = "spot"
@@ -560,7 +584,9 @@ class Tracker:
                     self.table.learn(self.landing, area, name=label, by="landing")
         self.route = None
         if not again:
-            self._event(ts, "Landed at " + label)
+            # "Arrived", not "landed": the game writes this line on entering the landing area's
+            # zone, also from a ship still in the air.
+            self._event(ts, "Arrived at " + label)
 
     # ------------------------------------------------------------ the ship's navigation
 
