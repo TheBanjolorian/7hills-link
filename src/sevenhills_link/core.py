@@ -197,7 +197,8 @@ class Core:
         self.delay_wait = None    # s from the game's frame to the start of its upload (smoothed)
         self.delay_upload = None  # s the upload to 7Net took (smoothed)
         # Where the player is, from Game.log next to the game's exe (see location.py).
-        self.tracker = location.Tracker(location.Places.load())
+        # The game's location numbers: the shipped list plus what this PC's own log has shown.
+        self.tracker = location.Tracker(location.Places.load(), location.LocationTable.load())
         self.gamelog: location.GameLogFollower | None = None
         # The exact place from the r_displayinfo text on screen, while sharing Full (see screen.py).
         self.screen = screen.ScreenReader(self.tracker, self.tracker.places)
@@ -572,6 +573,7 @@ class Core:
                 "now": _summary(frame),
                 "where": self.tracker.describe(),
                 "screen": self.screen.status,
+                "screen_report": self.screen.report(),   # for Settings → Game → Test screen reading; never uploaded
                 "situation": self._situation(frame),
                 "gamelog_error": self.gamelog.error if self.gamelog else None,
             }

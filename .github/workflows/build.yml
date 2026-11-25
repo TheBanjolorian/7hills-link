@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install grpcio protobuf pytest
+      - run: pip install grpcio protobuf pytest pillow
       - run: python -m pytest -q tests
         env:
           PYTHONPATH: src
@@ -53,6 +53,66 @@ jobs:
         run: |
           $v = & .\dist\7HillsLink.exe --version | Out-String
           Write-Host "version: $v"
+      # The screen reading (screen.py) can only be tried on Windows, so the build does it: the exe
+      # just made reads a drawn stand-in for a game screenshot with Windows' own text
+      # recognition, in the client's own way and in every other way the corner could be
+      # prepared (the log shows how each went), and then looks at this runner's screen.
+      # A missing OCR language on the runner is a warning; anything else that goes wrong
+      # stops the build.
+      - name: Windows OCR language
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          Get-WindowsCapability -Online -Name "Language.OCR*" | Format-Table Name, State
+          $cap = Get-WindowsCapability -Online -Name "Language.OCR~~~en-US~0.0.1.0"
+          if ($cap.State -ne 'Installed') { Add-WindowsCapability -Online -Name "Language.OCR~~~en-US~0.0.1.0" }
+      - name: Screen reading test
+        shell: pwsh
+        run: |
+          $env:LOCALAPPDATA = Join-Path $env:RUNNER_TEMP 'ocrtest'
+          New-Item -ItemType Directory -Force $env:LOCALAPPDATA | Out-Null
+          $json = "$env:LOCALAPPDATA\7HillsLink\screen-test.json"
+          # The exe is a window program: its answer is read from screen-test.json, not from a pipe.
+          function Invoke-ScreenTest($arguments) {
+            Remove-Item $json -ErrorAction SilentlyContinue
+            $p = Start-Process dist/7HillsLink.exe -ArgumentList $arguments -PassThru
+            $null = $p.Handle
+            $p | Wait-Process -Timeout 180 -ErrorAction SilentlyContinue
+            if (-not $p.HasExited) { $p | Stop-Process -Force; throw 'the screen test did not finish in three minutes' }
+            $text = Get-Content $json -Raw -ErrorAction SilentlyContinue
+            Write-Host "exit code $($p.ExitCode)"
+            if (-not $text) { throw 'the exe wrote no screen-test.json' }
+            $r = $text | ConvertFrom-Json
+            # The answer (what the client settles on), the lines it read, then every way of reading, one line each.
+            $r | Select-Object ok, error, source, language, lines_from, box, scale, prepared, size, ms, lines, block, location, place, confidence, other_lines | ConvertTo-Json -Compress | Write-Host
+            $r.read | ForEach-Object { Write-Host "   | $_" }
+            $r.tried | ForEach-Object { Write-Host ('   {0,-6} x{1} {2,-9} {3,5} ms  {4,2} lines  location [{5}]  place [{6}]  zones [{7}] {8}' -f $_.box, $_.scale, $_.prepared, $_.ms, $_.lines, $_.location, $_.place, ($_.zones -join ', '), $_.error) }
+            return [pscustomobject]@{ Code = $p.ExitCode; Result = $r }
+          }
+          # The same block at the two commonest screen sizes: both must come back as Yela, read
+          # with the lines put together from the words.
+          foreach ($size in @(@(2560, 1440), @(1920, 1080))) {
+            $shot = Join-Path $env:RUNNER_TEMP "shot-$($size[1]).png"
+            python tools/make_debug_screenshot.py $shot $size[0] $size[1]
+            $t = Invoke-ScreenTest @('--screen-test', "`"$shot`"")
+            if ($t.Code -eq 3 -and $t.Result.error -match 'no OCR language installed') {
+              Write-Host "::warning::Windows has no OCR language on this runner: the screen reading in the exe was NOT tried"
+              exit 0
+            }
+            if ($t.Code -ne 0 -or -not $t.Result.ok) { Write-Error "the screen test failed (exit code $($t.Code)): $($t.Result.error)"; exit 1 }
+            if ($t.Result.lines_from -ne 'words') { Write-Error "the lines were not put together from the words: $($t.Result.lines_from)"; exit 1 }
+            if (-not $t.Result.block) { Write-Error "$($size[1])p: the debug block was not found in the picture"; exit 1 }
+            if ($t.Result.place -ne 'stanton/crusader/yela') { Write-Error "$($size[1])p: the debug text was read as '$($t.Result.place)', not Yela"; exit 1 }
+            if ($t.Result.confidence -ne 'near') { Write-Error "$($size[1])p: a moon from the screen must be 'near', got '$($t.Result.confidence)'"; exit 1 }
+            if ($t.Result.location -ne 'GrimHEX') { Write-Host "::warning::$($size[1])p: the location line was read as '$($t.Result.location)', not GrimHEX" }
+          }
+          # The live path: capture this screen's corner with mss and read it. There is no game on
+          # the runner, so no place is expected; a runner without a screen to capture is a warning.
+          try { $live = Invoke-ScreenTest @('--screen-test') } catch { $live = [pscustomobject]@{ Code = -1; Result = [pscustomobject]@{ error = "$_" } } }
+          if ($live.Result.error -match 'ModuleNotFoundError|ImportError') { Write-Error "a module is missing from the exe: $($live.Result.error)"; exit 1 }
+          if ($live.Code -ne 0 -or -not $live.Result.captured) {
+            Write-Host "::warning::this runner's screen could not be captured and read (exit code $($live.Code)): $($live.Result.error) The live path was NOT confirmed"
+          }
       - name: Single instance test
         shell: pwsh
         run: |
@@ -83,7 +143,9 @@ jobs:
           Get-Content $log
           Get-Process 7HillsLink -ErrorAction SilentlyContinue | Stop-Process -Force
           if (-not (Select-String -Path $log -Pattern ' updated$' -Quiet)) { Write-Error 'install did not complete'; exit 1 }
-          if (-not (Test-Path "$d\7HillsLink.old.exe")) { Write-Error 'no backup kept'; exit 1 }
+          # The backup is checked in the log, not on disk: the new version removes 7HillsLink.old.exe as
+          # soon as it runs, and now and then it got there before this step looked.
+          if (-not (Select-String -Path $log -Pattern 'kept the old version as 7HillsLink\.old\.exe$' -Quiet)) { Write-Error 'no backup kept'; exit 1 }
       - name: Checksum
         shell: pwsh
         run: |

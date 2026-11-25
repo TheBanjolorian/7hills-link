@@ -205,6 +205,8 @@
       <div id="channels"></div>
       <p class="err" id="pathErr"></p>
       <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn outline small" onclick="call('rescan')">Scan again</button></div>
+      <div class="srow" style="margin-top:10px"><div class="grow"><div>Place from the screen</div><div class="dim" style="font-size:12px">While you share Full and the game window is in front, the debug text in the top-right corner (<span class="mono">r_displayinfo 3</span> in the game console) is read on this PC. Only the place goes to 7Net.</div></div><button class="btn outline small" id="scrBtn" onclick="toggleScreenTest()">Test screen reading</button></div>
+      <div class="mono hidden" id="scrReport" style="font-size:12px;line-height:1.6;margin-top:8px;padding:10px 12px;border:1px solid #2a2a2a;border-radius:6px;white-space:pre-wrap;word-break:break-word"></div>
     </div>
 
     <div class="sec" id="secUpdates">
@@ -282,6 +284,44 @@
     $('gearBtn').classList.toggle('on', open)
     if (open) { $('gearBtn').blur(); $('settingsView').focus({ preventScroll: true }) }
     if (open && typeof section === 'string') $(section).scrollIntoView({ block: 'start' })
+  }
+  // Settings → Game → Test screen reading: what the last look at the game's corner found.
+  // It stays on this PC; only the place id ever goes to 7Net.
+  let screenTestOpen = false
+  function toggleScreenTest() { screenTestOpen = !screenTestOpen; if (S) renderScreenTest(S) }
+  function screenTestText(s) {
+    const r = s.screen_report || {}
+    const mode = s.settings ? (s.settings.share_mode || (s.settings.share_org ? 'full' : 'online')) : null
+    const lines = []
+    if (r.status === 'unavailable') {
+      lines.push(s.platform === 'windows' ? 'Not available on this PC: ' + (r.error || 'Windows text recognition is missing') : 'Only on Windows.')
+      if (s.platform === 'windows') lines.push('Windows has no text recognition (OCR) for any of your languages. Adding English (United States) under Windows Settings → Time & language → Language & region usually installs it; restart 7Hills Link afterwards.')
+      return lines.join('\n')
+    }
+    if (mode !== 'full') lines.push('Off: the screen is read only while you share Full.')
+    lines.push('Text recognition: Windows' + (r.language ? ' (' + r.language + ')' : ''))
+    const l = r.last
+    if (!l) {
+      lines.push('No look yet. Share Full, type r_displayinfo 3 in the game console, keep the game window in front for half a minute and come back here.')
+      return lines.join('\n')
+    }
+    const ago = l.ago < 90 ? l.ago + ' s ago' : Math.round(l.ago / 60) + ' min ago'
+    if (l.error) { lines.push('Last look ' + ago + ' failed: ' + l.error); return lines.join('\n') }
+    lines.push('Last look ' + ago + (l.size ? ' · ' + l.size[0] + ' × ' + l.size[1] + ' px' + (l.scale > 1 ? ' (enlarged ×' + l.scale + ')' : '') : '') + ' · ' + l.lines + ' lines of text' + (l.ms != null ? ' · read in ' + l.ms + ' ms' : ''))
+    if (!l.block) {
+      lines.push(l.lines ? 'Debug text: not found among them. Type r_displayinfo 3 in the game console; it sits in the top-right corner.'
+        : 'No text read at all. If the game runs in exclusive fullscreen the capture can come out black: try borderless or windowed.')
+      return lines.join('\n')
+    }
+    lines.push('Debug text: found · zones: ' + (l.zones || []).join(', '))
+    if (l.location) lines.push('Location line: ' + l.location)
+    lines.push(l.place ? 'Place: ' + (l.place_name || l.place) + ' (' + l.place + ')' : 'Place: none of these names is on the place list yet')
+    return lines.join('\n')
+  }
+  function renderScreenTest(s) {
+    show('scrReport', screenTestOpen)
+    $('scrBtn').textContent = screenTestOpen ? 'Hide' : 'Test screen reading'
+    if (screenTestOpen) $('scrReport').textContent = screenTestText(s)
   }
   function togglePref(key) { call('set_pref', key, !(S && S.prefs && S.prefs[key])) }
   const setSwitch = (id, on) => $(id).classList.toggle('on', !!on)
@@ -368,15 +408,18 @@
     $('subline').textContent = [name || (s.linked ? 'Linked' : 'Not linked'), where, s.game_found ? s.channel : ''].filter(Boolean).join(' · ')
     const extra = n.ship ? ['Gear ' + (n.gear || '?'), n.mode, n.power_on ? 'Power on' : 'Power off'].filter(Boolean).join(' · ') : ''
     // The place itself is shown on 7Net (/live, party, Org Command), not here. Only whether the
-    // screen corner (r_displayinfo) is being read, while sharing Full.
+    // screen corner (r_displayinfo) is being read, while sharing Full. What was read is under
+    // Settings → Game → Test screen reading.
     const scr = {
-      reading: 'Exact spot: reading the screen',
-      no_text: 'Exact spot: off · type r_displayinfo 2 in the game console',
-      idle: 'Exact spot: read while the game window is in front',
-      unavailable: 'Exact spot: not available (Windows text recognition missing)',
+      reading: 'Screen: reading the debug text',
+      no_text: 'Screen: no debug text · type r_displayinfo 3 in the game console',
+      idle: 'Screen: read while the game window is in front',
+      error: 'Screen: could not be read · see Settings → Game',
+      unavailable: 'Screen: not available (Windows text recognition missing)',
     }[s.screen]
     show('screenLine', !!scr)
     $('screenLine').textContent = scr || ''
+    renderScreenTest(s)
     $('steps').innerHTML = p.steps.map(st => '<span><span class="bub ' + st.color + '"></span>' + esc(st.name) + '</span>').join('') + (extra ? '<span style="margin-left:auto">' + esc(extra) + '</span>' : '')
 
     const d = s.delay || {}, t = s.traffic || {}
