@@ -84,13 +84,13 @@ jobs:
             if (-not $text) { throw 'the exe wrote no screen-test.json' }
             $r = $text | ConvertFrom-Json
             # The answer (what the client settles on), the lines it read, then every way of reading, one line each.
-            $r | Select-Object ok, error, source, language, lines_from, box, scale, prepared, size, ms, lines, block, location, place, confidence, other_lines | ConvertTo-Json -Compress | Write-Host
+            $r | Select-Object ok, error, source, language, lines_from, box, scale, prepared, size, ms, lines, block, location, place, confidence, position, position_ways, other_lines | ConvertTo-Json -Compress -Depth 4 | Write-Host
             $r.read | ForEach-Object { Write-Host "   | $_" }
-            $r.tried | ForEach-Object { Write-Host ('   {0,-6} x{1} {2,-9} {3,5} ms  {4,2} lines  location [{5}]  place [{6}]  zones [{7}] {8}' -f $_.box, $_.scale, $_.prepared, $_.ms, $_.lines, $_.location, $_.place, ($_.zones -join ', '), $_.error) }
+            $r.tried | ForEach-Object { Write-Host ('   {0,-6} x{1} {2,-9} {3,5} ms  {4,2} lines  location [{5}]  place [{6}]  position [{9}]  zones [{7}] {8}' -f $_.box, $_.scale, $_.prepared, $_.ms, $_.lines, $_.location, $_.place, ($_.zones -join ', '), $_.error, $(if ($_.position) { "$($_.position.lat) $($_.position.lon) $($_.position.alt)" } else { '' })) }
             return [pscustomobject]@{ Code = $p.ExitCode; Result = $r }
           }
           # The same block at the two commonest screen sizes: both must come back as Yela, read
-          # with the lines put together from the words.
+          # with the lines put together from the words, and with the position on it.
           foreach ($size in @(@(2560, 1440), @(1920, 1080))) {
             $shot = Join-Path $env:RUNNER_TEMP "shot-$($size[1]).png"
             python tools/make_debug_screenshot.py $shot $size[0] $size[1]
@@ -105,6 +105,13 @@ jobs:
             if ($t.Result.place -ne 'stanton/crusader/yela') { Write-Error "$($size[1])p: the debug text was read as '$($t.Result.place)', not Yela"; exit 1 }
             if ($t.Result.confidence -ne 'near') { Write-Error "$($size[1])p: a moon from the screen must be 'near', got '$($t.Result.confidence)'"; exit 1 }
             if ($t.Result.location -ne 'GrimHEX') { Write-Host "::warning::$($size[1])p: the location line was read as '$($t.Result.location)', not GrimHEX" }
+            # The exact position (position.py): the picture describes 20 S, 148 W on Yela, 502 m above
+            # the radius (tools/make_debug_screenshot.py). The numbers must be read back right.
+            $pos = $t.Result.position
+            if (-not $pos) { Write-Error "$($size[1])p: no position was read from the debug text (ways that gave one: $($t.Result.position_ways))"; exit 1 }
+            if ($pos.body -ne 'stanton/crusader/yela' -or [math]::Abs($pos.lat + 20) -gt 0.02 -or [math]::Abs($pos.lon + 148) -gt 0.02 -or [math]::Abs($pos.alt - 502) -gt 20) {
+              Write-Error "$($size[1])p: the position was read as $($pos.body) $($pos.lat) $($pos.lon) $($pos.alt) m, not Yela -20 -148 502 m"; exit 1
+            }
           }
           # The live path: capture this screen's corner with mss and read it. There is no game on
           # the runner, so no place is expected; a runner without a screen to capture is a warning.
