@@ -72,7 +72,7 @@ def test_on_daymar_all_evening_not_at_the_planet_left_hours_before():
     crusader = []
     for ts, _line, _t, snap in replay(shipped()):
         if at(21, "21:27:00") <= ts <= at(22, "01:44:00"):
-            assert snap["place_id"] == "stanton/crusader/daymar", datetime.fromtimestamp(ts, tz=timezone.utc)
+            assert snap["place_id"] in ("stanton/crusader/daymar", "stanton/crusader/daymar/shubin-mining-facility-scd-1"), datetime.fromtimestamp(ts, tz=timezone.utc)   # the moon, or the one outpost on it the list can name
         if at(21, "21:20:30") <= ts <= at(21, "21:26:40"):
             crusader.append(snap["place_id"])
     assert crusader and set(crusader) == {"stanton/crusader"}

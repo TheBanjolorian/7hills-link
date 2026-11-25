@@ -50,7 +50,7 @@ def test_landing_area_name_puts_you_at_the_station_without_an_atc_hint():
     snap = run([JOIN, RUIN_NO, RUIN]).snapshot()
     assert snap["place_id"] == "pyro/terminus/ruin-station"
     assert snap["confidence"] == "exact" and snap["source"] == "port"
-    assert snap["event"]["text"] == "Landed at Ruin Station"
+    assert snap["event"]["text"] == "Arrived at Ruin Station"
 
 
 def test_opening_the_inventory_again_is_not_a_new_landing():
@@ -106,7 +106,7 @@ def test_your_ships_arrival_ends_the_route():
     snap = t.snapshot()
     assert snap["place_id"] == "pyro/jump-stanton" and snap["confidence"] == "exact"
     assert snap["jurisdiction"] == "UEE"
-    assert snap["event"]["text"] == "Landed at Stanton Gateway"
+    assert snap["event"]["text"] == "Arrived at Stanton Gateway"
 
 
 def test_a_route_without_an_arrival_is_forgotten_after_a_quarter_of_an_hour():
@@ -133,7 +133,7 @@ def test_unknown_landing_area_gives_the_moon_in_its_name_and_a_readable_event():
     t = run([JOIN, OUTPOST_NO, OUTPOST])
     snap = t.snapshot()
     assert snap["place_id"] == "stanton/crusader/daymar" and snap["confidence"] == "near"
-    assert snap["event"]["text"] == "Landed at Outpost PAF Stanton2b Attritus 2"
+    assert snap["event"]["text"] == "Arrived at Outpost PAF Stanton2b Attritus 2"
 
 
 def test_names_inside_longer_game_names():
