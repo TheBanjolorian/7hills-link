@@ -201,6 +201,7 @@ def install_to(target: Path, wait_pids: list[int], from_version: str) -> int:
         _log("could not keep a backup; leaving the old version in place")
         _start(target)
         return 1
+    _log(f"kept the old version as {backup.name}")       # the new version removes it once it runs (cleanup)
     if not _copy_retry(me, target):
         _log("could not replace the exe; starting the old one")
         _start(target)

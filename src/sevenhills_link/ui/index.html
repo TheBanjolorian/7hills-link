@@ -302,7 +302,7 @@
     lines.push('Text recognition: Windows' + (r.language ? ' (' + r.language + ')' : ''))
     const l = r.last
     if (!l) {
-      lines.push('No look yet. Share Full, type r_displayinfo 3 in the game console, keep the game window in front for ten seconds and come back here.')
+      lines.push('No look yet. Share Full, type r_displayinfo 3 in the game console, keep the game window in front for half a minute and come back here.')
       return lines.join('\n')
     }
     const ago = l.ago < 90 ? l.ago + ' s ago' : Math.round(l.ago / 60) + ' min ago'

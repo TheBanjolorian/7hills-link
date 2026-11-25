@@ -103,7 +103,7 @@ def test_install_to_swaps_and_starts_new(tmp_path, monkeypatch):
     assert rc == 0 and target.read_bytes() == b"new"
     assert target.with_name("7HillsLink.old.exe").read_bytes() == b"old"
     assert started == [(b"new", ("--updated", "0.4.3"))]
-    assert log.strip().endswith("updated")
+    assert "kept the old version as 7HillsLink.old.exe" in log and log.strip().endswith("updated")
 
 
 def test_install_to_rolls_back(tmp_path, monkeypatch):

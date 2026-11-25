@@ -218,12 +218,80 @@ def test_enlarging_keeps_the_picture_and_the_byte_order():
     assert _enlarge(pixels, 2, 1, 5, scale=3, prep="none")[1:] == (4, 2, 2)
 
 
-def test_the_corner_that_is_read_is_never_smaller_than_the_block():
-    from sevenhills_link.screen import _corner_box
-    assert _corner_box(0, 0, 2560, 1440) == (1408, 0, 2560, 576)            # 45 % × 40 % of the window
-    assert _corner_box(100, 50, 2020, 1130) == (1156, 50, 2020, 482)        # a 1920 × 1080 window that is not at 0, 0
-    assert _corner_box(0, 0, 1280, 720) == (560, 0, 1280, 380)              # small window: the text is as large, so 720 × 380
-    assert _corner_box(0, 0, 600, 300) == (0, 0, 600, 300)                  # never outside the window
+def test_the_box_that_is_read_and_the_wider_corner():
+    from sevenhills_link.screen import _box
+    # The box: 760 × 420 px in the top-right corner, whatever the size of the window.
+    assert _box(0, 0, 2560, 1440) == (1800, 0, 2560, 420)
+    assert _box(100, 50, 2020, 1130) == (1260, 50, 2020, 470)               # a 1920 × 1080 window that is not at 0, 0
+    assert _box(0, 0, 3840, 2160) == (3080, 0, 3840, 420)
+    assert _box(0, 0, 600, 300) == (0, 0, 600, 300)                         # never outside the window
+    # The wider corner: 45 % × 40 % of the window, and never less than the box.
+    assert _box(0, 0, 2560, 1440, "corner") == (1408, 0, 2560, 576)
+    assert _box(100, 50, 2020, 1130, "corner") == (1156, 50, 2020, 482)
+    assert _box(0, 0, 1280, 720, "corner") == (520, 0, 1280, 420)
+    assert _box(0, 0, 600, 300, "corner") == (0, 0, 600, 300)
+
+
+def test_lines_are_put_together_from_where_the_words_stand():
+    from sevenhills_link.screen import _lines_from_words
+    W = 21.6                                                   # a letter of the debug text enlarged three times
+    def word(col, row, text, dy=0.0, h=30.0):
+        return (col * W, row * 39.0 + dy, len(text) * W, h, text)
+    words = [
+        # One line of the screen that the OCR handed over as three lines, the last one first.
+        word(37, 1, "-19000000.0000km"), word(0, 1, "Zone:", dy=2.0), word(6, 1, "SolarSystem_926344131032", dy=-1.5), word(31, 1, "Pos:"),
+        # A word it cut in two: no room for a space between the halves.
+        word(0, 2, "Current"), word(8, 2, "pl"), word(10, 2, "ayer"), word(15, 2, "location"), word(24, 2, ":"), word(26, 2, "GrimHEX"),
+        # Two spaces between words are one.
+        word(35, 2, "(LZ"), word(39, 2, ":"), word(41, 2, "GrimHEX)"),
+        word(0, 0, "Zone:"), word(6, 0, "OOC_Stanton_2c_Yela"), word(26, 0, "Pos:"),
+        # A lit sign behind the text, three times as tall, on the same height as line 1.
+        (300.0, 20.0, 400.0, 95.0, "CARGO"),
+        (0.0, 0.0, 10.0, 30.0, "  "),
+    ]
+    assert _lines_from_words(words) == [
+        "Zone: OOC_Stanton_2c_Yela Pos:",
+        "Zone: SolarSystem_926344131032 Pos: -19000000.0000km",
+        "Current player location : GrimHEX (LZ : GrimHEX)",
+        "CARGO",
+    ]
+    assert _lines_from_words([]) == []
+    seen = read_debug_text("\n".join(_lines_from_words(words)))
+    assert seen["zones"] == ["OOC_Stanton_2c_Yela", "SolarSystem_926344131032"] and seen["location"] == "GrimHEX"
+
+
+def test_a_look_that_names_no_place_moves_on_to_the_next_way():
+    from sevenhills_link.screen import WAYS
+    r = reader()
+    assert r.way == 0
+    open_space = "Zone: SolarSystem_926344131032 Pos: 1.0km 2.0km 3.0km\nZone: Root Pos: 1.0km 2.0km 3.0km"
+    r.look(open_space)                      # the block, but no place: perhaps another way reads the names
+    assert r.way == 1 and r.status == "reading"
+    r.look("nothing")                       # no block at all
+    assert r.way == 2 and r.status == "no_text"
+    r.look(BLOCK)                           # this way names the place: stay with it
+    r.look(BLOCK)
+    assert r.way == 2 and r.place_id == "stanton/crusader/yela"
+    for _ in range(len(WAYS)):
+        r.look("nothing")
+    assert r.way == 2                       # once round, back at the same way
+
+
+def test_it_looks_less_often_when_the_debug_text_is_not_there():
+    from sevenhills_link.screen import IDLE_POLL_S, WAYS
+    r = reader()
+    r._looked = 1000.0
+    for _ in range(len(WAYS) * 2 - 1):
+        r.look("no debug text")
+    assert r.resting(now=1001.0) is False                     # every way has not had its two looks yet
+    r.look("no debug text")
+    assert r.resting(now=1001.0) is True and r.resting(now=1000.0 + IDLE_POLL_S) is False
+    r.look(BLOCK)                                             # the block is there: back to every two seconds
+    assert r.misses == 0 and r.resting(now=1001.0) is False
+    for _ in range(len(WAYS) * 2):
+        r.look("no debug text")
+    r.set_enabled(False)                                      # sharing switched off and on starts afresh
+    assert r.misses == 0
 
 
 def test_soft_makes_bright_text_white_on_black_whatever_its_colour():
@@ -284,33 +352,41 @@ def test_screen_test_reads_a_saved_screenshot_the_way_the_client_reads_the_scree
     from sevenhills_link import screen
     code, out, seen = _screen_test(monkeypatch, tmp_path, _picture(tmp_path))
     assert code == 0 and out["ok"] is True and out["language"] == "en-US"
-    # First the client's own way: the top-right corner (45 % × 40 % of the picture), enlarged, four bytes a pixel.
-    k = screen.SCALE
-    assert seen[0]["size"] == (900 * k, 400 * k) and seen[0]["bytes"] == 900 * k * 400 * k * 4
-    assert out["size"] == [900 * k, 400 * k] and out["scale"] == k and out["prepared"] == screen.PREP and isinstance(out["ms"], int)
+    # The reader's own ways first, in their order: the box (760 × 420 px) and the wider corner (45 % × 40 %).
+    sizes = {"box": (760, 420), "corner": (900, 420)}
+    assert [s["size"] for s in seen[:len(screen.WAYS)]] == [(sizes[b][0] * k, sizes[b][1] * k) for b, k, _ in screen.WAYS]
+    assert seen[0]["bytes"] == seen[0]["size"][0] * seen[0]["size"][1] * 4            # four bytes a pixel
+    # The answer is the first way that names a place: here the very first.
+    box, k, prep = screen.WAYS[0]
+    assert (out["box"], out["scale"], out["prepared"]) == (box, k, prep) and out["size"] == [760 * k, 420 * k] and isinstance(out["ms"], int)
     assert out["block"] is True and out["place"] == "stanton/crusader/yela" and out["place_name"] == "Yela"
     assert out["confidence"] == "near"                  # a moon, not the station: never "exact"
     assert '"place": "stanton/crusader/yela"' in capsys.readouterr().out
-    # Then every other way to prepare the corner, each read once and judged the same way.
-    assert [(t["scale"], t["prepared"]) for t in out["tried"]] == screen.VARIANTS and len(seen) == 1 + len(screen.VARIANTS)
-    assert {s["size"] for s in seen[1:]} == {(900, 400), (1800, 800), (2700, 1200)}
+    # Then every other way of reading: both boxes, twice and three times, each preparation; none twice.
+    ways = [(t["box"], t["scale"], t["prepared"]) for t in out["tried"]]
+    assert ways[:len(screen.WAYS)] == screen.WAYS and len(ways) == len(set(ways)) == 12 == len(seen)
     assert all(t["place"] == "stanton/crusader/yela" and t["location"] == "GrimHEX" and len(t["zones"]) == 4 for t in out["tried"])
+    assert not any("text" in t for t in out["tried"])               # what was read is not kept here
 
 
-def test_screen_test_shows_which_way_reads_best(monkeypatch, tmp_path):
+def test_screen_test_answers_with_the_first_way_that_names_a_place(monkeypatch, tmp_path):
     from sevenhills_link import screen
-    # The OCR finds the block only in the last three reads (enlarged three times).
-    n = 1 + len(screen.VARIANTS)
-    code, out, _ = _screen_test(monkeypatch, tmp_path, _picture(tmp_path), text=lambda i: BLOCK if i > n - 3 else "Zcne: nothing readable")
-    assert code == 0 and out["block"] is False and out["place"] is None
-    assert [t["place"] for t in out["tried"]] == [None] * 6 + ["stanton/crusader/yela"] * 3
+    # The first two ways find no block; the third (the wider corner) reads it.
+    code, out, _ = _screen_test(monkeypatch, tmp_path, _picture(tmp_path), text=lambda i: BLOCK if i >= 3 else "Zcne: nothing readable")
+    assert code == 0 and (out["box"], out["scale"], out["prepared"]) == screen.WAYS[2]
+    assert out["block"] is True and out["place"] == "stanton/crusader/yela"
+    assert [t["place"] for t in out["tried"]][:3] == [None, None, "stanton/crusader/yela"]
+    # No way reads it: the answer says so, with the first way's numbers.
+    code, out, _ = _screen_test(monkeypatch, tmp_path, _picture(tmp_path), text="Zcne: nothing readable")
+    assert code == 0 and out["block"] is False and out["place"] is None and out["confidence"] is None
+    assert (out["box"], out["scale"], out["prepared"]) == screen.WAYS[0]
 
 
 def test_screen_test_skips_the_sizes_the_ocr_does_not_take(monkeypatch, tmp_path):
-    from sevenhills_link import screen
     code, out, seen = _screen_test(monkeypatch, tmp_path, _picture(tmp_path, size=(8000, 5000)))     # corner 3600 × 2000
-    assert code == 0 and {t["scale"] for t in out["tried"]} == {1, 2}
-    assert max(s["size"][0] for s in seen) == 7200
+    assert code == 0 and max(s["size"][0] for s in seen) == 7200
+    assert not any(t["box"] == "corner" and t["scale"] == 3 for t in out["tried"])                 # 10 800 px wide: more than the OCR takes
+    assert any(t["box"] == "box" and t["scale"] == 3 for t in out["tried"])
 
 
 def test_screen_test_writes_down_no_position_session_or_server(monkeypatch, tmp_path):
