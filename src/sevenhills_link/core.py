@@ -68,6 +68,16 @@ def _summary(frame: dict | None) -> dict:
     return out
 
 
+def without_uec(frame: dict | None) -> dict | None:
+    """The frame as it is uploaded: the aUEC balance never leaves the PC."""
+    st = ((frame or {}).get("actor") or {}).get("state")
+    if not isinstance(st, dict) or "uec_balance" not in st:
+        return frame
+    actor = dict(frame["actor"])
+    actor["state"] = {k: v for k, v in st.items() if k != "uec_balance"}
+    return {**frame, "actor": actor}
+
+
 def _smooth(prev: float | None, value: float, k: float = 0.2) -> float:
     return value if prev is None else prev + k * (value - prev)
 
@@ -378,7 +388,7 @@ class Core:
     def set_share(self, patch: dict) -> dict:
         if self.token:
             try:
-                body = {k: bool(v) for k, v in patch.items() if k in ("share_org", "share_vitals", "share_uec")}
+                body = {k: bool(v) for k, v in patch.items() if k == "share_org"}
                 if patch.get("share_mode") in ("off", "online", "full"):
                     body["share_mode"] = patch["share_mode"]
                 r = api.patch_settings(self.token, body)
@@ -424,6 +434,7 @@ class Core:
             if not (new_frame or has_events or heartbeat or loc_due):
                 continue
             frame, at, events = self.stream.take()
+            frame = without_uec(frame)
             # The game sends ~17 frames a second; upload only when the content changed.
             frame_json = json.dumps(frame, sort_keys=True, default=str) if frame is not None else ""
             if frame_json == last_sent_json and not events and not heartbeat and not loc_due:

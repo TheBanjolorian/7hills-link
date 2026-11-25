@@ -54,6 +54,16 @@ def test_a_new_state_has_to_hold():
     assert s.state is None
 
 
+def test_the_balance_never_leaves_the_pc():
+    from sevenhills_link.core import without_uec
+    f = {"actor": {"state": {"locomotion": "ACTOR_LOCOMOTION_STATE_ON_FOOT", "uec_balance": 123456}, "vitals": {"heart_rate": 60}}}
+    out = without_uec(f)
+    assert "uec_balance" not in out["actor"]["state"]
+    assert out["actor"]["state"]["locomotion"] == "ACTOR_LOCOMOTION_STATE_ON_FOOT" and out["actor"]["vitals"] == {"heart_rate": 60}
+    assert f["actor"]["state"]["uec_balance"] == 123456      # the game's frame is left as it was
+    assert without_uec(None) is None and without_uec({"vehicle": {}}) == {"vehicle": {}}
+
+
 def test_one_line_with_the_place():
     assert describe("landed", "near", "Cellin") == "Landed at Cellin"
     assert describe("flying", "near", "Cellin", 940.2) == "Flying at Cellin, 940 m above the ground"

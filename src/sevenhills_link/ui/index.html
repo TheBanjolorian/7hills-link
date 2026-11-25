@@ -53,10 +53,6 @@
   .mt { font-size: 14px; }
   .mi { font-size: 11px; margin-top: 3px; }
   .mi.y { color: var(--ok); } .mi.n { color: var(--faint); }
-  .extras { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; margin-top: 10px; font-size: 12px; }
-  .extras label { display: flex; gap: 7px; align-items: center; cursor: pointer; }
-  .extras input { accent-color: var(--gold); }
-  .extras.off { opacity: .4; pointer-events: none; }
   .notice { border: 1px solid rgba(239,159,39,.4); background: rgba(239,159,39,.06); border-radius: 10px; padding: 14px 16px; margin-top: 14px; }
   .notice.gold { border-color: rgba(240,180,67,.4); background: rgba(240,180,67,.05); }
   .notice.red { border-color: rgba(226,75,74,.45); background: rgba(226,75,74,.06); }
@@ -127,7 +123,7 @@
       </div>
       <div class="steps" style="margin-top:18px" id="steps"></div>
       <div class="hidden" id="whereCard" style="margin-top:16px;border:1px solid var(--line2);border-radius:10px;padding:12px 16px">
-        <div class="label">Where · only you see this</div>
+        <div class="label" id="whereLabel">Where · only you see this</div>
         <div class="display" style="font-size:20px;margin-top:2px" id="whereNow"></div>
         <div class="dim" style="font-size:12px" id="wherePath"></div>
       </div>
@@ -164,12 +160,7 @@
       <div class="modes" id="modes" role="radiogroup" aria-label="Share with Org Command">
         <button type="button" class="mode" role="radio" data-mode="off" onclick="setMode('off')"><div class="mt">Off</div><div class="dim mi">Invisible to the org</div></button>
         <button type="button" class="mode" role="radio" data-mode="online" onclick="setMode('online')"><div class="mt">Online only</div><div class="dim mi">A green dot, nothing else</div></button>
-        <button type="button" class="mode" role="radio" data-mode="full" onclick="setMode('full')"><div class="mt">Full</div><div class="dim mi">Ship, seat and ship status</div></button>
-      </div>
-      <div class="extras" id="extras">
-        <span class="dim">Also share with Full:</span>
-        <label><input type="checkbox" id="optVitals" onchange="share({share_vitals:this.checked})"> Health and vitals</label>
-        <label><input type="checkbox" id="optUec" onchange="share({share_uec:this.checked})"> aUEC balance</label>
+        <button type="button" class="mode" role="radio" data-mode="full" onclick="setMode('full')"><div class="mt">Full</div><div class="dim mi">Ship, seat, status and vitals</div></button>
       </div>
       <p class="dim hidden" id="shareLinkHint" style="margin:10px 0 0;font-size:12px">Link this PC first.</p>
     </div>
@@ -246,8 +237,8 @@
     vol: '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>',
     mute: '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>',
   }
-  const SEES = { off: [0, 0, 0], online: [1, 0, 0], full: [1, 1, 1] }
-  const SEES_LABELS = ['In game', 'Ship and seat', 'Ship status']
+  const SEES = { off: [0, 0, 0, 0], online: [1, 0, 0, 0], full: [1, 1, 1, 1] }
+  const SEES_LABELS = ['In game', 'Ship and seat', 'Ship status', 'Health and vitals']
   document.querySelectorAll('.mode').forEach(b => {
     b.insertAdjacentHTML('beforeend', SEES[b.dataset.mode].map((v, i) => '<div class="mi ' + (v ? 'y">✓ ' : 'n">✕ ') + SEES_LABELS[i] + '</div>').join(''))
   })
@@ -336,8 +327,6 @@
     return { steps, head: blocked < 0 ? { text: 'Live on 7Net', color: 'g' } : { text: steps[blocked].head, color: steps[blocked].bad } }
   }
 
-  const live0 = s => !!(s.game_connected && s.linked)
-
   function render(s) {
     const first = S === null
     S = s
@@ -383,7 +372,9 @@
     $('subline').textContent = [name || (s.linked ? 'Linked' : 'Not linked'), where, s.game_found ? s.channel : ''].filter(Boolean).join(' · ')
     const extra = n.ship ? ['Gear ' + (n.gear || '?'), n.mode, n.power_on ? 'Power on' : 'Power off'].filter(Boolean).join(' · ') : ''
     // Place from Game.log joined with what the telemetry says you are doing there.
-    show('whereCard', !!s.where && live0(s))
+    // Shown whenever Game.log gave a place, also before the telemetry connects (as 0.5.x did in the line above).
+    show('whereCard', !!s.where)
+    $('whereLabel').textContent = s.game_connected ? 'Where · only you see this' : 'Where · from Game.log, game not connected · only you see this'
     $('whereNow').textContent = s.situation || (s.where ? s.where.split(' › ').pop() : '')
     $('wherePath').textContent = s.where || ''
     $('steps').innerHTML = p.steps.map(st => '<span><span class="bub ' + st.color + '"></span>' + esc(st.name) + '</span>').join('') + (extra ? '<span style="margin-left:auto">' + esc(extra) + '</span>' : '')
@@ -415,10 +406,7 @@
       const on = s.linked && b.dataset.mode === mode
       b.classList.toggle('on', on); b.setAttribute('aria-checked', on ? 'true' : 'false'); b.disabled = !s.linked
     })
-    $('extras').classList.toggle('off', !s.linked || mode !== 'full')
     show('shareLinkHint', !s.linked)
-    $('optVitals').checked = !!(s.settings && s.settings.share_vitals)
-    $('optUec').checked = !!(s.settings && s.settings.share_uec)
 
     const pr = s.prefs || {}
     setSwitch('prefStart', pr.start_with_windows); setSwitch('prefTray', pr.tray); setSwitch('prefMusic', pr.play_on_start)

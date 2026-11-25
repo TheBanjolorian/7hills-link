@@ -51,7 +51,7 @@ From v0.4.0 the client checks this repository's latest release at start and ever
 
 - It does not read game memory, inject anything, or touch Easy Anti-Cheat. It only uses the telemetry server the game itself provides.
 - It does not send commands to the game (yet).
-- Live data on 7Net is deleted after 24 hours. Org Command sees what you choose: *Off*, *Online only* (default: your name and "in game") or *Full* (ship, seat, status; health and aUEC only if you tick them).
+- Live data on 7Net is deleted after 24 hours. Org Command sees what you choose: *Off*, *Online only* (default: your name and "in game") or *Full* (ship, seat, status, health and vitals). The aUEC balance is removed before anything is uploaded (from v0.6.1).
 
 ## Run from source
 
