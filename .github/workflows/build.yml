@@ -89,7 +89,7 @@ jobs:
             $r.tried | ForEach-Object { Write-Host ('   {0,-6} x{1} {2,-9} {3,5} ms  {4,2} lines  location [{5}]  place [{6}]  position [{9}]  zones [{7}] {8}' -f $_.box, $_.scale, $_.prepared, $_.ms, $_.lines, $_.location, $_.place, ($_.zones -join ', '), $_.error, $(if ($_.position) { "$($_.position.lat) $($_.position.lon) $($_.position.alt)" } else { '' })) }
             return [pscustomobject]@{ Code = $p.ExitCode; Result = $r }
           }
-          # The same block at the two commonest screen sizes: both must come back as Yela, read
+          # The same block at the two commonest screen sizes: both must come back as Grim HEX at Yela, read
           # with the lines put together from the words, and with the position on it.
           foreach ($size in @(@(2560, 1440), @(1920, 1080))) {
             $shot = Join-Path $env:RUNNER_TEMP "shot-$($size[1]).png"
@@ -102,10 +102,10 @@ jobs:
             if ($t.Code -ne 0 -or -not $t.Result.ok) { Write-Error "the screen test failed (exit code $($t.Code)): $($t.Result.error)"; exit 1 }
             if ($t.Result.lines_from -ne 'words') { Write-Error "the lines were not put together from the words: $($t.Result.lines_from)"; exit 1 }
             if (-not $t.Result.block) { Write-Error "$($size[1])p: the debug block was not found in the picture"; exit 1 }
-            if ($t.Result.place -ne 'stanton/crusader/yela') { Write-Error "$($size[1])p: the debug text was read as '$($t.Result.place)', not Yela"; exit 1 }
-            if ($t.Result.confidence -ne 'near') { Write-Error "$($size[1])p: a moon from the screen must be 'near', got '$($t.Result.confidence)'"; exit 1 }
-            if ($t.Result.location -ne 'GrimHEX') { Write-Host "::warning::$($size[1])p: the location line was read as '$($t.Result.location)', not GrimHEX" }
-            # The exact position (position.py): the picture describes 20 S, 148 W on Yela, 502 m above
+            # Grim HEX is on the place list since 0.8.1: the location line names it, inside the zone of Yela.
+            if ($t.Result.place -ne 'stanton/crusader/yela/grim-hex') { Write-Error "$($size[1])p: the debug text was read as '$($t.Result.place)', not Grim HEX at Yela"; exit 1 }
+            if ($t.Result.confidence -ne 'exact') { Write-Error "$($size[1])p: a station from the screen must be 'exact', got '$($t.Result.confidence)'"; exit 1 }
+                        # The exact position (position.py): the picture describes 20 S, 148 W on Yela, 502 m above
             # the radius (tools/make_debug_screenshot.py). The numbers must be read back right.
             $pos = $t.Result.position
             if (-not $pos) { Write-Error "$($size[1])p: no position was read from the debug text (ways that gave one: $($t.Result.position_ways))"; exit 1 }
