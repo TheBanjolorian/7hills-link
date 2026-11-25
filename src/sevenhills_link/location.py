@@ -235,7 +235,8 @@ class Places:
         """An outpost from its landing-area name: Stanton2b_ShubinMining_SCD1 → Shubin Mining
         Facility SCD-1 on Daymar. The moon or planet comes from the name (hint); the outpost
         is the one place on it whose name holds every other word of the landing name. None
-        unless exactly one fits and the words are telling enough (8 letters together)."""
+        unless exactly one fits and the words are telling enough (6 letters together, one of
+        them 4 or more), not counting words that no place on the body has in its name."""
         body = self.hint(name)
         if not body or self.kind(body) not in ("planet", "moon"):
             return None
@@ -247,10 +248,13 @@ class Places:
             # "ShubinMining" is two words run together.
             tokens += [_norm(w) for w in re.findall(r"[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+", t)] if re.search(r"[a-z][A-Z]", t) else [n]
         tokens = [t for t in tokens if t]
-        if sum(len(t) for t in tokens) < 8 or not any(len(t) >= 4 for t in tokens):
+        spots = [p for p in self.by_id.values() if p.get("parent") == body and self.is_spot(p["id"])]
+        # A word no place on the body has in its name is the game's word for the kind of place
+        # ("IndyMiner" in Stanton2a_IndyMiner_TramMyers): it says nothing about which one.
+        telling = [t for t in tokens if any(t in _norm(p["name"]) for p in spots)]
+        if sum(len(t) for t in telling) < 6 or not any(len(t) >= 4 for t in telling):
             return None
-        fits = [p["id"] for p in self.by_id.values()
-                if p.get("parent") == body and self.is_spot(p["id"]) and all(t in _norm(p["name"]) for t in tokens)]
+        fits = [p["id"] for p in spots if all(t in _norm(p["name"]) for t in telling)]
         return fits[0] if len(fits) == 1 else None
 
     def kind(self, pid: str | None) -> str | None:
@@ -405,8 +409,8 @@ class Tracker:
         self.event: tuple[float, str] | None = None   # (log time, short text): the newest thing that happened
         self.screen: dict | None = None       # set by screen.py: {"place_id", "at"} while the screen shows a known place
         # The exact position on a planet or moon, read from the screen (position.py):
-        # {"body", "lat", "lon", "alt", "at"}. Sent only while share_position is on, which
-        # core.py sets from the member's own "Share exact position" setting (off by default).
+        # {"body", "lat", "lon", "alt", "hdg", "r", "at"}. Sent only while share_position is on,
+        # which core.py sets from the member's "Share exact position" switch on the main view.
         self.screen_pos: dict | None = None
         self.share_position = False
         self._last_ts = 0.0
@@ -818,7 +822,8 @@ class Tracker:
             sp = self.screen_pos
             if (self.share_position and sp and time.time() - sp["at"] <= POS_STALE_S
                     and (pid == sp["body"] or self.places.within(pid, sp["body"]))):
-                out["pos"] = {"body": sp["body"], "lat": sp["lat"], "lon": sp["lon"], "alt": sp["alt"]}
+                out["pos"] = {"body": sp["body"], "lat": sp["lat"], "lon": sp["lon"], "alt": sp["alt"],
+                              "hdg": sp.get("hdg"), "r": sp.get("r")}
             return out
 
     def describe(self) -> str | None:

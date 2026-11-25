@@ -25,9 +25,12 @@ same screen:
   - screen.py then wants two readings in a row that lie close together (a lost minus
     sign on one of the smaller numbers breaks this, unless it is lost every time).
 
-What leaves the PC, and only when the member has turned on "Share exact position":
-the body's place id, latitude and longitude to three decimals, and the height in
-metres. The numbers on the screen themselves are never sent or written down.
+The course (which way the player is moving, as a compass bearing) is worked out by
+screen.py from two positions at least 20 m apart; standing still keeps the last one.
+
+What leaves the PC, and only while "Share exact position" is on: the body's place id,
+latitude and longitude to three decimals, the height in metres, the course in whole
+degrees and the body's radius in km. The numbers on the screen themselves are never sent or written down.
 """
 
 from __future__ import annotations
@@ -146,7 +149,8 @@ def body_position(text: str | None, places) -> dict | None:
                 return None
             if abs(v[axis]) >= others * 0.95:
                 checked.append("side")
-        return {"body": pid, "lat": round(lat, 3), "lon": round(lon, 3), "alt": round(dist - radius), "radius": radius, "checked": checked}
+        return {"body": pid, "lat": round(lat, 3), "lon": round(lon, 3), "alt": round(dist - radius), "radius": radius, "checked": checked,
+                "exact": (lat, lon)}     # unrounded, for the course between two readings; not sent
     return None
 
 
@@ -157,3 +161,19 @@ def apart_m(a: dict, b: dict) -> float:
     c = math.sin(la) * math.sin(lb) + math.cos(la) * math.cos(lb) * math.cos(math.radians(a["lon"] - b["lon"]))
     ground = math.acos(max(-1.0, min(1.0, c))) * (radius_m + max(0.0, min(a["alt"], b["alt"])))
     return math.hypot(ground, a["alt"] - b["alt"])
+
+
+def bearing(a: tuple[float, float], b: tuple[float, float]) -> float:
+    """The compass course from one (lat, lon) to another on the same body, 0-360, 0 = towards
+    the body's north pole, 90 = east."""
+    la, lb, dl = math.radians(a[0]), math.radians(b[0]), math.radians(b[1] - a[1])
+    y = math.sin(dl) * math.cos(lb)
+    x = math.cos(la) * math.sin(lb) - math.sin(la) * math.cos(lb) * math.cos(dl)
+    return (math.degrees(math.atan2(y, x)) + 360.0) % 360.0
+
+
+def ground_m(a: tuple[float, float], b: tuple[float, float], radius_m: float) -> float:
+    """Metres along the ground between two (lat, lon) on a body of this radius."""
+    la, lb = math.radians(a[0]), math.radians(b[0])
+    c = math.sin(la) * math.sin(lb) + math.cos(la) * math.cos(lb) * math.cos(math.radians(a[1] - b[1]))
+    return math.acos(max(-1.0, min(1.0, c))) * radius_m
