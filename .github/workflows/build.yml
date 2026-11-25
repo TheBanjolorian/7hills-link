@@ -45,6 +45,8 @@ jobs:
           --hidden-import keyring.backends.Windows
           --hidden-import pystray._win32
           --hidden-import win32com.client
+          --collect-submodules winrt
+          --hidden-import mss.windows
           run_client.py
       - name: Smoke test
         shell: pwsh

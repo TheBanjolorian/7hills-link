@@ -24,7 +24,7 @@ import json
 import re
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from .paths import resource
@@ -39,6 +39,18 @@ RE_NOTICE = re.compile(r'<SHUDEvent_OnNotification> Added notification "([^"]*)'
 RE_ATC = re.compile(r"<ATC_Reset_VehiclesBeingStoredCleared> ATC '([^']+)'")
 RE_INV = re.compile(r"<Update Inventory Location>.*?Landing \[(\d+)\] -> \[(\d+)\]\. Location \[(\d+)\] -> \[(\d+)\]")
 RE_JURIS = re.compile(r"^Entered (.+?) Jurisdiction", re.I)
+# v0.7: the landing area by name, quantum travel, and who you are (for "calibration started by you").
+RE_LOCINV = re.compile(r"<RequestLocationInventory> Player\[[^\]]*\] requested inventory for Location\[([^\]]+)\]")
+RE_HANDLE = re.compile(r"<Legacy login response>.*?Handle\[([^\]]+)\]")
+RE_QT_SELECT = re.compile(r"<Player Selected Quantum Target - Local>.*?selected point (\S+) as their destination")
+RE_QT_START = re.compile(r"<Calculate Route>.*?Projected Start Location is (.+?) for route to destination (\S+)")
+RE_QT_ARRIVED = re.compile(r"<Quantum Drive Arrived - Arrived at Final Destination>")
+RE_QT_CAL = re.compile(r"^Quantum Travel Calibration (Started|Complete) By (.*?):?\s*$", re.I)
+# Gateway stations and jump-point quantum targets: RR_JP_PyroStanton, rs_ext_pyro-stan_jp1.
+RE_RR_JP = re.compile(r"^RR_JP_([A-Z][a-z]+)([A-Z][a-z]+)")
+RE_EXT_JP = re.compile(r"^rs_ext_([a-z]+)-([a-z]+)_jp", re.I)
+SYSTEMS = ("stanton", "pyro", "nyx", "castra", "magnus", "terra")
+QT_FORGET_S = 900.0     # a quantum trip with no arrival line is forgotten after this long
 
 # Jurisdiction notice text -> planet name in places.json. "UEE" is Stanton space
 # outside the planet companies (Lagrange points, the space between planets).
@@ -52,6 +64,15 @@ JURISDICTION = {
 
 def _norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def _iso(ts: float) -> str:
+    return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _plain(name: str) -> str:
+    """A game name for a landing area we have no place for: Outpost_OLP_Stanton2b_Lamina → Outpost OLP Stanton2b Lamina."""
+    return re.sub(r"[_]+", " ", name).strip()[:60]
 
 
 def _ts(line: str) -> float | None:
@@ -75,6 +96,7 @@ class Places:
         # Ports match as part of a longer name (ATC_DataManager_Port_Lawful-Orison):
         # cities, stations and rest stops, longest first, at least 5 letters.
         ports: list[tuple[str, str]] = []
+        named_ports: list[tuple[str, str]] = []
         for p in places:
             keys = [_norm(k) for k in p.get("match", [])]
             if p["kind"] in ("planet", "moon"):
@@ -84,8 +106,17 @@ class Places:
                 for k in keys:
                     if len(k) >= 5:
                         ports.append((k, p["id"]))
+                    if len(k) >= 4:
+                        named_ports.append((k, p["id"]))
         self.ports = sorted(ports, key=lambda kv: -len(kv[0]))
+        # Landing-area names are short and exact (RR_P6_LEO): the 4-letter keys count there.
+        self.named_ports = sorted(named_ports, key=lambda kv: -len(kv[0]))
         self.planets_by_name = {_norm(p["name"]): p["id"] for p in places if p["kind"] == "planet"}
+        # Any place by its name or a match key ("Daymar", "Ruin Station", "Nyx System").
+        self.by_name: dict[str, str] = {}
+        for p in places:
+            for k in [p["name"], *p.get("match", [])]:
+                self.by_name.setdefault(_norm(k), p["id"])
 
     @classmethod
     def load(cls, path: Path | None = None) -> "Places":
@@ -98,6 +129,32 @@ class Places:
     def port(self, text: str) -> str | None:
         t = _norm(text)
         return next((pid for k, pid in self.ports if k in t), None)
+
+    def gateway(self, text: str) -> str | None:
+        """RR_JP_PyroStanton (the station in Pyro towards Stanton) or rs_ext_pyro-stan_jp1 → pyro/jump-stanton."""
+        m = RE_RR_JP.match(text) or RE_EXT_JP.match(text)
+        if not m:
+            return None
+        a, b = (s.lower() for s in m.groups())
+        here = next((s for s in SYSTEMS if s.startswith(a)), None)
+        there = next((s for s in SYSTEMS if s.startswith(b)), None)
+        pid = f"{here}/jump-{there}" if here and there else None
+        return pid if pid in self.by_id else None
+
+    def named(self, text: str) -> str | None:
+        """A place from a name the game writes: a gateway, a port inside a longer name, a planet or moon, any place name."""
+        text = text.strip()
+        if not text:
+            return None
+        n = _norm(text)
+        if n.endswith("system") and n[:-6] in self.by_id:
+            return n[:-6]
+        port = next((pid for k, pid in self.named_ports if k in n), None)
+        return self.gateway(text) or port or self.bodies.get(n) or self.by_name.get(n)
+
+    def name_of(self, pid: str | None) -> str | None:
+        p = self.by_id.get(pid) if pid else None
+        return p["name"] if p else None
 
     def system_of(self, pid: str | None) -> str | None:
         return pid.split("/", 1)[0] if pid else None
@@ -137,6 +194,13 @@ class Tracker:
         self._landing_ports: dict[str, str] = {}   # landing-area number -> port, learnt this session
         self._pending: tuple[float, str, float] | None = None   # (log time, body, wall time)
         self._burst_until = 0.0
+        # v0.7
+        self.handle: str | None = getattr(self, "handle", None)   # kept across sessions of one game run
+        self.jurisdiction: str | None = None  # "UEE", "Ungoverned", "Crusader Industries" ...
+        self.qt: dict | None = None           # {"from", "to", "target", "state", "since"}; state plotted | spool | travel
+        self.event: tuple[float, str] | None = None   # (log time, short text): the newest thing that happened
+        self.screen: dict | None = None       # set by screen.py: {"place_id", "at"} while the screen shows a known place
+        self._last_ts = 0.0
 
     # ------------------------------------------------------------ feeding
 
@@ -146,10 +210,39 @@ class Tracker:
             return
         with self._lock:
             self._settle(ts)
+            self._last_ts = ts
+            if self.qt and ts - self.qt["since"] > QT_FORGET_S:
+                self.qt = None
             m = RE_JOIN.search(line)
             if m:
                 self.reset()
                 self.shard = m.group(1)[:64]
+                self._event(ts, "Joined a server")
+                return
+            m = RE_HANDLE.search(line)
+            if m:
+                self.handle = m.group(1)
+                return
+            m = RE_LOCINV.search(line)
+            if m:
+                self._landed_at(ts, m.group(1))
+                return
+            m = RE_QT_SELECT.search(line)
+            if m:
+                self._qt_target(ts, m.group(1))
+                return
+            m = RE_QT_START.search(line)
+            if m:
+                if self.qt and self.qt["target"] == m.group(2):
+                    self.qt["from"] = self.places.named(m.group(1)) or self.qt["from"]
+                return
+            if RE_QT_ARRIVED.search(line):
+                if self.qt:
+                    to = self.qt["to"]
+                    self._event(ts, "Arrived" + (" at " + self.places.name_of(to) if to else ""))
+                    if to and self.places.by_id.get(to, {}).get("kind") in ("planet", "moon"):
+                        self._set_body(to)
+                self.qt = None
                 return
             m = RE_PLANET.search(line)
             if m:
@@ -184,6 +277,8 @@ class Tracker:
                         self._landing_ports[landing_to] = pid
                         self._set_port(pid)
                 else:
+                    if self.landing and self.port:
+                        self._event(ts, "Left " + (self.places.name_of(self.port) or "the landing area"))
                     self.landing = None
                     if not self.armistice:
                         self.port = None
@@ -216,9 +311,26 @@ class Tracker:
         self._pending = (ts, pid, time.time())
 
     def _notice(self, ts: float, text: str) -> None:
+        m = RE_QT_CAL.match(text.strip())
+        if m:
+            # Shown to everybody aboard the ship whose pilot spools, so a passenger travels too
+            # (real sessions: the target and arrival lines reach passengers as well).
+            if not self.qt:
+                self.qt = {"from": self.port or self.body or self.jur_area, "to": None, "to_label": None,
+                           "target": None, "state": "plotted", "since": ts}
+            self.qt["state"] = "spool" if m.group(1).lower() == "started" else "travel"
+            self.qt["since"] = ts
+            who = m.group(2).strip()
+            by = "" if not who or (self.handle and who.lower() == self.handle.lower()) else " (pilot " + who[:32] + ")"
+            to = self.places.name_of(self.qt["to"]) or self.qt["to_label"]
+            self._event(ts, ("Quantum calibrating" if self.qt["state"] == "spool" else "Quantum travel")
+                        + (" to " + to if to else "") + by)
+            return
         m = RE_JURIS.match(text.strip())
         if m:
             who = m.group(1).strip()
+            self.jurisdiction = who[:40]
+            self._event(ts, "Entered " + self.jurisdiction + " jurisdiction")
             if who.upper() == "UEE":
                 self.jur_area = None
                 self.system = self.system or "stanton"
@@ -233,14 +345,38 @@ class Tracker:
         low = text.lower()
         if low.startswith("entering armistice zone"):
             self.armistice = True
+            self._event(ts, "Entered armistice zone")
             pid = (self._landing_ports.get(self.landing) if self.landing else None) or self._fresh_hint(ts)
             if pid:
                 self._set_port(pid)
         elif low.startswith("leaving armistice zone"):
             self.armistice = False
+            self._event(ts, "Left armistice zone")
             # Still inside the landing area (flying around the city): keep the port.
             if not self.landing:
                 self.port = None
+
+    def _event(self, ts: float, text: str) -> None:
+        self.event = (ts, text[:80])
+
+    def _landed_at(self, ts: float, name: str) -> None:
+        """RequestLocationInventory: the landing area's own name, sent right after Update Inventory Location."""
+        pid = self.places.named(name)
+        if pid:
+            if self.landing:
+                self._landing_ports[self.landing] = pid
+            self._set_port(pid)
+        self.qt = None
+        self._event(ts, "Landed at " + (self.places.name_of(pid) if pid else _plain(name)))
+
+    def _qt_target(self, ts: float, target: str) -> None:
+        if self.qt and self.qt["target"] == target and self.qt["state"] != "plotted":
+            return            # the game repeats the selection while spooling
+        to = self.places.named(target)
+        label = None if to else ("a party member" if target.startswith("PartyMemberMarker") else
+                                 "a mission marker" if target.startswith("MISSION_") else None)
+        frm = self.port or self.body or self.jur_area
+        self.qt = {"from": frm, "to": to, "to_label": label, "target": target, "state": "plotted", "since": ts}
 
     def _fresh_hint(self, ts: float) -> str | None:
         if self._port_hint and ts - self._port_hint[0] <= PORT_HINT_S:
@@ -256,7 +392,10 @@ class Tracker:
     def snapshot(self) -> dict | None:
         """What goes to 7Net: the best place and how sure it is, or None."""
         with self._lock:
-            if self.port:
+            scr = self.screen
+            if scr and scr.get("place_id"):
+                pid, conf, src = scr["place_id"], "exact", "screen"
+            elif self.port:
                 pid, conf, src = self.port, "exact", "port"
             elif self.body:
                 pid, conf, src = self.body, "near", "planet"
@@ -266,8 +405,15 @@ class Tracker:
                 pid, conf, src = self.system, "system", "system"
             else:
                 return None
+            qt = self.qt
+            transit = None
+            if qt and qt["state"] in ("spool", "travel"):
+                transit = {"from": qt["from"], "to": qt["to"], "to_label": qt["to_label"], "state": qt["state"],
+                           "since": _iso(qt["since"])}
             return {"place_id": pid, "confidence": conf, "source": src, "armistice": self.armistice,
-                    "shard": self.shard, "raw_id": self.raw_id}
+                    "shard": self.shard, "raw_id": self.raw_id,
+                    "jurisdiction": self.jurisdiction, "transit": transit,
+                    "event": {"text": self.event[1], "at": _iso(self.event[0])} if self.event else None}
 
     def describe(self) -> str | None:
         snap = self.snapshot()

@@ -12,7 +12,7 @@ import time
 from collections import deque
 import webbrowser
 
-from . import __version__, api, detect, gamecfg, location, protoset, situation, updater
+from . import __version__, api, detect, gamecfg, location, protoset, screen, situation, updater
 from .paths import data_dir
 from .prefs import Prefs, can_autostart
 from .stream import GameStream
@@ -199,6 +199,9 @@ class Core:
         # Where the player is, from Game.log next to the game's exe (see location.py).
         self.tracker = location.Tracker(location.Places.load())
         self.gamelog: location.GameLogFollower | None = None
+        # The exact place from the r_displayinfo text on screen, while sharing Full (see screen.py).
+        self.screen = screen.ScreenReader(self.tracker, self.tracker.places)
+        self.screen.start()
         # What the player is doing there, from the telemetry (see situation.py).
         self.steady = situation.Steady()
 
@@ -375,7 +378,10 @@ class Core:
     # ---------------------------------------------------------------- sharing
 
     def refresh_settings(self, force: bool = False) -> None:
-        if not self.token or (not force and time.time() - self._last_settings < SETTINGS_EVERY):
+        if not self.token:
+            self.screen.set_enabled(False)
+            return
+        if not force and time.time() - self._last_settings < SETTINGS_EVERY:
             return
         self._last_settings = time.time()
         try:
@@ -384,6 +390,12 @@ class Core:
         except api.ApiError as e:
             if refused_key(e):
                 self._lost_key(e)
+        self._screen_by_share()
+
+    def _screen_by_share(self) -> None:
+        # The screen is read only while the member shares Full with Org Command.
+        mode = (self.settings or {}).get("share_mode")
+        self.screen.set_enabled(bool(self.token) and mode == "full")
 
     def set_share(self, patch: dict) -> dict:
         if self.token:
@@ -393,6 +405,7 @@ class Core:
                     body["share_mode"] = patch["share_mode"]
                 r = api.patch_settings(self.token, body)
                 self.member, self.settings = r.get("member"), r.get("settings")
+                self._screen_by_share()
             except api.ApiError as e:
                 if refused_key(e):
                     self._lost_key(e)
@@ -498,6 +511,7 @@ class Core:
             self.stream.stop()
         if self.gamelog:
             self.gamelog.stop()
+        self.screen.stop()
 
     # ---------------------------------------------------------------- status for the window
 
@@ -556,6 +570,7 @@ class Core:
                 "upload_error": self.upload_error,
                 "now": _summary(frame),
                 "where": self.tracker.describe(),
+                "screen": self.screen.status,
                 "situation": self._situation(frame),
                 "gamelog_error": self.gamelog.error if self.gamelog else None,
             }

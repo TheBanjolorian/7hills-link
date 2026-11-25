@@ -122,11 +122,7 @@
         </div>
       </div>
       <div class="steps" style="margin-top:18px" id="steps"></div>
-      <div class="hidden" id="whereCard" style="margin-top:16px;border:1px solid var(--line2);border-radius:10px;padding:12px 16px">
-        <div class="label" id="whereLabel">Where · only you see this</div>
-        <div class="display" style="font-size:20px;margin-top:2px" id="whereNow"></div>
-        <div class="dim" style="font-size:12px" id="wherePath"></div>
-      </div>
+      <div class="dim hidden" style="font-size:12px;margin-top:10px" id="screenLine"></div>
 
       <div class="notice gold hidden" id="linkCard">
         <div class="display" style="font-size:19px">Link this PC to 7Net</div>
@@ -159,8 +155,8 @@
       <div class="dim" style="font-size:12px;margin:2px 0 12px">You always see everything on your own dashboard. This decides what Org Command (manager and up) sees. Your place is shown only to you. A party you join sees what its lead chose, whatever is set here. Live data is deleted after 24 hours.</div>
       <div class="modes" id="modes" role="radiogroup" aria-label="Share with Org Command">
         <button type="button" class="mode" role="radio" data-mode="off" onclick="setMode('off')"><div class="mt">Off</div><div class="dim mi">Invisible to the org</div></button>
-        <button type="button" class="mode" role="radio" data-mode="online" onclick="setMode('online')"><div class="mt">Online only</div><div class="dim mi">A green dot, nothing else</div></button>
-        <button type="button" class="mode" role="radio" data-mode="full" onclick="setMode('full')"><div class="mt">Full</div><div class="dim mi">Ship, seat, status and vitals</div></button>
+        <button type="button" class="mode" role="radio" data-mode="online" onclick="setMode('online')"><div class="mt">Online only</div><div class="dim mi">That you are in game</div></button>
+        <button type="button" class="mode" role="radio" data-mode="full" onclick="setMode('full')"><div class="mt">Full</div><div class="dim mi">Ship, health and where you are, for Org Command and your party</div></button>
       </div>
       <p class="dim hidden" id="shareLinkHint" style="margin:10px 0 0;font-size:12px">Link this PC first.</p>
     </div>
@@ -371,12 +367,14 @@
     const where = n.ship ? n.ship + (n.seat ? ', seated' : '') : n.locomotion === 'on_foot' ? 'On foot' : ''
     $('subline').textContent = [name || (s.linked ? 'Linked' : 'Not linked'), where, s.game_found ? s.channel : ''].filter(Boolean).join(' · ')
     const extra = n.ship ? ['Gear ' + (n.gear || '?'), n.mode, n.power_on ? 'Power on' : 'Power off'].filter(Boolean).join(' · ') : ''
-    // Place from Game.log joined with what the telemetry says you are doing there.
-    // Shown whenever Game.log gave a place, also before the telemetry connects (as 0.5.x did in the line above).
-    show('whereCard', !!s.where)
-    $('whereLabel').textContent = s.game_connected ? 'Where · only you see this' : 'Where · from Game.log, game not connected · only you see this'
-    $('whereNow').textContent = s.situation || (s.where ? s.where.split(' › ').pop() : '')
-    $('wherePath').textContent = s.where || ''
+    // The place itself is shown on 7Net (/live, party, Org Command), not here. Only whether the
+    // screen corner (r_displayinfo) is being read, while sharing Full.
+    const scr = {
+      reading: 'Exact spot: reading the screen',
+      no_text: 'Exact spot: off · type r_displayinfo 2 in the game console',
+    }[s.screen]
+    show('screenLine', !!scr)
+    $('screenLine').textContent = scr || ''
     $('steps').innerHTML = p.steps.map(st => '<span><span class="bub ' + st.color + '"></span>' + esc(st.name) + '</span>').join('') + (extra ? '<span style="margin-left:auto">' + esc(extra) + '</span>' : '')
 
     const d = s.delay || {}, t = s.traffic || {}
