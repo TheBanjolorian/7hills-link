@@ -152,7 +152,7 @@
 
     <div class="sec">
       <div class="display" style="font-size:19px">Who can see your telemetry</div>
-      <div class="dim" style="font-size:12px;margin:2px 0 12px">You always see everything on your own dashboard. This decides what Org Command (manager and up) sees. Your place is shown only to you. A party you join sees what its lead chose, whatever is set here. Live data is deleted after 24 hours.</div>
+      <div class="dim" style="font-size:12px;margin:2px 0 12px">You always see everything on your own dashboard. This decides what Org Command (manager and up) sees. A party you join sees what its lead chose, whatever is set here. Live data is deleted after 24 hours.</div>
       <div class="modes" id="modes" role="radiogroup" aria-label="Share with Org Command">
         <button type="button" class="mode" role="radio" data-mode="off" onclick="setMode('off')"><div class="mt">Off</div><div class="dim mi">Invisible to the org</div></button>
         <button type="button" class="mode" role="radio" data-mode="online" onclick="setMode('online')"><div class="mt">Online only</div><div class="dim mi">That you are in game</div></button>
@@ -233,8 +233,8 @@
     vol: '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>',
     mute: '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>',
   }
-  const SEES = { off: [0, 0, 0, 0], online: [1, 0, 0, 0], full: [1, 1, 1, 1] }
-  const SEES_LABELS = ['In game', 'Ship and seat', 'Ship status', 'Health and vitals']
+  const SEES = { off: [0, 0, 0, 0, 0], online: [1, 0, 0, 0, 0], full: [1, 1, 1, 1, 1] }
+  const SEES_LABELS = ['In game', 'Ship and seat', 'Ship status', 'Health and vitals', 'Where you are']
   document.querySelectorAll('.mode').forEach(b => {
     b.insertAdjacentHTML('beforeend', SEES[b.dataset.mode].map((v, i) => '<div class="mi ' + (v ? 'y">✓ ' : 'n">✕ ') + SEES_LABELS[i] + '</div>').join(''))
   })
@@ -372,6 +372,8 @@
     const scr = {
       reading: 'Exact spot: reading the screen',
       no_text: 'Exact spot: off · type r_displayinfo 2 in the game console',
+      idle: 'Exact spot: read while the game window is in front',
+      unavailable: 'Exact spot: not available (Windows text recognition missing)',
     }[s.screen]
     show('screenLine', !!scr)
     $('screenLine').textContent = scr || ''

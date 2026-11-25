@@ -394,7 +394,8 @@ class Core:
 
     def _screen_by_share(self) -> None:
         # The screen is read only while the member shares Full with Org Command.
-        mode = (self.settings or {}).get("share_mode")
+        st = self.settings or {}
+        mode = st.get("share_mode") or ("full" if st.get("share_org") else "online")
         self.screen.set_enabled(bool(self.token) and mode == "full")
 
     def set_share(self, patch: dict) -> dict:
