@@ -68,6 +68,8 @@ class ScreenReader:
 
     def set_enabled(self, on: bool) -> None:
         self.enabled = bool(on)
+        if on and self.status == "off":
+            self.status = "idle"
         if not on:
             self._clear()
             if self.status != "unavailable":
@@ -103,8 +105,10 @@ class ScreenReader:
     def _once(self, loop) -> None:
         rect = _game_rect()
         if not rect:
-            self.status = "idle"
-            self._clear()
+            # Game in the background (or this window in front): keep what the last look
+            # found, so the window can say it; the place itself expires after STALE_S.
+            if self.status not in ("reading", "no_text"):
+                self.status = "idle"
             return
         l, t, r, b = rect
         w, h = r - l, b - t
