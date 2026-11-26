@@ -317,6 +317,7 @@
     lines.push('Debug text: found · zones: ' + (l.zones || []).join(', '))
     if (l.location) lines.push('Location line: ' + l.location)
     lines.push(l.place ? 'Place: ' + (l.place_name || l.place) + ' (' + l.place + ')' : 'Place: none of these names is on the place list yet')
+    if (l.ship) lines.push('Ship: ' + l.ship + ' (you are inside it; sent with your place so 7Net can group the crew)')
     const p = l.position
     const deg = (v, pos, neg) => Math.abs(v).toFixed(3) + '° ' + (v < 0 ? neg : pos)
     lines.push(p ? 'Position: ' + deg(p.lat, 'N', 'S') + ', ' + deg(p.lon, 'E', 'W') + ', ' + (p.alt >= 1000 ? (p.alt / 1000).toFixed(1) + ' km' : p.alt + ' m') + ' above the radius · checked against: ' + (p.checked || []).join(', ') + ' · ' + (p.hdg != null ? 'course ' + p.hdg + '° · ' : '') + (s.prefs && s.prefs.exact_position ? 'shared' : 'not shared (Share exact position is off)')

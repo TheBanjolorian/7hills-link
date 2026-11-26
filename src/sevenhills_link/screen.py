@@ -56,6 +56,7 @@ import threading
 import time
 
 from . import position
+from .location import ship_zone
 from .log import log
 
 POLL_S = 2.0
@@ -94,10 +95,17 @@ def read_debug_text(text: str | None) -> dict:
     line; both are None when the block is not there.
     """
     zones: list[str] = []
+    ships: list[str] = []
     location: str | None = None
     lz: str | None = None
     for line in (text or "").splitlines():
         line = line.strip()
+        # A ship's name standing as one word anywhere: the reader at times puts it on a line
+        # of its own, away from its "Zone:" and "Pos:".
+        for word in line.split():
+            found = ship_zone(word)
+            if found and found[0] not in ships:
+                ships.append(found[0])
         m = RE_ZONE.search(line) or RE_ZONE_NO_HEAD.search(line) or RE_ZONE_NO_TAIL.search(line)
         if m:
             zones.append(m.group(1).strip()[:60])
@@ -107,7 +115,7 @@ def read_debug_text(text: str | None) -> dict:
             location = (m.group(1) or "").strip()[:60] or None
             lz = (m.group(2) or "").strip()[:60] or None
     block = len(zones) >= MIN_ZONE_LINES
-    return {"block": block, "zones": zones, "location": location if block else None, "lz": lz if block else None}
+    return {"block": block, "zones": zones, "ships": ships if block else [], "location": location if block else None, "lz": lz if block else None}
 
 
 class ScreenReader:
@@ -134,6 +142,8 @@ class ScreenReader:
         self._course: int | None = None                    # the last course, whole degrees
         self.position: dict | None = None                  # the last position that counted, for "Test screen reading"
         self._last: str | None = None
+        self._ship_last: str | None = None                 # the ship the look before this one named
+        self.ship: str | None = None                       # the ship two looks agreed on, for "Test screen reading"
         self._at = 0.0
         self._engine = None
         self._logged: str | None = None
@@ -179,9 +189,12 @@ class ScreenReader:
         self._course_from = None
         self._course = None
         self.position = None
+        self._ship_last = None
+        self.ship = None
         with self.tracker._lock:
             self.tracker.screen = None
             self.tracker.screen_pos = None
+            self.tracker.screen_ship = None
 
     def _look_position(self, text: str | None, now: float) -> dict | None:
         """The exact position this reading gives (position.py). It counts, and is handed to the
@@ -209,6 +222,24 @@ class ScreenReader:
             with self.tracker._lock:
                 self.tracker.screen_pos = dict(self.position)
         return pos
+
+    def _look_ship(self, seen: dict, now: float) -> str | None:
+        """The ship whose zone this reading shows (the innermost zone that is one), handed to
+        the tracker once two readings in a row name the same ship."""
+        found = next((z for z in (ship_zone(zone) for zone in seen["zones"]) if z), None)
+        if not found and len(seen.get("ships") or []) == 1:
+            found = ship_zone(seen["ships"][0])      # its name alone on a line: the only ship named in the block
+        name = found[0] if found else None
+        if name and name == self._ship_last:
+            self.ship = name
+            with self.tracker._lock:
+                self.tracker.screen_ship = {"name": name, "number": found[1], "at": now}
+        elif not name and not self._ship_last:
+            self.ship = None
+            with self.tracker._lock:
+                self.tracker.screen_ship = None
+        self._ship_last = name
+        return name
 
     def _fail(self, what: str, e: BaseException) -> None:
         """A look that did not work: say so in the window and once in link.log."""
@@ -279,7 +310,8 @@ class ScreenReader:
         seen = read_debug_text(text)
         pid = self.place_of(seen) if seen["block"] else None
         pos = self._look_position(text, time.time()) if seen["block"] else None
-        self.last = {"at": time.time(), "position": {**{k: pos[k] for k in ("body", "lat", "lon", "alt", "checked")}, "hdg": self._course} if pos else None, "size": list(size) if size else None, "scale": scale, "prepared": prep, "ms": ms,
+        ship = self._look_ship(seen, time.time()) if seen["block"] else None
+        self.last = {"at": time.time(), "ship": ship, "position": {**{k: pos[k] for k in ("body", "lat", "lon", "alt", "checked")}, "hdg": self._course} if pos else None, "size": list(size) if size else None, "scale": scale, "prepared": prep, "ms": ms,
                      "lines": len([x for x in (text or "").splitlines() if x.strip()]),
                      "block": seen["block"], "zones": seen["zones"][:6], "location": seen["location"] or seen["lz"],
                      "place": pid, "error": None}
@@ -541,7 +573,7 @@ def _place_lines(text: str, places=None) -> tuple[list[str], int]:
     place on the list. The other lines of the debug block (session, shard, server, times)
     are nobody's business and are only counted."""
     lines = [x.strip() for x in (text or "").splitlines() if x.strip()]
-    kept = [_no_numbers(x) for x in lines if RE_PLACE_LINE.search(x) or (places is not None and places.hint(x))]
+    kept = [_no_numbers(x) for x in lines if RE_PLACE_LINE.search(x) or (places is not None and places.hint(x)) or any(ship_zone(w) for w in x.split())]
     return kept[:30], len(lines) - len(kept)
 
 
@@ -630,6 +662,11 @@ def check_screenshot(path: str | None) -> int:
         # The exact position: what this way of reading gave, and how many of the ways gave one.
         out["position"] = best["position"]
         out["position_ways"] = sum(1 for x in looks if x["position"])
+        out["ship"] = reader.ship          # the ship whose zone the text shows, when you are inside one
+        import os
+        if os.environ.get("SEVENHILLS_SCREEN_DEBUG") == "1":   # the build only: every line of a drawn picture
+            every = [x for x in best["text"].splitlines() if x.strip()]
+            out["debug_lines"] = every[:3] + ["..."] + every[-10:]
         out.update({"ok": True, **{k: best[k] for k in ("box", "scale", "prepared", "ms", "size", "lines", "block", "zones", "location", "place")},
                     "place_name": places.name_of(best["place"]) if best["place"] else None,
                     "confidence": snap["confidence"] if snap else None, "read": kept, "other_lines": others})
