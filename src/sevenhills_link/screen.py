@@ -663,6 +663,9 @@ def check_screenshot(path: str | None) -> int:
         out["position"] = best["position"]
         out["position_ways"] = sum(1 for x in looks if x["position"])
         out["ship"] = reader.ship          # the ship whose zone the text shows, when you are inside one
+        import os
+        if os.environ.get("SEVENHILLS_SCREEN_DEBUG") == "1":   # the build only: every line of a drawn picture
+            out["debug_lines"] = [x for x in best["text"].splitlines() if x.strip()][:12]
         out.update({"ok": True, **{k: best[k] for k in ("box", "scale", "prepared", "ms", "size", "lines", "block", "zones", "location", "place")},
                     "place_name": places.name_of(best["place"]) if best["place"] else None,
                     "confidence": snap["confidence"] if snap else None, "read": kept, "other_lines": others})

@@ -117,10 +117,12 @@ jobs:
           # screen. Either reading must come back as Terminus with the position on it.
           $shot = Join-Path $env:RUNNER_TEMP "shot-pyro.png"
           python tools/make_debug_screenshot.py $shot 2560 1440 pyro
+          $env:SEVENHILLS_SCREEN_DEBUG = '1'
           $t = Invoke-ScreenTest @('--screen-test', "`"$shot`"")
           if ($t.Code -ne 0 -or -not $t.Result.ok) { Write-Error "the Pyro screen test failed (exit code $($t.Code)): $($t.Result.error)"; exit 1 }
           Write-Host "Pyro: zones [$($t.Result.zones -join ', ')] place [$($t.Result.place)]"
           $t.Result.read | ForEach-Object { Write-Host "   read: $_" }
+          $t.Result.debug_lines | ForEach-Object { Write-Host "   line: $_" }
           if ($t.Result.place -ne 'pyro/terminus') { Write-Error "Pyro: the debug text was read as '$($t.Result.place)', not Terminus (zones: $($t.Result.zones -join ', '))"; exit 1 }
           $pos = $t.Result.position
           if (-not $pos -or $pos.body -ne 'pyro/terminus' -or [math]::Abs($pos.lat + 20) -gt 0.02 -or [math]::Abs($pos.lon + 148) -gt 0.02) {
