@@ -95,10 +95,17 @@ def read_debug_text(text: str | None) -> dict:
     line; both are None when the block is not there.
     """
     zones: list[str] = []
+    ships: list[str] = []
     location: str | None = None
     lz: str | None = None
     for line in (text or "").splitlines():
         line = line.strip()
+        # A ship's name standing as one word anywhere: the reader at times puts it on a line
+        # of its own, away from its "Zone:" and "Pos:".
+        for word in line.split():
+            found = ship_zone(word)
+            if found and found[0] not in ships:
+                ships.append(found[0])
         m = RE_ZONE.search(line) or RE_ZONE_NO_HEAD.search(line) or RE_ZONE_NO_TAIL.search(line)
         if m:
             zones.append(m.group(1).strip()[:60])
@@ -108,7 +115,7 @@ def read_debug_text(text: str | None) -> dict:
             location = (m.group(1) or "").strip()[:60] or None
             lz = (m.group(2) or "").strip()[:60] or None
     block = len(zones) >= MIN_ZONE_LINES
-    return {"block": block, "zones": zones, "location": location if block else None, "lz": lz if block else None}
+    return {"block": block, "zones": zones, "ships": ships if block else [], "location": location if block else None, "lz": lz if block else None}
 
 
 class ScreenReader:
@@ -220,6 +227,8 @@ class ScreenReader:
         """The ship whose zone this reading shows (the innermost zone that is one), handed to
         the tracker once two readings in a row name the same ship."""
         found = next((z for z in (ship_zone(zone) for zone in seen["zones"]) if z), None)
+        if not found and len(seen.get("ships") or []) == 1:
+            found = ship_zone(seen["ships"][0])      # its name alone on a line: the only ship named in the block
         name = found[0] if found else None
         if name and name == self._ship_last:
             self.ship = name
@@ -564,7 +573,7 @@ def _place_lines(text: str, places=None) -> tuple[list[str], int]:
     place on the list. The other lines of the debug block (session, shard, server, times)
     are nobody's business and are only counted."""
     lines = [x.strip() for x in (text or "").splitlines() if x.strip()]
-    kept = [_no_numbers(x) for x in lines if RE_PLACE_LINE.search(x) or (places is not None and places.hint(x))]
+    kept = [_no_numbers(x) for x in lines if RE_PLACE_LINE.search(x) or (places is not None and places.hint(x)) or any(ship_zone(w) for w in x.split())]
     return kept[:30], len(lines) - len(kept)
 
 

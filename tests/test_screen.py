@@ -528,3 +528,18 @@ def test_a_ship_read_long_ago_is_not_sent():
     r.look(SHIP_BLOCK); r.look(SHIP_BLOCK)
     r.tracker.screen_ship["at"] -= 60
     assert "ship" not in r.tracker.snapshot()
+
+
+def test_a_ship_name_the_reader_put_on_a_line_of_its_own_still_counts():
+    # The build's reader gave "Zone: Pos: 1.00m ..." for the ship's line, its name elsewhere.
+    text = block("Zone: Pos: 1.00m -2.00m -3.00m", "AEGS_Gladius_955474563856",
+                 "Zone: pyr06 Pos: -199.4068km 199.2224km -50.5822km")
+    seen = read_debug_text(text)
+    assert seen["ships"] == ["AEGS_Gladius_955474563856"]
+    r = reader()
+    r.look(text); r.look(text)
+    assert r.ship == "AEGS_Gladius_955474563856"
+    two = block("AEGS_Gladius_955474563856", "ANVL_Asgard_877602855866", "Zone: pyr06 Pos: 1km 2km 3km")
+    r2 = reader()
+    r2.look(two); r2.look(two)
+    assert r2.ship is None                                     # two ships named and no zone line says which
