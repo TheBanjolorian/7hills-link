@@ -435,7 +435,8 @@ def test_the_drawn_test_screenshot_has_the_block_in_the_corner_the_client_reads(
     spec = importlib.util.spec_from_file_location("make_debug_screenshot", Path(__file__).parent.parent / "tools" / "make_debug_screenshot.py")
     tool = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(tool)
-    assert read_debug_text("\n".join(text for text, _ in tool.BLOCK))["block"] is True
+    assert read_debug_text("\n".join(text for text, _ in tool.block()))["block"] is True
+    assert read_debug_text("\n".join(text for text, _ in tool.block("pyro")))["zones"][1] == "pyro6"
     for size in ((2560, 1440), (1920, 1080)):
         img = tool.draw(*size)
         w, h = img.size
@@ -449,3 +450,28 @@ def test_the_drawn_test_screenshot_has_the_block_in_the_corner_the_client_reads(
                     ys.append(y)
         assert xs, "no text was drawn"
         assert min(xs) >= w * CORNER[0] and max(ys) <= h * CORNER[3], (size, min(xs), max(ys))
+
+
+# ---------------------------------------------------------------- names the reader gets wrong
+
+def test_pyro_as_windows_ocr_read_it_on_26_nov_is_terminus():
+    # Costas's screen on Terminus: every way of reading gave "pyr06" for the zone "pyro6".
+    seen = read_debug_text(block("Zone: pyr06 Pos: -199.4489km 199.1949km -50.5566km",
+                                 "Zone: SolarSystem 926675998371 Pos: -48118219.6840km 48503407.6580km -50.5566km",
+                                 "Zone: Root Pos •. -48118219.6840km 48503407.6580km -50.5566km",
+                                 "Current player locatzon pyr06",
+                                 "Planet:pyr06 ( Load Complete)"))
+    assert seen["block"] and "pyr06" in seen["zones"]
+    assert reader().place_of(seen) == "pyro/terminus"
+
+
+def test_a_misread_name_counts_only_when_one_body_fits():
+    assert PLACES.named("pyr06") == PLACES.named("Pyr06") == PLACES.named("pyro6") == "pyro/terminus"
+    assert PLACES.hint("0OC Stanton 2a Ce11in") == "stanton/crusader/cellin"
+    assert PLACES.named("Root") is None and PLACES.hint("SolarSystem 926675998371") is None
+    # A name read right is never bent into another body.
+    for key, pid in PLACES.bodies.items():
+        assert PLACES.named(key) in (pid, PLACES.named(key)) and PLACES.body(key) == pid
+    # Two bodies whose names a misreading makes the same name neither.
+    two = Places([{"id": "a/x", "kind": "moon", "name": "X", "match": ["abc10"]}, {"id": "a/y", "kind": "moon", "name": "Y", "match": ["abclo"]}])
+    assert two.misread_body("abc1o") is None and two.named("abc10") == "a/x"

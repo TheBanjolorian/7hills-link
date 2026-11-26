@@ -63,6 +63,7 @@ from .paths import data_dir, resource
 BURST_S = 3.0           # planets loaded this close together are streaming, not where you are
 PORT_HINT_S = 600.0     # an ATC hint counts for this long when you then land or enter armistice
 ROUTE_FORGET_S = 900.0  # a plotted route with no arrival is forgotten after this long
+LEFT_NEAR_S = 120.0     # "just outside the station you left" counts for this long
 POS_STALE_S = 15.0      # an exact position read from the screen counts for this long
 
 RE_TS = re.compile(r"^<(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?)Z>")
@@ -105,6 +106,15 @@ AREA_KINDS = frozenset({"system", "planet", "moon", "belt", "cloud", "cluster"})
 
 def _norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+_LOOSE = str.maketrans("01l", "oii")
+
+
+def _loose(s: str) -> str:
+    """_norm with the characters a screen reading mixes up made the same: o and 0, and l, 1
+    and I. Windows text recognition reads the zone "pyro6" as "pyr06"."""
+    return _norm(s).translate(_LOOSE)
 
 
 def _iso(ts: float) -> str:
@@ -153,6 +163,13 @@ class Places:
                         ports.append((k, p["id"]))
                     if len(k) >= 4:
                         named_ports.append((k, p["id"]))
+        # The same names as a misread shows them (_loose). A reading that could be two bodies
+        # names neither.
+        loose: dict[str, set[str]] = {}
+        for k, pid in self.bodies.items():
+            if len(k) >= 4:
+                loose.setdefault(_loose(k), set()).add(pid)
+        self.loose_bodies = {k: next(iter(v)) for k, v in loose.items() if len(v) == 1}
         self.ports = sorted(ports, key=lambda kv: -len(kv[0]))
         # Landing-area names are short and exact (RR_P6_LEO): the 4-letter keys count there.
         self.named_ports = sorted(named_ports, key=lambda kv: -len(kv[0]))
@@ -185,6 +202,10 @@ class Places:
     def body(self, game_name: str) -> str | None:
         return self.bodies.get(_norm(game_name))
 
+    def misread_body(self, text: str) -> str | None:
+        """The planet or moon a misread name stands for ("pyr06" → Terminus), when only one fits."""
+        return self.loose_bodies.get(_loose(text))
+
     def port(self, text: str) -> str | None:
         t = _norm(text)
         return next((pid for k, pid in self.ports if k in t), None)
@@ -209,7 +230,7 @@ class Places:
         if n.endswith("system") and n[:-6] in self.by_id:
             return n[:-6]
         port = next((pid for k, pid in self.named_ports if k in n), None)
-        return self.gateway(text) or port or self.bodies.get(n) or self.by_name.get(n)
+        return self.gateway(text) or port or self.bodies.get(n) or self.by_name.get(n) or self.misread_body(n)
 
     def hint(self, name: str) -> str | None:
         """The moon, planet, belt or system a longer game name sits in.
@@ -229,6 +250,12 @@ class Places:
                     pid = q
             if pid and (best is None or pid.count("/") > best.count("/")):
                 best = pid
+        if best is None:
+            # Nothing fits as written: the same words as a screen reading may have misread them.
+            for t in tokens + [a + b for a, b in zip(tokens, tokens[1:])]:
+                pid = self.misread_body(t)
+                if pid and (best is None or pid.count("/") > best.count("/")):
+                    best = pid
         return best
 
     def outpost(self, name: str) -> str | None:
@@ -407,6 +434,9 @@ class Tracker:
         # The route plotted on the ship the player flies: {"ship", "target", "from", "to", "to_label", "since", "wall"}.
         self.route: dict | None = None
         self.event: tuple[float, str] | None = None   # (log time, short text): the newest thing that happened
+        self._left_at: float | None = None    # when `body` became "the station you left"
+        self.clock = time.time                # the time now (tests set their own)
+        self._screen_kept: tuple[str, str | None] | None = None   # (the last place the screen named, what Game.log knew then)
         self.screen: dict | None = None       # set by screen.py: {"place_id", "at"} while the screen shows a known place
         # The exact position on a planet or moon, read from the screen (position.py):
         # {"body", "lat", "lon", "alt", "hdg", "r", "at"}. Sent only while share_position is on,
@@ -545,6 +575,7 @@ class Tracker:
             elif was_port and not self.armistice and not self.places.within(was_port, self.body):
                 # Just outside the station you left (a city keeps its planet instead).
                 self.body, self._body_by = was_port, "left"
+                self._left_at = ts
         # Some trips end without an arrival line (a jump to a party member does). With a known
         # target the route ends when its number is reached; without one it ends when open space
         # gives way to any place, which can be half a minute early when the jump crosses a
@@ -790,8 +821,17 @@ class Tracker:
     def snapshot(self) -> dict | None:
         """What goes to 7Net: the best place and how sure it is, or None."""
         with self._lock:
+            left = self.body and self._body_by == "left" and not self.port
             if self.port:
                 pid, conf, src = self.port, "exact", "port"
+            elif left and self.clock() - (self._left_at or 0) > LEFT_NEAR_S:
+                # Long since you left that station, and nothing has said where you went: the
+                # planet or moon it circles, else its system.
+                up = self.places.by_id.get(self.body, {}).get("parent")
+                if up and self.places.kind(up) == "system":
+                    pid, conf, src = up, "system", "system"
+                else:
+                    pid, conf, src = up or self.body, "near", "planet"
             elif self.body:
                 pid, conf, src = self.body, "near", "planet"
             elif self.jur_area:
@@ -803,8 +843,20 @@ class Tracker:
             # The screen (screen.py) decides unless Game.log already has a spot inside the
             # place the screen names: the debug text often shows only the moon's zone while
             # the log knows the station on it.
+            # A station you only left is not such a spot: the screen then says where you are now.
+            log_pid = "|".join(str(x) for x in (self.port, self.body, self._body_by, self.system))
             scr = self.screen.get("place_id") if self.screen else None
-            if scr and scr in self.places.by_id and not (pid and pid != scr and self.places.within(pid, scr)):
+            if scr and scr not in self.places.by_id:
+                scr, self._screen_kept = None, None
+            if scr:
+                self._screen_kept = (scr, log_pid)
+            elif self._screen_kept and self._screen_kept[1] == log_pid and self._screen_kept[0] in self.places.by_id:
+                # The debug text is gone (the game is in the background, or it was switched
+                # off) and Game.log has said nothing new since: the place it last showed stands.
+                scr = self._screen_kept[0]
+            else:
+                self._screen_kept = None
+            if scr and not (pid and pid != scr and not left and self.places.within(pid, scr)):
                 pid, conf, src = scr, self._confidence(scr), "screen"
             if not pid:
                 return None

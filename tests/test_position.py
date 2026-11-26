@@ -192,3 +192,15 @@ def test_a_landing_name_with_the_games_own_word_for_the_kind_of_place():
     assert PLACES.outpost("Stanton2b_ShubinMining_SCD1") == "stanton/crusader/daymar/shubin-mining-facility-scd-1"
     assert PLACES.outpost("Stanton2a_IndyMiner_Nowhere") is None          # nothing telling left
     assert PLACES.outpost("Stanton2a_Security") is None                   # eight security posts: not one
+
+
+def test_the_position_on_terminus_from_a_misread_zone_name():
+    from sevenhills_link.location import Places
+    text = "\n".join(["Zone: pyr06 Pos: -199.4489km 199.1949km -50.5566km",
+                      "Zone: SolarSystem 926675998371 Pos: -48118219.6840km 48503407.6580km -50.5566km",
+                      "Zone: Root Pos: -48118219.6840km 48503407.6580km -50.5566km",
+                      "Radius: 285000.000000 ElevationUnderCam: 1379.906250 Altitude 1.739387",
+                      "XYPos: 284636.953127 -72242.190123 Page: 1 (-X)"])
+    pos = position.body_position(text, Places.load())
+    assert pos and pos["body"] == "pyro/terminus" and pos["checked"] == ["distance", "side"]
+    assert abs(pos["lat"] + 10.168) < 0.01 and abs(pos["lon"] - 135.037) < 0.01 and abs(pos["alt"] - 1382) <= 1

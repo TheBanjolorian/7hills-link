@@ -141,10 +141,43 @@ def test_leaving_a_station_into_an_unnamed_number_is_still_next_to_it_for_one_st
     t = run([join(), move(RUIN, landing=RUIN), landed("RR_P6_LEO")])
     assert place(t) == ("pyro/terminus/ruin-station", "exact")
     t.feed(move("4100000001", frm=RUIN))
+    t.clock = lambda: t._left_at + 60
     assert place(t) == ("pyro/terminus/ruin-station", "near")
     assert t.event[1] == "Left Ruin Station"
     t.feed(move("4100000002", frm="4100000001"))
     assert place(t) == ("pyro", "system")
+
+
+def test_a_station_you_left_gives_way_to_its_planet_after_two_minutes():
+    t = run([join(), move(RUIN, landing=RUIN), landed("RR_P6_LEO"), move("4100000001", frm=RUIN)])
+    t.clock = lambda: t._left_at + 119
+    assert place(t) == ("pyro/terminus/ruin-station", "near")
+    t.clock = lambda: t._left_at + 121
+    assert place(t) == ("pyro/terminus", "near")
+
+
+def test_the_screen_says_where_you_are_once_you_have_left_a_station():
+    # Costas, 26 Nov: flew from Ruin Station down to Terminus; nothing in Game.log says so.
+    t = run([join(), move(RUIN, landing=RUIN), landed("RR_P6_LEO"), move("4100000001", frm=RUIN)])
+    t.clock = lambda: t._left_at + 30
+    t.screen = {"place_id": "pyro/terminus"}
+    snap = t.snapshot()
+    assert (snap["place_id"], snap["source"]) == ("pyro/terminus", "screen")
+    # Inside the station the log still knows better than the planet's zone on the screen.
+    t2 = run([join(), move(RUIN, landing=RUIN), landed("RR_P6_LEO")])
+    t2.screen = {"place_id": "pyro/terminus"}
+    assert place(t2) == ("pyro/terminus/ruin-station", "exact")
+
+
+def test_the_last_place_the_screen_showed_stands_until_the_log_says_something_new():
+    t = run([join(), move(STANTON)])
+    t.screen = {"place_id": "stanton/crusader/daymar"}
+    assert place(t) == ("stanton/crusader/daymar", "near")
+    t.screen = None                                  # the game went to the background
+    assert place(t) == ("stanton/crusader/daymar", "near")
+    t.feed(move(NYX, frm=STANTON))                   # Game.log moves on
+    assert place(t) == ("nyx", "system")
+    assert place(t) == ("nyx", "system")
 
 
 def test_the_space_around_a_gateway_is_near_it_not_in_it():
