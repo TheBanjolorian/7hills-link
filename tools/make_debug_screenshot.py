@@ -27,45 +27,55 @@ from PIL import Image, ImageDraw, ImageFont
 # degrees west, on ground 500 m above the radius, eyes 1.7 m above the ground. The build
 # checks that the exe reads this position back from the picture (position.py).
 SPOT = {"lat": -20.0, "lon": -148.0, "radius": 313000.0, "elevation": 500.0, "altitude": 1.7}
+# The same spot on Terminus in Pyro, as the game writes it there: the zone is the short name
+# "pyro6", which Windows text recognition reads as "pyr06" on a real screen (26 Nov 2026).
+WHERE = {
+    "yela": {"zone": "OOC_Stanton_2c_Yela", "radius": 313000.0, "location": "GrimHEX  (LZ : GrimHEX)", "planet": "OOC_Stanton_2c_Yela (working)"},
+    "pyro": {"zone": "pyro6", "radius": 285000.0, "location": "Pyro6", "planet": "pyro6 "},
+}
 
 
-def _spot_xyz() -> tuple[float, float, float]:
+def _spot_xyz(radius: float) -> tuple[float, float, float]:
     import math
-    r = SPOT["radius"] + SPOT["elevation"] + SPOT["altitude"]
+    r = radius + SPOT["elevation"] + SPOT["altitude"]
     la, lo = math.radians(SPOT["lat"]), math.radians(SPOT["lon"])
     return r * math.cos(la) * math.cos(lo), r * math.cos(la) * math.sin(lo), r * math.sin(la)
 
 
-_X, _Y, _Z = _spot_xyz()
-BLOCK = [
-    ("CamDir:    4    0 -112 FOV: 84 Focal: 0.10 FStop: 64.0", "w"),
-    ("Zone: ObjectContainer-000 Pos: 1.00m -2.00m -3.00m", "w"),
-    (f"Zone: OOC_Stanton_2c_Yela Pos: {_X / 1000:.4f}km {_Y / 1000:.4f}km {_Z / 1000:.4f}km", "w"),
-    (f"Zone: SolarSystem_926344131032 Pos: -19000000.0000km -2600000.0000km {_Z / 1000:.4f}km", "w"),
-    (f"Zone: Root Pos: -19000000.0000km -2600000.0000km {_Z / 1000:.4f}km", "w"),
-    ("FPS 53.2 [51..54], - 18.8ms [18.5ms]", "y"),
-    ("Session: 00000000-0000-0000-0000-000000000000", "w"),
-    ("ShardId: pub_euw1b_00000000_000", "w"),
-    ("[100.0|100.0|99.9|99.8|98.8|91.3|25.2]", "y"),
-    ("Phys: 0.0ms Stall: 0.0ms Event: 0.0ms", "w"),
-    ("Server FPS 30.0 [29.1..30.7] - 33.3ms [32.5..34.3], Hitches: 0", "y"),
-    ("Server: pub-euw1b-sc-alpha-0000-00000000-game-000, restarts 0, pop. [shard 100, srv 5]", "w"),
-    ("Net: ping 34.0ms, loss 0.0% BwIn 251.935kbps, BwOut 81.967kbps", "w"),
-    ("RL: entities: 18735, tick: 0.29ms, MTSync: 0.77ms", "w"),
-    ("ServerTime: Sat Nov 21 00:09:31 2026", "w"),
-    ("UniverseTime: Mon May  2 00:57:10 2991", "w"),
-    ("Working Set (OS): 20.96 GiB Committed (OS): 44.46 GiB", "o"),
-    ("Render: MT: 18.5ms RT: 4.0ms GPU: 18.4ms", "o"),
-    ("Graphics Renderer : Vulkan (FSR AA)", "w"),
-    ("GI: Off, Reflections: Half-Res, Hardware Tracing", "w"),
-    ("VRAM(MB): 10756 / 15569", "w"),
-    ("VRAM Demoted: 3113, OSBudget: 15569 MB", "o"),
-    ("Current player location : GrimHEX  (LZ : GrimHEX)", "w"),
-    ("Planet:OOC_Stanton_2c_Yela (working) (Load Complete)", "w"),
-    (f"CamPos Planet Zone: {_X:.6f} {_Y:.6f} {_Z:.6f}", "w"),
-    (f"Radius: {SPOT['radius']:.6f} ElevationUnderCam: {SPOT['elevation']:.6f} Altitude {SPOT['altitude']:.6f}", "w"),
-    ("XYPos: -100000.000000 50000.000000 Page: 0 (-X)", "w"),
-]
+def block(where: str = "yela") -> list[tuple[str, str]]:
+    at = WHERE[where]
+    _X, _Y, _Z = _spot_xyz(at["radius"])
+    return [
+        ("CamDir:    4    0 -112 FOV: 84 Focal: 0.10 FStop: 64.0", "w"),
+        ("Zone: ObjectContainer-000 Pos: 1.00m -2.00m -3.00m", "w"),
+        (f"Zone: {at['zone']} Pos: {_X / 1000:.4f}km {_Y / 1000:.4f}km {_Z / 1000:.4f}km", "w"),
+        (f"Zone: SolarSystem_926344131032 Pos: -19000000.0000km -2600000.0000km {_Z / 1000:.4f}km", "w"),
+        (f"Zone: Root Pos: -19000000.0000km -2600000.0000km {_Z / 1000:.4f}km", "w"),
+        ("FPS 53.2 [51..54], - 18.8ms [18.5ms]", "y"),
+        ("Session: 00000000-0000-0000-0000-000000000000", "w"),
+        ("ShardId: pub_euw1b_00000000_000", "w"),
+        ("[100.0|100.0|99.9|99.8|98.8|91.3|25.2]", "y"),
+        ("Phys: 0.0ms Stall: 0.0ms Event: 0.0ms", "w"),
+        ("Server FPS 30.0 [29.1..30.7] - 33.3ms [32.5..34.3], Hitches: 0", "y"),
+        ("Server: pub-euw1b-sc-alpha-0000-00000000-game-000, restarts 0, pop. [shard 100, srv 5]", "w"),
+        ("Net: ping 34.0ms, loss 0.0% BwIn 251.935kbps, BwOut 81.967kbps", "w"),
+        ("RL: entities: 18735, tick: 0.29ms, MTSync: 0.77ms", "w"),
+        ("ServerTime: Sat Nov 21 00:09:31 2026", "w"),
+        ("UniverseTime: Mon May  2 00:57:10 2991", "w"),
+        ("Working Set (OS): 20.96 GiB Committed (OS): 44.46 GiB", "o"),
+        ("Render: MT: 18.5ms RT: 4.0ms GPU: 18.4ms", "o"),
+        ("Graphics Renderer : Vulkan (FSR AA)", "w"),
+        ("GI: Off, Reflections: Half-Res, Hardware Tracing", "w"),
+        ("VRAM(MB): 10756 / 15569", "w"),
+        ("VRAM Demoted: 3113, OSBudget: 15569 MB", "o"),
+        (f"Current player location : {at['location']}", "w"),
+        (f"Planet:{at['planet']} (Load Complete)", "w"),
+        (f"CamPos Planet Zone: {_X:.6f} {_Y:.6f} {_Z:.6f}", "w"),
+        (f"Radius: {at['radius']:.6f} ElevationUnderCam: {SPOT['elevation']:.6f} Altitude {SPOT['altitude']:.6f}", "w"),
+        ("XYPos: -100000.000000 50000.000000 Page: 0 (-X)", "w"),
+    ]
+
+
 COLOURS = {"w": (235, 235, 235), "y": (232, 214, 96), "o": (236, 150, 60)}
 TEXT_PX, LINE_PX = 12, 13
 # The game's face looks like Bitstream Vera Sans Mono: DejaVu Sans Mono is that face, and
@@ -81,7 +91,7 @@ def font(size: int):
     return ImageFont.load_default(size)
 
 
-def draw(width: int = 2560, height: int = 1440) -> Image.Image:
+def draw(width: int = 2560, height: int = 1440, where: str = "yela") -> Image.Image:
     img = Image.new("RGB", (width, height), (10, 9, 9))
     d = ImageDraw.Draw(img)
     rnd = random.Random(7)
@@ -110,7 +120,7 @@ def draw(width: int = 2560, height: int = 1440) -> Image.Image:
     d = ImageDraw.Draw(img)
     f = font(TEXT_PX)
     y = 2
-    for text, colour in BLOCK:
+    for text, colour in block(where):
         w = d.textlength(text, font=f)
         d.text((width - 4 - w, y), text, font=f, fill=COLOURS[colour])
         y += LINE_PX
@@ -122,8 +132,12 @@ def main(argv: list[str]) -> int:
         print(__doc__.strip(), file=sys.stderr)
         return 2
     size = (int(argv[1]), int(argv[2])) if len(argv) >= 3 else (2560, 1440)
-    draw(*size).save(argv[0])
-    print(f"wrote {argv[0]} ({size[0]}x{size[1]})")
+    where = argv[3] if len(argv) >= 4 else "yela"
+    if where not in WHERE:
+        print(f"unknown place {where!r}: one of {', '.join(WHERE)}", file=sys.stderr)
+        return 2
+    draw(*size, where).save(argv[0])
+    print(f"wrote {argv[0]} ({size[0]}x{size[1]}, {where})")
     return 0
 
 
