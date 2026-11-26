@@ -125,6 +125,10 @@ jobs:
           if (-not $pos -or $pos.body -ne 'pyro/terminus' -or [math]::Abs($pos.lat + 20) -gt 0.02 -or [math]::Abs($pos.lon + 148) -gt 0.02) {
             Write-Error "Pyro: the position was read as $($pos.body) $($pos.lat) $($pos.lon), not Terminus -20 -148"; exit 1
           }
+          # The Pyro picture is drawn from inside a ship: its zone line must come back as that ship.
+          if ($t.Result.ship -notmatch '^AEGS_Gladius_\d{12}$') { Write-Error "Pyro: the ship zone was read as '$($t.Result.ship)', not AEGS_Gladius_<number>"; exit 1 }
+          if ($t.Result.ship -ne 'AEGS_Gladius_955474563856') { Write-Host "::warning::the ship's number was read as $($t.Result.ship), not AEGS_Gladius_955474563856" }
+          Write-Host "Pyro: ship [$($t.Result.ship)]"
           # The live path: capture this screen's corner with mss and read it. There is no game on
           # the runner, so no place is expected; a runner without a screen to capture is a warning.
           try { $live = Invoke-ScreenTest @('--screen-test') } catch { $live = [pscustomobject]@{ Code = -1; Result = [pscustomobject]@{ error = "$_" } } }

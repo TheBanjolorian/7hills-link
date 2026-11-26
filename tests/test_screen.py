@@ -475,3 +475,56 @@ def test_a_misread_name_counts_only_when_one_body_fits():
     # Two bodies whose names a misreading makes the same name neither.
     two = Places([{"id": "a/x", "kind": "moon", "name": "X", "match": ["abc10"]}, {"id": "a/y", "kind": "moon", "name": "Y", "match": ["abclo"]}])
     assert two.misread_body("abc1o") is None and two.named("abc10") == "a/x"
+
+
+# ---------------------------------------------------------------- the ship you are inside
+
+SHIP_BLOCK = block("Zone: AEGS_Gladius_955474563856 Pos: 0.00m 8.27m 0.30m",
+                   "Zone: pyro6 Pos: -199.4068km 199.2224km -50.5822km",
+                   "Zone: SolarSystem_926675998371 Pos: -48118479.0312km 48503324.4574km -50.5822km")
+
+
+def test_a_zone_line_that_is_a_ship():
+    from sevenhills_link.location import ship_zone
+    assert ship_zone("AEGS_Gladius_955474563856") == ("AEGS_Gladius_955474563856", "955474563856")
+    assert ship_zone("AEGS Idris M 951672814177") == ("AEGS_Idris_M_951672814177", "951672814177")      # underscores lost
+    assert ship_zone("AEGS_Gladius_95547456385O") == ("AEGS_Gladius_955474563850", "955474563850")      # a letter among the digits
+    for other in ("pyro6", "OOC_Stanton_2a_Cellin", "SolarSystem_926675998371", "Root", "ObjectContainer-000", "aegs_gladius_955474563856", "AEGS_955474563856"):
+        assert ship_zone(other) is None
+
+
+def test_the_ship_goes_with_the_place_after_two_readings_and_ends_with_the_text():
+    r = reader()
+    r.tracker.feed("<2026-11-26T00:00:00.000Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_250] locationId[1] [GIM]")
+    r.look(SHIP_BLOCK)
+    assert r.tracker.screen_ship is None                       # one reading is not enough
+    r.look(SHIP_BLOCK)
+    snap = r.tracker.snapshot()
+    assert snap["place_id"] == "pyro/terminus" and snap["ship"] == "AEGS_Gladius_955474563856"
+    assert r.last["ship"] == "AEGS_Gladius_955474563856"
+    out = block("Zone: pyro6 Pos: -199.4068km 199.2224km -50.5822km")
+    r.look(out)
+    assert "ship" in r.tracker.snapshot()                      # one look without it: could be a misreading
+    r.look(out)
+    assert "ship" not in r.tracker.snapshot()
+    r.look(SHIP_BLOCK); r.look(SHIP_BLOCK)
+    r.look("nothing of the debug text")                        # the text is gone
+    assert r.tracker.screen_ship is None
+
+
+def test_the_ship_is_sent_as_game_log_spells_it():
+    r = reader()
+    r.tracker.feed("<2026-11-26T00:00:00.000Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_250] locationId[1] [GIM]")
+    r.tracker.feed("<2026-11-26T00:00:05.000Z> [Notice] <Something> AEGS_Gladius_955474563856[955474563856] and its seat AEGS_Gladius_SCItem_Seat_Pilot_955474563900 [Team]")
+    assert r.tracker._entities == {"955474563856": "AEGS_Gladius_955474563856"}
+    misread = SHIP_BLOCK.replace("AEGS_Gladius_955474563856", "AEGS G1adius 955474563856")
+    r.look(misread); r.look(misread)
+    assert r.tracker.snapshot()["ship"] == "AEGS_Gladius_955474563856"
+
+
+def test_a_ship_read_long_ago_is_not_sent():
+    r = reader()
+    r.tracker.feed("<2026-11-26T00:00:00.000Z> [Notice] <Join PU> address[0.0.0.0] port[0] shard[pub_euw1b_13165946_250] locationId[1] [GIM]")
+    r.look(SHIP_BLOCK); r.look(SHIP_BLOCK)
+    r.tracker.screen_ship["at"] -= 60
+    assert "ship" not in r.tracker.snapshot()

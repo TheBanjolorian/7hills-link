@@ -117,6 +117,28 @@ def _loose(s: str) -> str:
     return _norm(s).translate(_LOOSE)
 
 
+# A ship or ground vehicle as the game names one of them: maker, model, the entity's number
+# (AEGS_Gladius_955474563856). Game.log, the game telemetry and the debug text's zone line all
+# use this same name for the same ship.
+RE_ENTITY = re.compile(r"(?<![A-Za-z0-9_])([A-Z]{3,5}(?:_[A-Za-z0-9]+)+?_(\d{9,15}))(?![A-Za-z0-9_])")
+ENTITIES_MAX = 4000
+_DIGITS = str.maketrans("OoQDlIiSsBZz", "000011155822")
+
+
+def ship_zone(zone: str) -> tuple[str, str] | None:
+    """(name, number) when a zone line of the debug text names a ship: "AEGS Gladius
+    955474563856" (the reading often loses the underscores) → ("AEGS_Gladius_955474563856",
+    "955474563856"). Letters the reading put among the digits are put right. None for any
+    other zone (a planet, an object container, the solar system, Root)."""
+    parts = [p for p in re.split(r"[\s_]+", (zone or "").strip()) if p]
+    if len(parts) < 3 or not re.fullmatch(r"[A-Z]{3,5}", parts[0]):
+        return None
+    number = parts[-1].translate(_DIGITS)
+    if not re.fullmatch(r"\d{9,15}", number) or not all(re.fullmatch(r"[A-Za-z0-9]+", p) for p in parts[1:-1]):
+        return None
+    return "_".join([*parts[:-1], number])[:80], number
+
+
 def _iso(ts: float) -> str:
     return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -443,6 +465,13 @@ class Tracker:
         # which core.py sets from the member's "Share exact position" switch on the main view.
         self.screen_pos: dict | None = None
         self.share_position = False
+        # The ship whose zone the debug text shows (screen.py): {"name", "number", "at"}. You are
+        # inside it, seated or on foot. Sent with the place so 7Net can tell who is aboard the
+        # same ship also when the game sends no telemetry.
+        self.screen_ship: dict | None = None
+        # Ships Game.log has named this run, by entity number: the log's spelling is the one
+        # sent, a reading of the screen can have a letter of the name wrong.
+        self._entities: dict[str, str] = {}
         self._last_ts = 0.0
 
     # ------------------------------------------------------------ feeding
@@ -453,6 +482,14 @@ class Tracker:
             return
         line = line.rstrip("\r\n")
         with self._lock:
+            if "_" in line:
+                for m in RE_ENTITY.finditer(line):
+                    if "_Seat_" in m.group(1) or "SCItem" in m.group(1):
+                        continue
+                    self._entities.pop(m.group(2), None)
+                    self._entities[m.group(2)] = m.group(1)[:80]
+                while len(self._entities) > ENTITIES_MAX:
+                    self._entities.pop(next(iter(self._entities)))
             self._settle(ts)
             self._last_ts = ts
             if self.route and ts - self.route["since"] > ROUTE_FORGET_S:
@@ -876,6 +913,10 @@ class Tracker:
                     and (pid == sp["body"] or self.places.within(pid, sp["body"]))):
                 out["pos"] = {"body": sp["body"], "lat": sp["lat"], "lon": sp["lon"], "alt": sp["alt"],
                               "hdg": sp.get("hdg"), "r": sp.get("r")}
+            # The ship you are inside, while the screen shows its zone.
+            ss = self.screen_ship
+            if ss and time.time() - ss["at"] <= POS_STALE_S:
+                out["ship"] = self._entities.get(ss["number"]) or ss["name"]
             return out
 
     def describe(self) -> str | None:

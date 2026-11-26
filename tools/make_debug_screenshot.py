@@ -31,7 +31,7 @@ SPOT = {"lat": -20.0, "lon": -148.0, "radius": 313000.0, "elevation": 500.0, "al
 # "pyro6", which Windows text recognition reads as "pyr06" on a real screen (26 Nov 2026).
 WHERE = {
     "yela": {"zone": "OOC_Stanton_2c_Yela", "radius": 313000.0, "location": "GrimHEX  (LZ : GrimHEX)", "planet": "OOC_Stanton_2c_Yela (working)"},
-    "pyro": {"zone": "pyro6", "radius": 285000.0, "location": "Pyro6", "planet": "pyro6 "},
+    "pyro": {"zone": "pyro6", "radius": 285000.0, "location": "Pyro6", "planet": "pyro6 ", "inside": "AEGS_Gladius_955474563856"},
 }
 
 
@@ -47,7 +47,7 @@ def block(where: str = "yela") -> list[tuple[str, str]]:
     _X, _Y, _Z = _spot_xyz(at["radius"])
     return [
         ("CamDir:    4    0 -112 FOV: 84 Focal: 0.10 FStop: 64.0", "w"),
-        ("Zone: ObjectContainer-000 Pos: 1.00m -2.00m -3.00m", "w"),
+        (f"Zone: {at.get('inside', 'ObjectContainer-000')} Pos: 1.00m -2.00m -3.00m", "w"),
         (f"Zone: {at['zone']} Pos: {_X / 1000:.4f}km {_Y / 1000:.4f}km {_Z / 1000:.4f}km", "w"),
         (f"Zone: SolarSystem_926344131032 Pos: -19000000.0000km -2600000.0000km {_Z / 1000:.4f}km", "w"),
         (f"Zone: Root Pos: -19000000.0000km -2600000.0000km {_Z / 1000:.4f}km", "w"),
