@@ -464,6 +464,10 @@ class Tracker:
         # {"body", "lat", "lon", "alt", "hdg", "r", "at"}. Sent only while share_position is on,
         # which core.py sets from the member's "Share exact position" switch on the main view.
         self.screen_pos: dict | None = None
+        # The position in the solar system's own frame, read from the screen (position.system_position):
+        # {"x", "y", "z" (km), "at"}. It is what places a member in open space. Sent under the same
+        # switch as the exact position, and only while it is fresh.
+        self.screen_space: dict | None = None
         self.share_position = False
         # The ship whose zone the debug text shows (screen.py): {"name", "number", "at"}. You are
         # inside it, seated or on foot. Sent with the place so 7Net can tell who is aboard the
@@ -913,6 +917,10 @@ class Tracker:
                     and (pid == sp["body"] or self.places.within(pid, sp["body"]))):
                 out["pos"] = {"body": sp["body"], "lat": sp["lat"], "lon": sp["lon"], "alt": sp["alt"],
                               "hdg": sp.get("hdg"), "r": sp.get("r")}
+            # Where in the solar system (0.9.0): what places you in open space. Same switch, same freshness.
+            sx = self.screen_space
+            if self.share_position and sx and time.time() - sx["at"] <= POS_STALE_S:
+                out["space"] = {"x": sx["x"], "y": sx["y"], "z": sx["z"]}
             # The ship you are inside, while the screen shows its zone.
             ss = self.screen_ship
             if ss and time.time() - ss["at"] <= POS_STALE_S:

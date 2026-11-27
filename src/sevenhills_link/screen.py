@@ -67,6 +67,11 @@ STALE_S = 15.0           # a screen place older than this no longer counts
 POS_SPEED_MS = 3000.0
 POS_SLACK_M = 300.0
 COURSE_MIN_M = 20.0      # the course is taken between two positions at least this far apart
+# The position in the solar system's frame (position.system_position): two readings in a row
+# must lie this close together. A ship in quantum travel moves far faster, so nothing counts
+# (and nothing is sent) while it jumps.
+SPACE_SPEED_KMS = 5.0
+SPACE_SLACK_KM = 5.0
 BOX = (760, 420)         # px in the window's top-right corner: the block is about 640 × 330 px on a real screen
 CORNER = (0.55, 0.0, 1.0, 0.40)   # the wider corner, as fractions of the window, should a screen draw the text larger
 # The ways a look can be made, in the order they are tried: which part of the window,
@@ -141,6 +146,8 @@ class ScreenReader:
         self._course_from: tuple[str, tuple[float, float]] | None = None   # (body, where the course is measured from)
         self._course: int | None = None                    # the last course, whole degrees
         self.position: dict | None = None                  # the last position that counted, for "Test screen reading"
+        self._space_prev: tuple[dict, float] | None = None # the last position in the system's frame read, and when
+        self.space: dict | None = None                     # the last one that counted: {"x", "y", "z" (km), "at"}
         self._last: str | None = None
         self._ship_last: str | None = None                 # the ship the look before this one named
         self.ship: str | None = None                       # the ship two looks agreed on, for "Test screen reading"
@@ -189,11 +196,14 @@ class ScreenReader:
         self._course_from = None
         self._course = None
         self.position = None
+        self._space_prev = None
+        self.space = None
         self._ship_last = None
         self.ship = None
         with self.tracker._lock:
             self.tracker.screen = None
             self.tracker.screen_pos = None
+            self.tracker.screen_space = None
             self.tracker.screen_ship = None
 
     def _look_position(self, text: str | None, now: float) -> dict | None:
@@ -222,6 +232,24 @@ class ScreenReader:
             with self.tracker._lock:
                 self.tracker.screen_pos = dict(self.position)
         return pos
+
+    def _look_space(self, text: str | None, now: float) -> dict | None:
+        """The position in the solar system's frame this reading gives (position.system_position).
+        It counts, and is handed to the tracker, once it lies close to the reading before it;
+        the tracker sends it only when the member has turned on "Share exact position"."""
+        sp = position.system_position(text)
+        prev, self._space_prev = self._space_prev, ((sp, now) if sp else None)
+        if not sp:
+            if self.space and now - self.space["at"] > STALE_S:
+                self.space = None
+                with self.tracker._lock:
+                    self.tracker.screen_space = None
+            return None
+        if prev and position.space_apart_km(prev[0], sp) <= SPACE_SLACK_KM + SPACE_SPEED_KMS * max(0.0, now - prev[1]):
+            self.space = {"x": sp["x"], "y": sp["y"], "z": sp["z"], "at": now}
+            with self.tracker._lock:
+                self.tracker.screen_space = dict(self.space)
+        return sp
 
     def _look_ship(self, seen: dict, now: float) -> str | None:
         """The ship whose zone this reading shows (the innermost zone that is one), handed to
@@ -311,7 +339,8 @@ class ScreenReader:
         pid = self.place_of(seen) if seen["block"] else None
         pos = self._look_position(text, time.time()) if seen["block"] else None
         ship = self._look_ship(seen, time.time()) if seen["block"] else None
-        self.last = {"at": time.time(), "ship": ship, "position": {**{k: pos[k] for k in ("body", "lat", "lon", "alt", "checked")}, "hdg": self._course} if pos else None, "size": list(size) if size else None, "scale": scale, "prepared": prep, "ms": ms,
+        space = self._look_space(text, time.time()) if seen["block"] else None
+        self.last = {"at": time.time(), "ship": ship, "space": space, "position": {**{k: pos[k] for k in ("body", "lat", "lon", "alt", "checked")}, "hdg": self._course} if pos else None, "size": list(size) if size else None, "scale": scale, "prepared": prep, "ms": ms,
                      "lines": len([x for x in (text or "").splitlines() if x.strip()]),
                      "block": seen["block"], "zones": seen["zones"][:6], "location": seen["location"] or seen["lz"],
                      "place": pid, "error": None}

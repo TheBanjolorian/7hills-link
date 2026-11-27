@@ -11,8 +11,12 @@ Next to the place (screen.py), the debug block gives a position inside each zone
 
 The line of the planet or moon is a position from that body's middle, in a frame that
 turns with the body: the same spot on the ground always has the same numbers. From it
-this module works out latitude, longitude and height. Nothing else is taken: the
-solar-system lines, session and server names are not read here.
+this module works out latitude, longitude and height.
+
+From 0.9.0 the "SolarSystem" line is read too: the position in the solar system's own
+frame, in km. It is what says where the player is in open space, away from any planet or
+moon, so a bookmark or a waypoint can be saved there (7Net works out the nearest quantum
+travel point from it). Session and server names are not read here.
 
 Text recognition can misread a digit, and a wrong digit would put the player somewhere
 else entirely. So a position counts only when it checks out against the rest of the
@@ -30,7 +34,9 @@ screen.py from two positions at least 20 m apart; standing still keeps the last 
 
 What leaves the PC, and only while "Share exact position" is on: the body's place id,
 latitude and longitude to three decimals, the height in metres, the course in whole
-degrees and the body's radius in km. The numbers on the screen themselves are never sent or written down.
+degrees and the body's radius in km; and, from 0.9.0, the position in the solar system's
+frame as three numbers in km to one decimal (`system_position`). Nothing is written down
+on this PC, and 7Net keeps only the latest.
 """
 
 from __future__ import annotations
@@ -152,6 +158,41 @@ def body_position(text: str | None, places) -> dict | None:
         return {"body": pid, "lat": round(lat, 3), "lon": round(lon, 3), "alt": round(dist - radius), "radius": radius, "checked": checked,
                 "exact": (lat, lon)}     # unrounded, for the course between two readings; not sent
     return None
+
+
+RE_SYSTEM = re.compile(r"^S[o0]lar\s?System", re.I)
+SYSTEM_MAX_KM = 1e9            # further from the star than this is not a position
+ROOT_SLACK_M = 1000.0          # the "Root" line repeats the system line: they must agree
+
+
+def system_position(text: str | None) -> dict | None:
+    """Where the player is in the solar system's own frame, from the "SolarSystem" zone line,
+    or None when the block has none that checks out: {"x", "y", "z"} in km to one decimal,
+    "checked": which checks it passed.
+
+    The block usually repeats the same numbers on a "Root" line. When it is there the two
+    must agree, which catches a misread digit; screen.py also wants two readings in a row
+    that lie close together.
+    """
+    system = root = None
+    for name, xyz in zone_positions(text):
+        if RE_SYSTEM.match(name.strip()):
+            system = system or xyz
+        elif name.strip().lower() == "root":
+            root = root or xyz
+    if not system or max(abs(v) for v in system) / 1000.0 > SYSTEM_MAX_KM:
+        return None
+    checked = []
+    if root is not None:
+        if max(abs(a - b) for a, b in zip(system, root)) > ROOT_SLACK_M:
+            return None
+        checked.append("root")
+    return {"x": round(system[0] / 1000.0, 1), "y": round(system[1] / 1000.0, 1), "z": round(system[2] / 1000.0, 1), "checked": checked}
+
+
+def space_apart_km(a: dict, b: dict) -> float:
+    """Kilometres between two positions in the solar system's frame."""
+    return math.sqrt((a["x"] - b["x"]) ** 2 + (a["y"] - b["y"]) ** 2 + (a["z"] - b["z"]) ** 2)
 
 
 def apart_m(a: dict, b: dict) -> float:

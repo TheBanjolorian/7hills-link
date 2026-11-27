@@ -159,7 +159,7 @@
         <button type="button" class="mode" role="radio" data-mode="full" onclick="setMode('full')"><div class="mt">Full</div><div class="dim mi">Ship, health and where you are, for Org Command and your party</div></button>
       </div>
       <p class="dim hidden" id="shareLinkHint" style="margin:10px 0 0;font-size:12px">Link this PC first.</p>
-      <div class="srow" style="margin-top:14px"><div class="grow"><div>Share exact position</div><div class="dim" style="font-size:12px">With the debug text on screen (<span class="mono">r_displayinfo 3</span>), where you are on a planet or moon and which way you are heading is worked out on this PC and sent with your place, so the map shows a dot where you are and can point you to a waypoint. Seen by those who see your place: your party and, while you share Full, Org Command. Only the latest position is kept.</div></div><button class="switch" id="prefPos" onclick="togglePref('exact_position')" aria-label="Share exact position"><span></span></button></div>
+      <div class="srow" style="margin-top:14px"><div class="grow"><div>Share exact position</div><div class="dim" style="font-size:12px">With the debug text on screen (<span class="mono">r_displayinfo 3</span>), where you are on a planet or moon and which way you are heading is worked out on this PC and sent with your place, so the map shows a dot where you are and can point you to a waypoint. In open space your position in the solar system is sent too, so you can save a bookmark there and get the nearest quantum travel point. Seen by those who see your place: your party and, while you share Full, Org Command. Only the latest position is kept.</div></div><button class="switch" id="prefPos" onclick="togglePref('exact_position')" aria-label="Share exact position"><span></span></button></div>
     </div>
 
     <div class="sec row" style="padding-top:14px;padding-bottom:14px;gap:10px">
@@ -322,6 +322,9 @@
     const deg = (v, pos, neg) => Math.abs(v).toFixed(3) + '° ' + (v < 0 ? neg : pos)
     lines.push(p ? 'Position: ' + deg(p.lat, 'N', 'S') + ', ' + deg(p.lon, 'E', 'W') + ', ' + (p.alt >= 1000 ? (p.alt / 1000).toFixed(1) + ' km' : p.alt + ' m') + ' above the radius · checked against: ' + (p.checked || []).join(', ') + ' · ' + (p.hdg != null ? 'course ' + p.hdg + '° · ' : '') + (s.prefs && s.prefs.exact_position ? 'shared' : 'not shared (Share exact position is off)')
       : 'Position: none that checks out on this look (it needs the planet\'s Zone line and the Radius line, both read without a wrong digit)')
+    const sp = l.space
+    lines.push(sp ? 'In the solar system: ' + sp.x + ' km, ' + sp.y + ' km, ' + sp.z + ' km' + ((sp.checked || []).length ? ' · checked against: ' + sp.checked.join(', ') : '') + ' · ' + (s.prefs && s.prefs.exact_position ? 'shared after two readings that agree' : 'not shared (Share exact position is off)')
+      : 'In the solar system: no SolarSystem line read on this look')
     return lines.join('\n')
   }
   function renderScreenTest(s) {
