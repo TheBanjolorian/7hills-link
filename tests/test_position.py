@@ -204,3 +204,56 @@ def test_the_position_on_terminus_from_a_misread_zone_name():
     pos = position.body_position(text, Places.load())
     assert pos and pos["body"] == "pyro/terminus" and pos["checked"] == ["distance", "side"]
     assert abs(pos["lat"] + 10.168) < 0.01 and abs(pos["lon"] - 135.037) < 0.01 and abs(pos["alt"] - 1382) <= 1
+
+
+# ---- 0.9.0: the position in the solar system's own frame (open space)
+
+def test_the_system_position_is_read_in_km_and_checked_against_the_root_line():
+    p = position.system_position(ON_FOOT)
+    assert (p["x"], p["y"], p["z"]) == (-18987730.0, -2708970.2, -228.7)
+    assert p["checked"] == ["root"]
+    # In open space the block has no Root line: the two readings in a row are the check.
+    q = position.system_position(OPEN_SPACE)
+    assert (q["x"], q["y"]) == (-13499926.6, -23382659.9) and q["z"] == pytest.approx(-5.2, abs=0.01)
+    assert q["checked"] == []
+
+
+def test_a_system_line_that_disagrees_with_the_root_line_does_not_count():
+    wrong = ON_FOOT.replace("Zone: Root Pos: -18987729.9791km", "Zone: Root Pos: -18987129.9791km")
+    assert position.system_position(wrong) is None
+    assert position.system_position("Zone: OOC_Stanton_2a_Cellin Pos: -102.1047km -72.5157km -228.7069km") is None
+    assert position.system_position(None) is None
+
+
+def test_the_space_position_counts_after_two_readings_and_is_sent_only_when_shared():
+    r, t = reader(True)
+    r.look(OPEN_SPACE)
+    assert t.screen_space is None                    # one reading is not enough
+    r.look(OPEN_SPACE)
+    assert set(t.screen_space) == {"x", "y", "z", "at"}
+    snap = t.snapshot()
+    assert snap["space"] == {"x": -13499926.6, "y": -23382659.9, "z": pytest.approx(-5.2, abs=0.01)}
+    assert "pos" not in snap                         # no planet or moon here
+
+    r2, t2 = reader(False)
+    r2.look(OPEN_SPACE); r2.look(OPEN_SPACE)
+    assert t2.screen_space is not None               # read, for "Test screen reading"
+    assert "space" not in t2.snapshot()              # but not sent: the setting is off
+
+
+def test_a_quantum_jump_between_two_readings_does_not_count_in_space():
+    r, t = reader(True)
+    r.look(OPEN_SPACE)
+    r.look(OPEN_SPACE.replace("-13499926.6148km", "-13299926.6148km"))   # 200 000 km in one look
+    assert t.screen_space is None
+    r.look(OPEN_SPACE.replace("-13499926.6148km", "-13299926.6148km"))
+    assert t.screen_space["x"] == -13299926.6
+
+
+def test_an_old_space_position_is_not_sent_and_no_block_clears_it():
+    r, t = reader(True)
+    r.look(OPEN_SPACE); r.look(OPEN_SPACE)
+    t.screen_space["at"] = time.time() - 60
+    assert "space" not in t.snapshot()
+    r.look("nothing here")
+    assert t.screen_space is None
